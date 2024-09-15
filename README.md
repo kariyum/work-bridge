@@ -1,0 +1,1 @@
+A bridge between a recruiter and a worker.
