@@ -8,7 +8,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "2061ee239a750b74",
+            "id": "1bea26298b023727",
             "type": "leaf",
             "state": {
               "type": "kanban",
@@ -28,27 +28,18 @@
             }
           },
           {
-            "id": "1bea26298b023727",
+            "id": "055d45cd76033140",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "markdown",
               "state": {
-                "file": "Kanban.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": [
-                    false,
-                    false,
-                    false,
-                    false,
-                    false
-                  ]
-                }
+                "file": "Problems encountered.md",
+                "mode": "source",
+                "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -179,8 +170,8 @@
   "active": "1bea26298b023727",
   "lastOpenFiles": [
     "Problems encountered.md",
-    "Handle cookies.md",
     "Kanban.md",
+    "Handle cookies.md",
     "Doc 1.md"
   ]
 }

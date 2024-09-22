@@ -13,7 +13,8 @@ export async function handle({ event, resolve }) {
       event.request
     );
     // console.log("Server hooks new request", new_request);
-    return await fetch(new_request)
+    let response = await fetch(new_request);
+    return response;
   }
 
   // Continue with the normal resolve process

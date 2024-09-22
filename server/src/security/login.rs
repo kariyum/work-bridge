@@ -1,14 +1,10 @@
 use actix_web::{
     cookie::Cookie,
-    get,
-    http::header,
-    middleware::Logger,
     options, post,
-    web::{self, Form},
-    App, HttpRequest, HttpResponse, HttpServer, Responder, ResponseError,
+    web::{Form}, HttpResponse, Responder,
 };
 
-use serde::{Deserialize, Serialize};
+use serde::Deserialize;
 use super::token::generate_jwt;
 
 #[derive(Deserialize)]
@@ -29,7 +25,6 @@ pub async fn login(Form(info): Form<LoginRequest>) -> impl Responder {
     request.add_cookie(&cookie).unwrap();
     request
 }
-
 
 #[options("/login")]
 pub async fn preflight() -> impl Responder {

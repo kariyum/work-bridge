@@ -1,6 +1,7 @@
 use serde::{Serialize, Deserialize};
-use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
+use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
 use std::env;
+use chrono::Utc;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
@@ -9,9 +10,14 @@ pub struct Claims {
 }
 
 pub fn generate_jwt(user_id: &str) -> Result<String, jsonwebtoken::errors::Error> {
+    let expiration = Utc::now()
+        .checked_add_signed(chrono::Duration::hours(24))
+        .expect("valid timestamp")
+        .timestamp() as usize;
+
     let my_claims = Claims {
         sub: user_id.to_owned(),
-        exp: 10000000000, // TODO update expiration time to millisecondspoch
+        exp: expiration, // 24 hours
     };
     // let secret = env::var("SECRET_KEY").expect("SECRET_KEY must be set");
     let secret = env::var("SECRET_KEY").unwrap_or("secret".to_string());
@@ -26,10 +32,11 @@ pub fn validate_jwt(token: &str) -> Result<Claims, jsonwebtoken::errors::Error> 
     println!("Token is {:?}", token);
     // let secret = env::var("SECRET_KEY").expect("SECRET_KEY must be set");
     let secret = env::var("SECRET_KEY").unwrap_or("secret".to_string());
-    decode::<Claims>(
+    let claims = decode::<Claims>(
         token,
         &DecodingKey::from_secret(secret.as_ref()),
         &Validation::default(),
     )
-    .map(|data| data.claims)
+    .map(|data| data.claims);
+    claims
 }

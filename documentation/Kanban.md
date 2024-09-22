@@ -6,6 +6,9 @@ kanban-plugin: board
 
 ## p3
 
+- [ ] add unit tests
+- [ ] add dynamic postgres schema support
+- [ ] fix cors
 
 
 ## p2
@@ -14,8 +17,7 @@ kanban-plugin: board
 
 ## p1
 
-- [ ] add unit tests
-- [ ] add dynamic postgres schema support
+- [ ] fix token validation
 
 
 ## doing
