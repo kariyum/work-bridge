@@ -8,52 +8,27 @@ use actix_web::{
     web::{self, Form},
     App, HttpRequest, HttpResponse, HttpServer, Responder, ResponseError,
 };
-use jsonwebtoken::{decode, encode, Algorithm, DecodingKey, EncodingKey, Header, Validation};
 use serde::{Deserialize, Serialize};
 use sqlx::{postgres::PgPoolOptions, PgPool, Pool, Postgres};
-use std::env;
 
-#[derive(Debug, Serialize, Deserialize)]
-struct Claims {
-    sub: String,
-    exp: usize,
-}
-fn generate_jwt(user_id: &str) -> Result<String, jsonwebtoken::errors::Error> {
-    let my_claims = Claims {
-        sub: user_id.to_owned(),
-        exp: 10000000000, // TODO update expiration time to millisecondspoch
-    };
-    // let secret = env::var("SECRET_KEY").expect("SECRET_KEY must be set");
-    let secret = env::var("SECRET_KEY").unwrap_or("secret".to_string());
-    encode(
-        &Header::default(),
-        &my_claims,
-        &EncodingKey::from_secret(secret.as_ref()),
-    )
+pub mod security {
+    pub mod token;
+    pub mod login;
+    pub mod register;
 }
 
-fn validate_jwt(token: &str) -> Result<Claims, jsonwebtoken::errors::Error> {
-    println!("Token is {:?}", token);
-    // let secret = env::var("SECRET_KEY").expect("SECRET_KEY must be set");
-    let secret = env::var("SECRET_KEY").unwrap_or("secret".to_string());
-    decode::<Claims>(
-        token,
-        &DecodingKey::from_secret(secret.as_ref()),
-        &Validation::default(),
-    )
-    .map(|data| data.claims)
+use security::token::validate_jwt;
+use security::login::{login, preflight};
+use security::register::register;
+
+#[derive(Serialize, sqlx::FromRow)]
+struct UserRow {
+    email: String,
+    password: String,
 }
 
 #[get("/")]
 async fn hello(request: HttpRequest) -> impl Responder {
-    // let cookie = Cookie::build("name", "value")
-    // .path("/")
-    // .secure(true)
-    // .http_only(true)
-    // .finish();
-    // let mut request = HttpResponse::Ok().body("Hello world!");
-    // request.add_cookie(&cookie).unwrap();
-    // request
     let x = request
         .cookie("Authorization")
         .map(|token| validate_jwt(token.value()));
@@ -61,30 +36,9 @@ async fn hello(request: HttpRequest) -> impl Responder {
     HttpResponse::Ok().body("Hello world!")
 }
 
-#[options("/login")]
-async fn preflight() -> impl Responder {
-    HttpResponse::Ok()
-        .append_header(("Access-Control-Allow-Origin", "*"))
-        .append_header(("Access-Control-Allow-Methods", "POST, GET, OPTIONS"))
-        .append_header(("Access-Control-Allow-Headers", "Content-Type"))
-        .finish()
-}
-
 #[post("/echo")]
 async fn echo(req_body: String) -> impl Responder {
     HttpResponse::Ok().body(req_body)
-}
-
-#[derive(Deserialize)]
-struct RegisterRequest {
-    email: String,
-    password: String,
-}
-
-#[derive(Serialize, sqlx::FromRow)]
-struct UserRow {
-    email: String,
-    password: String,
 }
 
 #[get("users")]
@@ -104,36 +58,6 @@ async fn get_users(data: web::Data<PgPool>) -> impl Responder {
     HttpResponse::Ok().json(users)
 }
 
-#[post("/register")]
-async fn register(
-    Form(register_request): Form<RegisterRequest>,
-    data: web::Data<Pool<Postgres>>,
-) -> impl Responder {
-    HttpResponse::Ok().body("Register")
-}
-
-#[derive(Deserialize)]
-struct LoginRequest {
-    email: String,
-    password: String,
-}
-
-#[post("/login")]
-// async fn login(info: web::Json<LoginRequest>) -> impl Responder {
-async fn login(Form(info): Form<LoginRequest>) -> impl Responder {
-    let cookie = Cookie::build("Authorization", generate_jwt(&info.email).unwrap())
-        .path("/")
-        .secure(true)
-        .http_only(true)
-        .finish();
-    let mut request = HttpResponse::Ok().finish();
-    request.add_cookie(&cookie).unwrap();
-    request
-}
-
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
-}
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
