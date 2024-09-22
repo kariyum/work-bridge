@@ -14,6 +14,8 @@ kanban-plugin: board
 
 ## p1
 
+- [ ] add unit tests
+- [ ] add dynamic postgres schema support
 
 
 ## doing

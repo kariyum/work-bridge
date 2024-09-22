@@ -64,7 +64,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
     let pool = PgPoolOptions::new()
         .max_connections(5)
-        .connect("postgres://user:password@localhost:5432/main_db")
+        .connect("postgres://user:password@localhost:5432/main")
         .await
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
     HttpServer::new(move || {

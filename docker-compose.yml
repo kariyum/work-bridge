@@ -2,20 +2,33 @@
 # Use postgres/example user/password credentials
 version: '3.9'
 services:
-  pg_host:
-    image: postgres
+  postgres:
+    image: postgres #:alpine
     restart: always
     # set shared memory limit when using docker-compose
     shm_size: 128mb
-    # or set shared memory limit when deploy via swarm stack
-    #volumes:
-    #  - type: tmpfs
-    #    target: /dev/shm
-    #    tmpfs:
-    #      size: 134217728 # 128*2^20 bytes = 128Mb
     environment:
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: main
       POSTGRES_USER: user
-      POSTGRES_DB: main_db
+      PGUSER: user
+      POSTGRES_PASSWORD: password
+    # env_file:
+    #   - .env
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  flyway-migrations:
+    image: flyway/flyway
+    volumes:
+      - ./migrations:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    command: -url=jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB} -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD}  migrate
+    # -schema=$(POSTGRES_SCHEMA)
