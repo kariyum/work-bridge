@@ -26,8 +26,21 @@
                 }
               }
             }
+          },
+          {
+            "id": "9377f292a1ecb33e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Handle cookies.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -77,8 +90,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "885ff3a0944b0df5",
@@ -94,7 +106,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Kanban.md",
+                "file": "Handle cookies.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -111,7 +123,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Kanban.md",
+                "file": "Handle cookies.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -134,7 +146,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Kanban.md"
+                "file": "Handle cookies.md"
               }
             }
           }
@@ -156,10 +168,10 @@
       "obsidian-kanban:Create new board": false
     }
   },
-  "active": "2061ee239a750b74",
+  "active": "9377f292a1ecb33e",
   "lastOpenFiles": [
     "Kanban.md",
-    "Kanban.md",
+    "Handle cookies.md",
     "Doc 1.md"
   ]
 }
