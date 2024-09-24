@@ -6,8 +6,9 @@ edition = "2021"
 [dependencies]
 actix-cors = "0.7.0"
 actix-web = "4.9.0"
-chrono = "0.4.38"
+chrono = { version = "0.4.38", features = ["serde"] }
 env_logger = "0.11.5"
+features = "0.10.0"
 jsonwebtoken = "9.3.0"
 serde = { version = "1.0.210", features = ["derive"] }
-sqlx = { version = "0.8.2", features = ["postgres", "runtime-tokio"] }
+sqlx = { version = "0.8.2", features = ["postgres", "runtime-tokio", "chrono"] }

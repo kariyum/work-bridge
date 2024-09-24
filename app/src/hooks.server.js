@@ -4,10 +4,10 @@ import { goto } from '$app/navigation';
 /** @type {import('@sveltejs/kit').Handle} */
 export async function handle({ event, resolve }) {
   // Define your rerouting logic here
-  console.log(`Running server hooks for ${event.url.pathname}`);
+  console.log(`Running server hooks: pathname = '${event.url.pathname}'. Does it start with '/api'? ${event.url.pathname.startsWith('/api')}`);
   // rewrite the request to the API localhost:8080
   if (event.url.pathname.startsWith('/api')) {
-    console.log("Rewriting request to localhost:8080", event.request.url);
+    console.log("Rewriting request to",event.request.url.replace('http://localhost:5173/api', 'http://localhost:8080'));
     const new_request = new Request(
       event.request.url.replace('http://localhost:5173/api', 'http://localhost:8080'),
       event.request

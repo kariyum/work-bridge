@@ -1,5 +1,8 @@
+use std::future::ready;
+
 use actix_cors::Cors;
 use actix_web::{
+    dev::{Service, ServiceResponse},
     get,
     middleware::Logger,
     web::{self},
@@ -8,19 +11,21 @@ use actix_web::{
 use sqlx::postgres::PgPoolOptions;
 
 pub mod security {
-    pub mod token;
     pub mod login;
     pub mod register;
+    pub mod token;
 }
 
 pub mod repo {
     pub mod user;
+    pub mod posts;
 }
 
-use security::token::validate_jwt;
+use repo::user::get_users;
 use security::login::{login, preflight};
 use security::register::register;
-use repo::user::get_users;
+use security::token::validate_jwt;
+use repo::posts::get_posts;
 
 #[get("/")]
 async fn hello(request: HttpRequest) -> impl Responder {
@@ -39,18 +44,57 @@ async fn main() -> std::io::Result<()> {
         .connect("postgres://user:password@localhost:5432/main")
         .await
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
-    
+
     HttpServer::new(move || {
         let cors = Cors::permissive();
         App::new()
             .wrap(cors)
             .app_data(web::Data::new(pool.clone()))
             .wrap(Logger::default())
+            // .service(
+            //     web::scope("")
+            //         .wrap_fn(|req, srv| {
+            //             let is_authorized = req
+            //                 .cookie("Authorization")
+            //                 .map(|cookie| validate_jwt(cookie.value()).ok())
+            //                 .flatten();
+
+            //             // let fut = async move {
+            //             //     if is_authorized.is_some() {
+            //             //         let response = HttpResponse::Unauthorized().finish();
+            //             //         let (req, _pl) = req.into_parts();
+            //             //         return Ok(ServiceResponse::new(req, response));
+            //             //     }
+            //             //     let res = srv.call(req).await?;
+            //             //     Ok(res.into())
+            //             // };
+            //             // Box::pin(fut)
+            //             // let short_circuit = HttpResponse::Unauthorized().finish().map_into_boxed_body();
+            //             let short_circuit_response: std::future::Ready<Result<ServiceResponse, actix_web::Error>> = {
+            //                 if is_authorized.is_some() {
+            //                     let response = HttpResponse::Unauthorized().finish();
+            //                     let (req, _pl) = req.into_parts();
+            //                     ready(Ok(ServiceResponse::new(req, response).map_into_boxed_body()))
+            //                 } else {
+            //                     let fut = srv.call(req);
+            //                     Ok(fut.await?.into())
+            //                 }
+            //             };
+            //             Box::pin(short_circuit_response)
+            //             // Box::pin(async move { Ok(fut.await?) })
+            //         })
+            //         .wrap(Logger::new("%a %{User-Agent}i"))
+            //         .service(hello)
+            //         .service(preflight)
+            //         .service(register)
+            //         .service(get_users),
+            // )
             .service(login)
             .service(hello)
             .service(preflight)
             .service(register)
             .service(get_users)
+            .service(get_posts)
     })
     .bind(("127.0.0.1", 8080))?
     .run()

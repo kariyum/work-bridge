@@ -1,11 +1,11 @@
 use actix_web::{
-    cookie::Cookie,
+    cookie::{time::Duration, Cookie},
     options, post,
-    web::{Form}, HttpResponse, Responder,
+    web::Form, HttpResponse, Responder,
 };
 
 use serde::Deserialize;
-use super::token::generate_jwt;
+use super::token::generate_cookie;
 
 #[derive(Deserialize)]
 struct LoginRequest {
@@ -16,11 +16,7 @@ struct LoginRequest {
 #[post("/login")]
 // async fn login(info: web::Json<LoginRequest>) -> impl Responder {
 pub async fn login(Form(info): Form<LoginRequest>) -> impl Responder {
-    let cookie = Cookie::build("Authorization", generate_jwt(&info.email).unwrap())
-        .path("/")
-        .secure(true)
-        .http_only(true)
-        .finish();
+    let cookie = generate_cookie(info.email.as_str()).unwrap();
     let mut request = HttpResponse::Ok().finish();
     request.add_cookie(&cookie).unwrap();
     request

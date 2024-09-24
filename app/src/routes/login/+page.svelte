@@ -29,7 +29,7 @@
 				<button type="submit" on:click|preventDefault={handleSubmit} >Login</button>
 			</div>
 			<a href="/register">
-				<button>
+				<button style="width: 100%;">
 					Register
 				</button>
 			</a>

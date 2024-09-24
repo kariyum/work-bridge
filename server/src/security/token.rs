@@ -1,7 +1,8 @@
-use serde::{Serialize, Deserialize};
-use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
-use std::env;
+use actix_web::cookie::{time::Duration, Cookie};
 use chrono::Utc;
+use jsonwebtoken::{decode, encode, DecodingKey, EncodingKey, Header, Validation};
+use serde::{Deserialize, Serialize};
+use std::env;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Claims {
@@ -39,4 +40,15 @@ pub fn validate_jwt(token: &str) -> Result<Claims, jsonwebtoken::errors::Error> 
     )
     .map(|data| data.claims);
     claims
+}
+
+pub fn generate_cookie(user_id: &str) -> Result<Cookie, jsonwebtoken::errors::Error> {
+    generate_jwt(user_id).map(|jwt| {
+        Cookie::build("Authorization", jwt)
+            .path("/")
+            .secure(true)
+            .http_only(true)
+            .max_age(Duration::hours(24))
+            .finish()
+    })
 }

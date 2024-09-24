@@ -39,7 +39,8 @@
               }
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -105,7 +106,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Kanban.md",
+                "file": "Problems encountered.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +123,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Kanban.md",
+                "file": "Problems encountered.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,7 +146,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Kanban.md"
+                "file": "Problems encountered.md"
               }
             }
           }
@@ -167,10 +168,10 @@
       "obsidian-kanban:Create new board": false
     }
   },
-  "active": "1bea26298b023727",
+  "active": "055d45cd76033140",
   "lastOpenFiles": [
-    "Problems encountered.md",
     "Kanban.md",
+    "Problems encountered.md",
     "Handle cookies.md",
     "Doc 1.md"
   ]

@@ -4,6 +4,7 @@ use actix_web::{
 
 use serde::Deserialize;
 use sqlx::{Pool, Postgres};
+use std::hash::{BuildHasher, DefaultHasher, Hash, Hasher};
 
 #[derive(Deserialize, Debug)]
 struct RegisterRequest {
@@ -14,7 +15,7 @@ struct RegisterRequest {
     surname: String,
 }
 
-use super::token::generate_jwt;
+use super::token::generate_cookie;
 
 #[post("/register")]
 pub async fn register(
@@ -30,10 +31,13 @@ pub async fn register(
         .acquire()
         .await
         .expect("Failed to acquire a Postgres connection from the pool");
-
+    let mut hasher = DefaultHasher::new();
+    register_request.password.hash(&mut hasher);
+    let hashed_password = hasher.finish();
+    // let password_hash = (register_request.password, 12).unwrap();
     let query = sqlx::query(sql_query)
         .bind(&register_request.email)
-        .bind(&register_request.password)
+        .bind(&hashed_password.to_string())
         .bind(&register_request.role)
         .bind(&register_request.name)
         .bind(&register_request.surname)
@@ -41,11 +45,7 @@ pub async fn register(
         .await
         .expect("Failed to insert user into database");
 
-    let cookie = Cookie::build("Authorization", generate_jwt(&register_request.email).unwrap())
-        .path("/")
-        .secure(true)
-        .http_only(true)
-        .finish();
+    let cookie = generate_cookie(&register_request.email).unwrap();
     let mut request = HttpResponse::Ok().finish();
     request.add_cookie(&cookie).unwrap();
     
