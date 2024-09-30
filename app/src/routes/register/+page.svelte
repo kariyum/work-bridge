@@ -1,5 +1,7 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { cyrb53, validateEmail } from '$lib/utils.js';
+
 	/** @type { HTMLFormElement } */
 	let formElement;
 	/**
@@ -14,10 +16,20 @@
 	async function register() {
 		error_message = '';
 		let formData = new FormData(formElement);
-		console.log('Form Data', formData.entries());
 		let invalid = false;
+		// check confirm_password and password
+		const confirmPassword = formData.get('confirm_password')?.toString();
+		const password = formData.get('password')?.toString();
+		if (!password || !confirmPassword || confirmPassword !== password) {
+			invalid = true;
+		}
+		const email = formData.get('email')?.toString();
+		if (!email || !validateEmail(email)) {
+			invalid = true;
+		}
 		formData.entries().forEach(([key, value]) => {
 			invalid = invalid || !value;
+			console.log(key);
 			if (!value) {
 				let element = document.getElementById(key);
 				if (element) {
@@ -31,8 +43,10 @@
 				}
 			}
 		});
-		console.log(invalid);
 		if (invalid) return;
+		formData.delete('confirm_password');
+		const hashedPassword = cyrb53(password ?? '').toString();
+		formData.set('password', hashedPassword);
 		let data = new URLSearchParams(
 			Array.from(formData.entries()).map(([key, value]) => [key, value.toString()])
 		);
@@ -41,21 +55,19 @@
 			body: data
 		});
 		if (response.ok) { 
-			// wasn't able to check if the cookie was indeed set here
-			// the sveltkit server on the other hand was able to check on the cookie
-			// because it's set http only
 			goto('/');
 		}
 	}
-
+	
 	async function getUsers() {
 		const response = await fetch('/api/users');
 		const data = await response.json();
 		console.log(data);
 	}
+
 </script>
 
-<button on:click={getUsers}> Get users </button>
+<!-- <button on:click={getUsers}> Get users </button> -->
 
 <div class="container">
 	<h1>Register</h1>
@@ -63,7 +75,7 @@
 		<p>
 			{error_message}
 		</p>
-		<input type="text" name="email" id="email" placeholder="Email" required />
+		<input type="email" name="email" id="email" placeholder="Email" required />
 		<input type="password" name="password" id="password" placeholder="Password" required />
 		<input
 			type="password"
@@ -71,8 +83,8 @@
 			id="confirm_password"
 			placeholder="Confirm password"
 		/>
-		<input type="text" name="name" id="name" placeholder="name" required />
-		<input type="text" name="surname" id="surname" placeholder="surname" required />
+		<input type="text" name="name" id="name" placeholder="Name" required />
+		<input type="text" name="surname" id="surname" placeholder="Surname" required />
 		<div class="options" id="role">
 			<span>
 				<input type="radio" id="recruiter" name="role" value="recruiter" required checked />
@@ -97,7 +109,7 @@
 	.container {
 		display: flex;
 		justify-content: space-between;
-		/* align-items: center; */
+		align-items: safe center;
 		flex-wrap: wrap;
 		width: 30%;
 		padding: 10%;

@@ -1,4 +1,3 @@
-/** @type {import('./$types').PageLoad} */
 export async function load({ fetch, params }) {
 	// we try to fetch posts for example
     // if that failed with a 403 unauthorized error

@@ -1,15 +1,17 @@
+use std::future::Future;
+
 use actix_web::{
     get,
-    web::{self}, HttpResponse, Responder,
+    web::{self},
+    HttpResponse, Responder,
 };
 use serde::Serialize;
-use sqlx::PgPool;
-
+use sqlx::{pool::PoolConnection, PgPool, Postgres};
 
 #[derive(Serialize, sqlx::FromRow)]
-struct UserRow {
-    email: String,
-    password: String,
+pub struct UserRow {
+    pub email: String,
+    pub password: String,
 }
 
 #[get("users")]
@@ -27,4 +29,14 @@ pub async fn get_users(data: web::Data<PgPool>) -> impl Responder {
         .expect("Failed to fetch users");
 
     HttpResponse::Ok().json(users)
+}
+
+pub async fn get_user(email: String, password: String, mut client: PoolConnection<Postgres>) -> Option<UserRow> {
+    let users: Option<UserRow> = sqlx::query_as::<_, UserRow>("SELECT * FROM users WHERE email = $1 AND password = $2")
+        .bind(&email)
+        .bind(&password)
+        .fetch_optional(&mut *client)
+        .await
+        .expect("Failed to fetch users");
+    users
 }

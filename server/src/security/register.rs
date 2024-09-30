@@ -31,13 +31,12 @@ pub async fn register(
         .acquire()
         .await
         .expect("Failed to acquire a Postgres connection from the pool");
-    let mut hasher = DefaultHasher::new();
-    register_request.password.hash(&mut hasher);
-    let hashed_password = hasher.finish();
-    // let password_hash = (register_request.password, 12).unwrap();
-    let query = sqlx::query(sql_query)
+        let mut hasher = DefaultHasher::new();
+        register_request.password.hash(&mut hasher);
+        let hashed_password = hasher.finish().to_string();
+        let query = sqlx::query(sql_query)
         .bind(&register_request.email)
-        .bind(&hashed_password.to_string())
+        .bind(&hashed_password)
         .bind(&register_request.role)
         .bind(&register_request.name)
         .bind(&register_request.surname)
