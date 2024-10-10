@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import storage from '$lib/storage';
 	import Navbar from '$lib/components/Navbar.svelte';
+	import CreatePost from '$lib/components/CreatePost.svelte';
 	/**
 	 * @type {import('svelte/store').Writable<boolean>}
 	 */
@@ -43,7 +44,7 @@
 		</div>
 {:else}
 	<Navbar></Navbar>
-	<h1>Some posts lmao</h1>
+	<CreatePost></CreatePost>
 {/if}
 
 <style>
