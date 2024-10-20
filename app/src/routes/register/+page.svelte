@@ -1,18 +1,16 @@
-<script>
+<script lang="ts">
 	import { goto } from '$app/navigation';
+	import { authStore } from '$lib/storage';
 	import { cyrb53, validateEmail } from '$lib/utils.js';
 
-	/** @type { HTMLFormElement } */
-	let formElement;
-	/**
-	 * @type {Map<string, string>}
-	 */
-	let errorMessages = new Map([
+	let formElement: HTMLFormElement;
+	let errorMessages: Map<string, string> = new Map([
 		['email', 'Please enter a valid email'],
 		['password', 'Please enter a valid password'],
 		['confirm_password', 'Passwords do not match']
 	]);
-	let error_message = '';
+	let error_message: string = '';
+	
 	async function register() {
 		error_message = '';
 		let formData = new FormData(formElement);
@@ -54,20 +52,12 @@
 			method: 'POST',
 			body: data
 		});
-		if (response.ok) { 
+		if (response.ok) {
+			authStore.set(true);
 			goto('/');
 		}
 	}
-	
-	async function getUsers() {
-		const response = await fetch('/api/users');
-		const data = await response.json();
-		console.log(data);
-	}
-
 </script>
-
-<!-- <button on:click={getUsers}> Get users </button> -->
 
 <div class="container">
 	<h1>Register</h1>
@@ -83,8 +73,8 @@
 			id="confirm_password"
 			placeholder="Confirm password"
 		/>
-		<input type="text" name="name" id="name" placeholder="Name" required />
-		<input type="text" name="surname" id="surname" placeholder="Surname" required />
+		<input type="text" name="first_name" id="first_name" placeholder="Name" required />
+		<input type="text" name="last_name" id="last_name" placeholder="Last Name" required />
 		<div class="options" id="role">
 			<span>
 				<input type="radio" id="recruiter" name="role" value="recruiter" required checked />
@@ -95,7 +85,14 @@
 				<label for="freelancer">Freelancer</label>
 			</span>
 		</div>
-		<button type="submit">Register</button>
+		<div style="display: flex; justify-content: space-between; width: 100%;">
+			<a href="/login">
+				<button style="width: 100%;">
+					Login
+				</button>
+			</a>
+			<button type="submit">Register</button>
+		</div>
 	</form>
 </div>
 
@@ -111,7 +108,7 @@
 		justify-content: space-between;
 		align-items: safe center;
 		flex-wrap: wrap;
-		width: 30%;
+		width: 60%;
 		padding: 10%;
 		position: absolute;
 		top: 50%;

@@ -1,38 +1,23 @@
-<script>
+<script lang="ts">
 	import { goto } from '$app/navigation';
-	import { login, register } from '$lib/api.js';
-	import { onMount } from 'svelte';
-	import storage from "$lib/storage";
-	import { writable } from 'svelte/store';
+	import { login } from '$lib/api.js';
+	import AlreadyLoggedIn from '$lib/components/AlreadyLoggedIn.svelte';
+	import { authStore } from '$lib/storage';
 	import { cyrb53, validateEmail } from '$lib/utils';
-	import { error } from '@sveltejs/kit';
+	import { onMount } from 'svelte';
 
-
-	/**
-	 * @type {import('svelte/store').Writable<boolean>}
-	 */
-	let store;
 	onMount(() => {
-		store = storage("auth", false);
-		if ($store) {
+		if ($authStore) {
 			goto('/');
 		}
-	})
-	
-	/**
-	 * @type {HTMLInputElement}
-	 */
-	let email_element;
-	/**
-	 * @type {HTMLFormElement}
-	 */
-	let form_element;
-	/**
-	 * @type {HTMLInputElement}
-	 */
-	let password_element;
+	});
+
+	let form_element: HTMLFormElement;
+	let email_element: HTMLInputElement;
+	let password_element: HTMLInputElement;
 	let error_message = '';
 	let final_error_message = '';
+
 	async function handleSubmit() {
 		error_message = '';
 		form_element.reportValidity();
@@ -40,48 +25,55 @@
 		const password = password_element.value;
 		if (!email || !validateEmail(email)) {
 			email_element.style.border = '2px solid red';
-			return
+			return;
 		} else {
 			email_element.style.border = '';
 		}
 		if (!password) {
 			password_element.style.border = '2px solid red';
-			return
+			return;
 		} else {
 			password_element.style.border = '';
 		}
 		const response = await login(email, cyrb53(password).toString());
 		if (response.ok) {
-			store.set(true);
+			authStore.set(true);
 			goto('/');
 		} else {
-			error_message = "Wrong combination"
+			error_message = 'Wrong combination';
 		}
 		final_error_message = error_message;
 	}
 </script>
 
-<div class="container">
-	<h1>Welcome</h1>
-	<form class="fields-container" method="post" on:submit|preventDefault bind:this={form_element}>
-
-		<input name="email" type="email" placeholder="Email" required bind:this={email_element} />
-		<input name="password" type="password" placeholder="Password" required bind:this={password_element}/>
-		<p>
-			{final_error_message}
-		</p>
-		<div class="buttons">
-			<div class="action-buttons">
-				<button type="submit" on:click|preventDefault={handleSubmit} >Login</button>
-				<!-- <a href="/register">
-					<button style="width: 100%;">
-						Register
-					</button>
-				</a> -->
+{#if $authStore}
+	<AlreadyLoggedIn />
+{:else}
+	<div class="container">
+		<h1>Welcome</h1>
+		<form class="fields-container" method="post" on:submit|preventDefault bind:this={form_element}>
+			<input name="email" type="email" placeholder="Email" required bind:this={email_element} />
+			<input
+				name="password"
+				type="password"
+				placeholder="Password"
+				required
+				bind:this={password_element}
+			/>
+			<p>
+				{final_error_message}
+			</p>
+			<div class="buttons">
+				<div class="action-buttons">
+					<button type="submit" on:click|preventDefault={handleSubmit}>Login</button>
+					<a href="/register">
+						<button style="width: 100%;"> Register </button>
+					</a>
+				</div>
 			</div>
-		</div>
-	</form>
-</div>
+		</form>
+	</div>
+{/if}
 
 <style>
 	.action-buttons {
@@ -106,10 +98,11 @@
 	.container {
 		display: flex;
 		justify-content: space-between;
-		/* align-items: center; */
+		flex-direction: row;
 		flex-wrap: wrap;
-		width: 30%;
-		padding: 10%;
+		/* align-items: center; */
+		width: 50%;
+		padding: 0% 10% 0% 10%;
 		position: absolute;
 		top: 50%;
 		left: 50%;
@@ -123,5 +116,4 @@
 		gap: 10px;
 		width: 50%;
 	}
-
 </style>

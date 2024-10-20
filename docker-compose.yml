@@ -29,5 +29,5 @@ services:
         condition: service_healthy
     env_file:
       - .env
-    command: -url=jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB} -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD} migrate
+    command: -url=jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB} -user=${POSTGRES_USER} -password=${POSTGRES_PASSWORD} -X migrate
     # -schema=$(POSTGRES_SCHEMA)

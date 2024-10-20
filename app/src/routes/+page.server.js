@@ -2,6 +2,11 @@ export async function load({ fetch, params }) {
 	// we try to fetch posts for example
     // if that failed with a 403 unauthorized error
     // we display
+    return {
+        props: {
+            posts: []
+        }
+    }
     const response = await fetch("/api/posts");
     console.log("response", response);
     if (response.status == 200) {

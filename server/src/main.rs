@@ -2,11 +2,7 @@ use std::future::ready;
 
 use actix_cors::Cors;
 use actix_web::{
-    dev::{Service, ServiceResponse},
-    get,
-    middleware::Logger,
-    web::{self},
-    App, HttpRequest, HttpResponse, HttpServer, Responder,
+    dev::{Service, ServiceResponse}, get, middleware::Logger, rt, web::{self}, App, HttpRequest, HttpResponse, HttpServer, Responder
 };
 use sqlx::postgres::PgPoolOptions;
 
@@ -35,6 +31,77 @@ async fn hello(request: HttpRequest) -> impl Responder {
     println!("Cookie is {:?}", x);
     HttpResponse::Ok().body("Hello world!")
 }
+use actix_web::Error;
+pub mod websocket {
+    pub mod ws;
+    pub mod messages;
+    pub mod lobby;
+}
+use websocket::ws;
+
+use actix_ws::AggregatedMessage;
+use futures_util::StreamExt as _;
+
+use crate::ws::WsConn;
+use crate::websocket::lobby::Lobby;
+use actix::{Actor, Addr};
+use actix_web::{web::Data, web::Path, web::Payload};
+use uuid::Uuid;
+
+#[get("/{group_id}")]
+async fn start_connection(
+    req: HttpRequest,
+    stream: Payload,
+    path: Path<Uuid>,
+    lobby_addr: Data<Addr<Lobby>>,
+) -> Result<HttpResponse, Error> {
+    let room = path.into_inner();
+    let ws = WsConn::new(
+        room,
+        lobby_addr.get_ref().clone(),
+    );
+
+    let resp = actix_web_actors::ws::start(ws, &req, stream)?;
+    Ok(resp)
+}
+
+async fn echo(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
+    let (res, mut session, stream) = actix_ws::handle(&req, stream)?;
+
+    let mut stream = stream
+        .aggregate_continuations()
+        // aggregate continuation frames up to 1MiB
+        .max_continuation_size(2_usize.pow(20));
+
+    // start task but don't wait for it
+    rt::spawn(async move {
+        // receive messages from websocket
+        while let Some(msg) = stream.next().await {
+            match msg {
+                Ok(AggregatedMessage::Text(text)) => {
+                    // echo text message
+                    session.text(text).await.unwrap();
+                }
+
+                Ok(AggregatedMessage::Binary(bin)) => {
+                    // echo binary message
+                    session.binary(bin).await.unwrap();
+                }
+
+                Ok(AggregatedMessage::Ping(msg)) => {
+                    // respond to PING frame with PONG frame
+                    session.pong(&msg).await.unwrap();
+                }
+
+                _ => {}
+            }
+        }
+    });
+
+    // respond immediately with response connected to WS session
+    Ok(res)
+}
+
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
@@ -44,12 +111,14 @@ async fn main() -> std::io::Result<()> {
         .connect("postgres://user:password@localhost:5432/main")
         .await
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+    let chat_server = Lobby::default().start(); //create and spin up a lobby
 
     HttpServer::new(move || {
         let cors = Cors::permissive();
         App::new()
             .wrap(cors)
             .app_data(web::Data::new(pool.clone()))
+            .app_data(web::Data::new(chat_server.clone())) //register the lobby
             .wrap(Logger::default())
             // .service(
             //     web::scope("")
@@ -95,6 +164,8 @@ async fn main() -> std::io::Result<()> {
             .service(register)
             .service(get_users)
             .service(get_posts)
+            .route("/echo", web::get().to(echo))
+            .service(start_connection)
     })
     .bind(("127.0.0.1", 8080))?
     .run()

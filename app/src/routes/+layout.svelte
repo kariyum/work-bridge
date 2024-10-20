@@ -1,4 +1,12 @@
-<script>
-    import "./styles.css";
+<script context="module">
+	import Navbar from '$lib/components/Navbar.svelte';
+	import { authStore } from '$lib/storage';
+	import './styles.css';
 </script>
-<slot />
+
+{#if $authStore}
+	<Navbar />
+	<slot />
+{:else}
+	<slot />
+{/if}

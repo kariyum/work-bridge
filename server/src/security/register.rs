@@ -11,8 +11,8 @@ struct RegisterRequest {
     email: String,
     password: String,
     role: String,
-    name: String,
-    surname: String,
+    first_name: String,
+    last_name: String,
 }
 
 use super::token::generate_cookie;
@@ -38,8 +38,8 @@ pub async fn register(
         .bind(&register_request.email)
         .bind(&hashed_password)
         .bind(&register_request.role)
-        .bind(&register_request.name)
-        .bind(&register_request.surname)
+        .bind(&register_request.first_name)
+        .bind(&register_request.last_name)
         .execute(&mut *client)
         .await
         .expect("Failed to insert user into database");

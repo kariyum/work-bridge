@@ -1,29 +1,15 @@
-<script>
-	/** @type {import('./$types').PageData} */
-	export let data;
+<script lang="ts">
 	import { onMount } from 'svelte';
-	import storage from '$lib/storage';
+	import { authStore } from '$lib/storage.js';
 	import Navbar from '$lib/components/Navbar.svelte';
 	import CreatePost from '$lib/components/CreatePost.svelte';
-	/**
-	 * @type {import('svelte/store').Writable<boolean>}
-	 */
-	let store;
-	onMount(() => {
-		store = storage('auth', false);
-		if (data.error) {
-			store.set(false);
-		}
-	});
+	import type { Writable } from 'svelte/store';
 
-	// setInterval(() => {
-	// 	if ($store) {
-	// 		console.log('store', $store);
-	// 	}
-	// }, 1000);
 </script>
 
-{#if data.error}
+{#if $authStore}
+	<CreatePost></CreatePost>
+{:else}
 		<div class="container">
 			<div style="margin:auto; text-align:center; font-size:48px;">
 				<h1>Recruit freelancers</h1>
@@ -42,9 +28,7 @@
 				Please <a href="/login">login</a> or <a href="/register">create</a> an account to continue
 			</p> -->
 		</div>
-{:else}
-	<Navbar></Navbar>
-	<CreatePost></CreatePost>
+
 {/if}
 
 <style>
