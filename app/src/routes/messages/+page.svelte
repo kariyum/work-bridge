@@ -1,44 +1,62 @@
 <script lang="ts">
-	let groupId = $state('a9f734b8-090d-4765-8fb0-13e6accf15bd');
+	import type { PageData } from './$types';
+	const { data } = $props<{ data: PageData }>();
+    console.log(data);
+    let groupId = $state('a9f734b8-090d-4765-8fb0-13e6accf15bd');
 	let url = $derived(`ws://localhost:8080/${groupId}`);
-
 	let webSocket: WebSocket;
 	let message: string = $state('');
+	
+	type Message = {
+		sender: string,
+		content: string
+	};
+
+	let messages: Array<Message> = $state([]);
+
 	function onClick(event: Event) {
 		event.preventDefault();
+		if (message.length == 0 || message.trim().length == 0) {
+			return;
+		}
 		webSocket.send(message);
+		const msg: Message = {
+			sender: 'me',
+			content: message
+		};
+		messages.push(msg);
 		message = '';
 		console.log('SENDING MESSAGE', message);
 	}
 
-	let messages: Array<string> = $state(new Array());
-
 	import { onMount } from 'svelte';
-
 	onMount(() => {
 		webSocket = new WebSocket(url);
 		webSocket.onmessage = function (event) {
 			console.log('RECEIVED MESSAGE', event.data);
-			messages.push(event.data);
+			let msg: Message = {
+				sender: 'others',
+				content: event.data
+			};
+			messages.push(msg);
 		};
 	});
 </script>
 
 <div class="component">
 	<div class="container">
-        <div class="users-col">
-            <h1 class="users-header">Discussions</h1>
-        </div>
-		<div class="message-col">
+		<div class="discussions">
+			<h1 class="header">Discussions</h1>
+			<!-- List of Discussions here -->
+		</div>
+		<div class="messages-col">
 			<div class="messages">
 				{#each messages as message}
-					<p class="message">
-						{message}
-					</p>
+					<p class="message" data-sender={message.sender}>{message.content}</p>
 				{/each}
 			</div>
 			<div class="input">
-				<form onsubmit={onClick} class="input">
+				<form onsubmit={onClick} class="input-form">
 					<input type="text" bind:value={message} />
 					<input type="submit" value="Send" />
 				</form>
@@ -48,52 +66,93 @@
 </div>
 
 <style>
-    .users-header {
-        margin: auto;
-        width: min-content;
-    }
-	
-    .container {
-		margin: auto;
-		display: flex;
+	.component {
 		width: 100%;
-		max-height: 800px;
-		justify-content: space-between;
-        gap: 1rem;
+		height: 80vh;
+		display: flex;
 	}
 
-	.users-col {
-		flex-grow: 1;
-        border: 2px solid rgb(211, 211, 211);
+	.container {
+		display: flex;
+		width: 90%;
+        margin: auto;
+		height: 100%;
+		gap: 1rem;
+	}
+
+	.discussions {
+		flex: 1;
+		padding: 1rem;
+		overflow-y: auto;
+        border: 1px solid rgb(204, 204, 204);
         border-radius: 5px;
 	}
 
-	.message-col {
-		flex-grow: 4;
+	.messages-col {
+		flex: 3;
 		display: flex;
 		flex-direction: column;
-		height: 800px;
+		background-color: #fff;
 	}
-	.input {
-		display: flex;
-		width: 100%;
-	}
-	.input > form > input[type='text'] {
-		width: 100%;
+
+	.header {
+		font-size: 1.5rem;
+		margin-bottom: 1rem;
+		color: #333;
+        width: min-content;
+        margin: auto;
 	}
 
 	.messages {
 		flex-grow: 1;
-		max-height: 800px;
 		overflow-y: auto;
-        border: 2px solid rgb(211, 211, 211);
-        border-radius: 5px;
-        max-width: 100%;
+		padding: 1rem;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		background-color: #f7f7f7;
 	}
 
-	.component {
-		width: 90%;
-        margin: auto;
+	.message {
+		padding: 0.75rem;
+		border-radius: 9px;
+		background-color: #e0e0e0;
+		width: fit-content;
+		max-width: 70%;
+	}
+
+	.message[data-sender='me'] {
+		margin-left: auto;
+		background-color: #007bff;
+		color: #fff;
+	}
+
+	.message {
+		margin: 0.5rem 0.5rem 0.5rem 0.5rem;
+	}
+
+	.input {
+		display: flex;
+		width: 100%;
+		padding-top: 1rem;
+	}
+
+	.input-form {
+		display: flex;
+		width: 100%;
+	}
+
+	.input-form input[type='text'] {
+		flex: 1;
+		padding: 0.75rem;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		margin-right: 0.5rem;
+	}
+
+	.input-form input[type='submit'] {
+		padding: 0.75rem 1rem;
+		border-radius: 5px;
+		cursor: pointer;
 	}
 
 </style>
