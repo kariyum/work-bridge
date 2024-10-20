@@ -59,7 +59,7 @@ CREATE TABLE
         user_ids TEXT[] NOT NULL, -- array of user_id
         created_by VARCHAR(255) NOT NULL, -- admin
         title VARCHAR(255) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (created_by) REFERENCES users (email)
     );
 

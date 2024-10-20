@@ -1,18 +1,30 @@
 export const ssr = false;
-
+interface Discussion {
+    id: number;
+    title: string;
+    created_at: string;
+    created_by: string;
+    user_ids: Array<string>
+}
 export const load = async () => {
     const response = await fetch("/api/discussions");
-    console.log("response", response);
-    if (response.status == 200) {
-        return {
-            props: {
-                posts: await response.json()
+    try {
+        const discussions = await response.json();
+        console.log("response", response);
+        if (response.ok) {
+            return {
+                discussions: discussions as Array<Discussion>,
+            }
+        } else {
+            return {
+                error: "You are not authorized to view this page",
+                discussions: [] as Array<Discussion>
             }
         }
-    } else {
+    } catch (error) {
         return {
-            error: "You are not authorized to view this page"
+            error: "An error occurred",
+            discussions: [] as Array<Discussion>
         }
     }
-  return { status: 200, body: 'Hello, world!' };
 };

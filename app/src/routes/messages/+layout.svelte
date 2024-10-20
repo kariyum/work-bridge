@@ -53,7 +53,7 @@
 			{/each}
 		</div>
 		<div class="messages-col">
-			<div class="messages">
+			<!-- <div class="messages">
 				{#each messages as message}
 					<p class="message" data-sender={message.sender}>{message.content}</p>
 				{/each}
@@ -63,7 +63,8 @@
 					<input type="text" bind:value={message} />
 					<input type="submit" value="Send" />
 				</form>
-			</div>
+			</div> -->
+            <slot/>
 		</div>
 	</div>
 </div>

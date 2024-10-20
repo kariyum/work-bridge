@@ -1,7 +1,6 @@
 <script lang="ts">
 
-	const { data } = $props();
-	console.log("UI data", data.discussions);
+	const { data, discussions } = $props();
 
 	let groupId = $state('a9f734b8-090d-4765-8fb0-13e6accf15bd');
 	let url = $derived(`ws://localhost:8080/${groupId}`);
@@ -13,7 +12,7 @@
 		content: string
 	};
 
-	let messages: Array<Message> = $state([]);
+	let messages: Array<Message> = $state(data.messages);
 
 	function onClick(event: Event) {
 		event.preventDefault();
@@ -48,9 +47,7 @@
 	<div class="container">
 		<div class="discussions">
 			<h1 class="header">Discussions</h1>
-			{#each data.discussions as discussion}
-				<p><a href="/messages/{discussion.id}">{discussion.title}</a></p>
-			{/each}
+
 		</div>
 		<div class="messages-col">
 			<div class="messages">

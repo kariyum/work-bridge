@@ -17,6 +17,11 @@ pub mod repo {
     pub mod posts;
 }
 
+pub mod messaging {
+    pub mod discussions;
+}
+use messaging::discussions::{get_discussions, post_discussions};
+
 use repo::user::get_users;
 use security::login::{login, preflight};
 use security::register::register;
@@ -164,6 +169,8 @@ async fn main() -> std::io::Result<()> {
             .service(register)
             .service(get_users)
             .service(get_posts)
+            .service(get_discussions)
+            .service(get_discussions)
             .route("/echo", web::get().to(echo))
             .service(start_connection)
     })
