@@ -1,6 +1,6 @@
 <script lang="ts">
 
-	const { data, discussions } = $props();
+	const { data } = $props();
 
 	let groupId = $state('a9f734b8-090d-4765-8fb0-13e6accf15bd');
 	let url = $derived(`ws://localhost:8080/${groupId}`);
@@ -43,26 +43,16 @@
 	});
 </script>
 
-<div class="component">
-	<div class="container">
-		<div class="discussions">
-			<h1 class="header">Discussions</h1>
-
-		</div>
-		<div class="messages-col">
-			<div class="messages">
-				{#each messages as message}
-					<p class="message" data-sender={message.sender}>{message.content}</p>
-				{/each}
-			</div>
-			<div class="input">
-				<form onsubmit={onClick} class="input-form">
-					<input type="text" bind:value={message} />
-					<input type="submit" value="Send" />
-				</form>
-			</div>
-		</div>
-	</div>
+<div class="messages">
+    {#each messages as message}
+        <p class="message" data-sender={message.sender}>{message.content}</p>
+    {/each}
+</div>
+<div class="input">
+    <form onsubmit={onClick} class="input-form">
+        <input type="text" bind:value={message} />
+        <input type="submit" value="Send" />
+    </form>
 </div>
 
 <style>

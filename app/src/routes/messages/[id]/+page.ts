@@ -1,7 +1,7 @@
 export const ssr = false;
 
-export const load = async () => {
-    // const response = await fetch("/api/discussions");
+export const load = async ( {fetch} ) => {
+    // const response = await fetch("/api/messages");
     type Message = {
 		sender: string,
 		content: string
@@ -31,7 +31,51 @@ export const load = async () => {
             {
                 sender: "Jane",
                 content: "That's great to hear"
-            }
+            },
+            {
+                sender: "me",
+                content: "I know right"
+            },
+            {
+                sender: "Jane",
+                content: "I have to go now, bye"
+            },
+            {
+                sender: "me",
+                content: "Bye"
+            },
+            {
+                sender: "Jane",
+                content: "That's great to hear"
+            },
+            {
+                sender: "me",
+                content: "I know right"
+            },
+            {
+                sender: "Jane",
+                content: "I have to go now, bye"
+            },
+            {
+                sender: "me",
+                content: "Bye"
+            },
+            {
+                sender: "Jane",
+                content: "That's great to hear"
+            },
+            {
+                sender: "me",
+                content: "I know right"
+            },
+            {
+                sender: "Jane",
+                content: "I have to go now, bye"
+            },
+            {
+                sender: "me",
+                content: "Bye"
+            },
         ]
     }
 };

@@ -3,70 +3,17 @@
 	const { data } = $props();
 	console.log("UI data", data.discussions);
 
-	let groupId = $state('a9f734b8-090d-4765-8fb0-13e6accf15bd');
-	let url = $derived(`ws://localhost:8080/${groupId}`);
-	let webSocket: WebSocket;
-	let message: string = $state('');
-	
-	type Message = {
-		sender: string,
-		content: string
-	};
-
-	let messages: Array<Message> = $state([]);
-
-	function onClick(event: Event) {
-		event.preventDefault();
-		if (message.length == 0 || message.trim().length == 0) {
-			return;
-		}
-		webSocket.send(message);
-		const msg: Message = {
-			sender: 'me',
-			content: message
-		};
-		messages.push(msg);
-		message = '';
-		console.log('SENDING MESSAGE', message);
-	}
-
-	import { onMount } from 'svelte';
-	onMount(() => {
-		webSocket = new WebSocket(url);
-		webSocket.onmessage = function (event) {
-			console.log('RECEIVED MESSAGE', event.data);
-			let msg: Message = {
-				sender: 'others',
-				content: event.data
-			};
-			messages.push(msg);
-		};
-	});
 </script>
 
-<div class="component">
-	<div class="container">
-		<div class="discussions">
-			<h1 class="header">Discussions</h1>
-			{#each data.discussions as discussion}
-				<p><a href="/messages/{discussion.id}">{discussion.title}</a></p>
-			{/each}
-		</div>
-		<div class="messages-col">
-			<div class="messages">
-				{#each messages as message}
-					<p class="message" data-sender={message.sender}>{message.content}</p>
-				{/each}
-			</div>
-			<div class="input">
-				<form onsubmit={onClick} class="input-form">
-					<input type="text" bind:value={message} />
-					<input type="submit" value="Send" />
-				</form>
-			</div>
-		</div>
+
+<div class="messages-col">
+	<div class="messages">
+		<h1>
+			Select a discussion please! 😊
+		</h1>
 	</div>
 </div>
+
 
 <style>
 	.component {

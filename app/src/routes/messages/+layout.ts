@@ -6,7 +6,7 @@ interface Discussion {
     created_by: string;
     user_ids: Array<string>
 }
-export const load = async () => {
+export const load = async ({fetch }) => {
     const response = await fetch("/api/discussions");
     try {
         const discussions = await response.json();

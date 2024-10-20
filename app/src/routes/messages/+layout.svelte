@@ -1,47 +1,7 @@
 <script lang="ts">
 
-	const { data } = $props();
-	console.log("UI data", data.discussions);
-
-	let groupId = $state('a9f734b8-090d-4765-8fb0-13e6accf15bd');
-	let url = $derived(`ws://localhost:8080/${groupId}`);
-	let webSocket: WebSocket;
-	let message: string = $state('');
+	export let data;
 	
-	type Message = {
-		sender: string,
-		content: string
-	};
-
-	let messages: Array<Message> = $state([]);
-
-	function onClick(event: Event) {
-		event.preventDefault();
-		if (message.length == 0 || message.trim().length == 0) {
-			return;
-		}
-		webSocket.send(message);
-		const msg: Message = {
-			sender: 'me',
-			content: message
-		};
-		messages.push(msg);
-		message = '';
-		console.log('SENDING MESSAGE', message);
-	}
-
-	import { onMount } from 'svelte';
-	onMount(() => {
-		webSocket = new WebSocket(url);
-		webSocket.onmessage = function (event) {
-			console.log('RECEIVED MESSAGE', event.data);
-			let msg: Message = {
-				sender: 'others',
-				content: event.data
-			};
-			messages.push(msg);
-		};
-	});
 </script>
 
 <div class="component">
