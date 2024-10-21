@@ -8,22 +8,32 @@ interface Discussion {
 }
 export const load = async ({fetch }) => {
     const response = await fetch("/api/discussions");
+    if (response.status === 401) {
+        return {
+            error: "Unauthorized",
+            status: 401,
+            discussions: [] as Array<Discussion>
+        }
+    }
     try {
         const discussions = await response.json();
         console.log("response", response);
         if (response.ok) {
             return {
                 discussions: discussions as Array<Discussion>,
+                status: response.status,
             }
         } else {
             return {
-                error: "You are not authorized to view this page",
-                discussions: [] as Array<Discussion>
+                error: "Something went wrong",
+                discussions: [] as Array<Discussion>,
+                status: response.status
             }
         }
     } catch (error) {
         return {
             error: "An error occurred",
+            status: response.status,
             discussions: [] as Array<Discussion>
         }
     }

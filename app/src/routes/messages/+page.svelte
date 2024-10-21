@@ -1,21 +1,20 @@
-<script lang="ts">
-
-	const { data } = $props();
-	console.log("UI data", data.discussions);
-
-</script>
-
-
 <div class="messages-col">
 	<div class="messages">
-		<h1>
-			Select a discussion please! 😊
-		</h1>
+		<h1>Select a discussion please! 😊</h1>
 	</div>
 </div>
 
-
 <style>
+	h1 {
+		font-size: 1.5rem;
+		color: #333;
+		background-color: #f7f7f7;
+		position: relative;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: fit-content;
+	}
 	.component {
 		width: 100%;
 		height: 80vh;
@@ -25,7 +24,7 @@
 	.container {
 		display: flex;
 		width: 90%;
-        margin: auto;
+		margin: auto;
 		height: 100%;
 		gap: 1rem;
 	}
@@ -34,8 +33,8 @@
 		flex: 1;
 		padding: 1rem;
 		overflow-y: auto;
-        border: 1px solid rgb(204, 204, 204);
-        border-radius: 5px;
+		border: 1px solid rgb(204, 204, 204);
+		border-radius: 5px;
 	}
 
 	.messages-col {
@@ -49,8 +48,8 @@
 		font-size: 1.5rem;
 		margin-bottom: 1rem;
 		color: #333;
-        width: min-content;
-        margin: auto;
+		width: min-content;
+		margin: auto;
 	}
 
 	.messages {
@@ -104,5 +103,4 @@
 		border-radius: 5px;
 		cursor: pointer;
 	}
-
 </style>
