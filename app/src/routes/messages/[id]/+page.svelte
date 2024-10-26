@@ -1,9 +1,12 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import { authStore } from '$lib/storage';
+	import { onDestroy } from 'svelte';
 
 	const { data } = $props();
 
 	let groupId = $state('a9f734b8-090d-4765-8fb0-13e6accf15bd');
-	let url = $derived(`ws://localhost:8080/${groupId}`);
+	let url = $derived(`/api/${groupId}`);
 	let webSocket: WebSocket;
 	let message: string = $state('');
 	
@@ -24,13 +27,27 @@
 			sender: 'me',
 			content: message
 		};
-		messages.push(msg);
+		// messages.push(msg);
+		messages = [...messages, msg];
 		message = '';
-		console.log('SENDING MESSAGE', message);
 	}
-
+	import { tick } from 'svelte';
+	let viewport: HTMLDivElement;
+	$effect.pre(() => {
+		messages;
+		const autoscroll = viewport && viewport.offsetHeight + viewport.scrollTop > viewport.scrollHeight - 100;
+		if (viewport) {
+			tick().then(() => {
+				viewport.scrollTo(0, viewport.scrollHeight);
+			});
+		}
+	});
 	import { onMount } from 'svelte';
 	onMount(() => {
+		if (!$authStore) {
+			goto("/")
+		}
+		viewport.scrollTo(0, viewport.scrollHeight);
 		webSocket = new WebSocket(url);
 		webSocket.onmessage = function (event) {
 			console.log('RECEIVED MESSAGE', event.data);
@@ -38,12 +55,17 @@
 				sender: 'others',
 				content: event.data
 			};
-			messages.push(msg);
+			// messages.push(msg);
+			messages = [...messages, msg];
 		};
+	});
+
+	onDestroy(() => {
+		webSocket.close();
 	});
 </script>
 
-<div class="messages">
+<div class="messages" bind:this={viewport}>
     {#each messages as message}
         <p class="message" data-sender={message.sender}>{message.content}</p>
     {/each}

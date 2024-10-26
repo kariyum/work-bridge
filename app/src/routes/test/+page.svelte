@@ -1,12 +1,14 @@
 <script lang="ts">
-	let groupId = $state("a9f734b8-090d-4765-8fb0-13e6accf15bd");
-	let url = $derived(`ws://localhost:8080/${groupId}`);
-	let webSocket = new WebSocket(url);
+	
+	let groupId = "a9f734b8-090d-4765-8fb0-13e6accf15bd";
+	let url = `ws://localhost:8080/${groupId}`;
+	
+	let ws = new WebSocket(url);
 
 	let message: string;
 	function onClick(event: Event) {
         event.preventDefault();
-		webSocket.send(message);
+		ws.send(message);
 		console.log('SENDING MESSAGE', message);
 	}
 
@@ -15,7 +17,7 @@
 	import { onMount } from 'svelte';
 
 	onMount(() => {
-		webSocket.onmessage = function (event) {
+		ws.onmessage = function (event) {
 			console.log('RECEIVED MESSAGE', event.data);
 			messages.push(event.data);
 		};

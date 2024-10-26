@@ -2,7 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { authStore } from '$lib/storage.js';
 
-	let { data } = $props();
+	let { data, children } = $props();
 	if (data.status === 401) {
 		authStore.set(false);
 		goto('/');
@@ -18,18 +18,7 @@
 			{/each}
 		</div>
 		<div class="messages-col">
-			<!-- <div class="messages">
-				{#each messages as message}
-					<p class="message" data-sender={message.sender}>{message.content}</p>
-				{/each}
-			</div>
-			<div class="input">
-				<form onsubmit={onClick} class="input-form">
-					<input type="text" bind:value={message} />
-					<input type="submit" value="Send" />
-				</form>
-			</div> -->
-            <slot/>
+            {@render children()}
 		</div>
 	</div>
 </div>
@@ -37,7 +26,7 @@
 <style>
 	.component {
 		width: 100%;
-		height: 80vh;
+		height: 90vh;
 		display: flex;
 	}
 

@@ -6,7 +6,7 @@ export const load = async ( {fetch} ) => {
 		sender: string,
 		content: string
 	};
-    return {
+    return await Promise.resolve({
         messages: [
             {
                 sender: "me",
@@ -77,5 +77,5 @@ export const load = async ( {fetch} ) => {
                 content: "Bye"
             },
         ]
-    }
+    });
 };
