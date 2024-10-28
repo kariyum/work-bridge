@@ -1,88 +1,136 @@
 <script lang="ts">
-	
-	let groupId = "a9f734b8-090d-4765-8fb0-13e6accf15bd";
-	let url = `ws://localhost:8080/${groupId}`;
-	
-	let ws = new WebSocket(url);
+	import { onMount, onDestroy } from 'svelte';
+	import { Editor } from '@tiptap/core';
+	import StarterKit from '@tiptap/starter-kit';
+	import Link from '@tiptap/extension-link';
 
-	let message: string;
-	function onClick(event: Event) {
-        event.preventDefault();
-		ws.send(message);
-		console.log('SENDING MESSAGE', message);
-	}
+	let element: HTMLDivElement;
+	let editor: Editor | undefined;
 
-	let messages: Array<string> = $state(new Array());
-
-	import { onMount } from 'svelte';
-
+	let content = '';
 	onMount(() => {
-		ws.onmessage = function (event) {
-			console.log('RECEIVED MESSAGE', event.data);
-			messages.push(event.data);
-		};
+		editor = new Editor({
+			editorProps: {
+				attributes: {
+					class: 'editor'
+				}
+			},
+			element: element,
+			extensions: [
+				StarterKit,
+				Link.configure({
+					openOnClick: false,
+					autolink: true,
+					defaultProtocol: 'https'
+				})
+			],
+			content: '<p>Placeholder</p>',
+			onTransaction: () => {
+				// force re-render so `editor.isActive` works as expected
+				editor = editor;
+			}
+		});
+		editor.on('update', ({ editor }) => {
+			// console.log('editor html', editor.getHTML());
+			content = editor.getHTML();
+		});
+	});
+
+	onDestroy(() => {
+		if (editor) {
+			editor.destroy();
+		}
 	});
 </script>
-{url}
-<h1>Connecting to '{groupId}'</h1>
-<input type="text" name="group id" id="groupid" bind:value={groupId}>
-<div class="component">
-	<div class="container">
-		<div class="users-col">USERS</div>
-		<div class="message-col">
-			<div class="messages">
-				{#each messages as message}
-					<p>
-						{message}
-					</p>
-				{/each}
-			</div>
-			<div class="input">
-				<form onsubmit={onClick} class="input">
-					<input type="text" bind:value={message} />
-					<input type="submit" value="Send" />
-				</form>
-			</div>
-		</div>
+
+{#if editor}
+	<div class="button-container">
+		<button
+			onclick={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
+			class:active={editor.isActive('heading', { level: 1 })}
+		>
+			H1
+		</button>
+		<button
+			onclick={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+			class:active={editor.isActive('heading', { level: 2 })}
+		>
+			H2
+		</button>
+		<button
+			onclick={() => editor?.chain().focus().setParagraph().run()}
+			class:active={editor.isActive('paragraph')}
+		>
+			P
+		</button>
+		<button
+			onclick={() => editor?.chain().focus().toggleBold().run()}
+			class:active={editor.isActive('bold')}
+		>
+			B
+		</button>
+		<button
+			onclick={() => editor?.chain().focus().toggleItalic().run()}
+			class:active={editor.isActive('i')}
+		>
+			I
+		</button>
+		<button
+			onclick={() => editor?.chain().focus().toggleOrderedList().run()}
+			class:active={editor.isActive('orderedList')}
+		>
+			Ordered List
+		</button>
+		<button
+			onclick={() => editor?.chain().focus().toggleBulletList().run()}
+			class:active={editor.isActive('bulletList')}
+		>
+			Unordered List
+		</button>
 	</div>
-</div>
+{/if}
+
+<div bind:this={element}></div>
+
+<!-- 
+<hr />
+
+Displayed:
+<pre>
+	{@html content}
+</pre> -->
 
 <style>
-	.container {
-		margin: auto;
+	button.active {
+		background: black;
+		color: white;
+	}
+	button-container {
 		display: flex;
-		width: 70%;
-		max-height: 800px;
-		justify-content: stretch;
 	}
 
-	.users-col {
-		flex-grow: 1;
+	:global(.editor) {
+		margin: 1rem;
+		padding: 0.5rem;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		min-height: 30vh;
 	}
 
-	.message-col {
-		flex-grow: 1;
-		display: flex;
-		flex-direction: column;
-		justify-content: stretch;
-        height: 800px;
-	}
-	.input {
-		display: flex;
-		width: 100%;
-	}
-	.input > form > input[type="text"] {
-		width: 100%;
+	:global(.editor:focus) {
+		outline: none;
 	}
 
-	.messages {
-		width: 100%;
-		flex-grow: 1;
-        max-height: 800px;
-        overflow-y: auto;
+	:global(ol) {
+		margin-left: 2rem;
 	}
 
-	.component {
-		width: 100%;
+	:global(ul) {
+		margin-left: 2rem;
+	}
+
+	:global(p) {
+		display: block;
+		min-height: 1rem;
 	}
 </style>

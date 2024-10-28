@@ -44,6 +44,12 @@ pub mod websocket {
 }
 use websocket::ws;
 
+pub mod project {
+    pub mod repo;
+    pub mod service;
+    pub mod route;
+}
+
 use actix_ws::AggregatedMessage;
 use futures_util::StreamExt as _;
 
@@ -53,7 +59,7 @@ use actix::{Actor, Addr};
 use actix_web::{web::Data, web::Path, web::Payload};
 use uuid::Uuid;
 
-#[get("/{group_id}")]
+#[get("/chat/{group_id}")]
 async fn start_connection(
     req: HttpRequest,
     stream: Payload,
@@ -170,9 +176,12 @@ async fn main() -> std::io::Result<()> {
             .service(get_users)
             .service(get_posts)
             .service(get_discussions)
-            .service(get_discussions)
             .route("/echo", web::get().to(echo))
             .service(start_connection)
+            .service(project::repo::create_project)
+            .service(project::repo::get_projects)
+            .service(project::repo::delete_project)
+            .service(project::repo::get_project)
     })
     .bind(("127.0.0.1", 8080))?
     .run()

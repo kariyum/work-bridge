@@ -1,5 +1,8 @@
 use actix_web::{
-    cookie::Cookie, post, web::{self, Form}, HttpResponse, Responder
+    cookie::Cookie,
+    post,
+    web::{self, Form},
+    HttpResponse, Responder,
 };
 
 use serde::Deserialize;
@@ -31,10 +34,10 @@ pub async fn register(
         .acquire()
         .await
         .expect("Failed to acquire a Postgres connection from the pool");
-        let mut hasher = DefaultHasher::new();
-        register_request.password.hash(&mut hasher);
-        let hashed_password = hasher.finish().to_string();
-        let query = sqlx::query(sql_query)
+    let mut hasher = DefaultHasher::new();
+    register_request.password.hash(&mut hasher);
+    let hashed_password = hasher.finish().to_string();
+    let query = sqlx::query(sql_query)
         .bind(&register_request.email)
         .bind(&hashed_password)
         .bind(&register_request.role)
@@ -47,7 +50,7 @@ pub async fn register(
     let cookie = generate_cookie(&register_request.email).unwrap();
     let mut request = HttpResponse::Ok().finish();
     request.add_cookie(&cookie).unwrap();
-    
+
     println!("Register request is {:?}", register_request);
     println!("Query result is {:?}", query);
 

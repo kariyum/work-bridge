@@ -6,7 +6,7 @@
 	const { data } = $props();
 
 	let groupId = $state('a9f734b8-090d-4765-8fb0-13e6accf15bd');
-	let url = $derived(`/api/${groupId}`);
+	let url = $derived(`/api/chat/${groupId}`);
 	let webSocket: WebSocket;
 	let message: string = $state('');
 	

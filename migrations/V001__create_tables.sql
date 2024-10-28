@@ -25,10 +25,10 @@ CREATE TABLE
         user_id VARCHAR(255) NOT NULL,
         title VARCHAR(255) NOT NULL,
         content TEXT NOT NULL,
-        deadline TIMESTAMP NOT NULL,
-        budget NUMERIC NOT NULL,
+        deadline TIMESTAMPTZ NOT NULL,
+        budget FLOAT4 NOT NULL,
         currency_code VARCHAR(255) NOT NULL, -- enum TD
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (email)
     );
 

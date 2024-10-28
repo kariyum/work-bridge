@@ -30,8 +30,6 @@ pub fn generate_jwt(user_id: &str) -> Result<String, jsonwebtoken::errors::Error
 }
 
 pub fn validate_jwt(token: &str) -> Result<Claims, jsonwebtoken::errors::Error> {
-    println!("Token is {:?}", token);
-    // let secret = env::var("SECRET_KEY").expect("SECRET_KEY must be set");
     let secret = env::var("SECRET_KEY").unwrap_or("secret".to_string());
     let claims = decode::<Claims>(
         token,

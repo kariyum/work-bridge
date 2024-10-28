@@ -1,4 +1,5 @@
 export const ssr = false;
+
 interface Discussion {
     id: number;
     title: string;
@@ -6,7 +7,8 @@ interface Discussion {
     created_by: string;
     user_ids: Array<string>
 }
-export const load = async ({fetch }) => {
+
+export const load = async ({ fetch }) => {
     const response = await fetch("/api/discussions");
     if (response.status === 401) {
         return {
@@ -17,7 +19,6 @@ export const load = async ({fetch }) => {
     }
     try {
         const discussions = await response.json();
-        console.log("response", response);
         if (response.ok) {
             return {
                 discussions: discussions as Array<Discussion>,
@@ -32,7 +33,7 @@ export const load = async ({fetch }) => {
         }
     } catch (error) {
         return {
-            error: "An error occurred",
+            error: `An error occurred while fetching discussions: ${error}`,
             status: response.status,
             discussions: [] as Array<Discussion>
         }

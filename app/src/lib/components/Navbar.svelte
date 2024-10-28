@@ -7,7 +7,8 @@
         <nav>
             <ul>
                 <!-- <li><a href="/"><span class="material-symbols-outlined">home</span></a></li> -->
-                <li><a href="/profile">(Avatar) Name Lastname</a></li> 
+                <li><a href="/project">Create a project</a></li>
+                <li><a href="/profile">(Avatar) Name Lastname</a></li>
                 <li><a href="/messages">Discussions</a></li>
                 <li><a href="/notifications">Notifications</a></li>
                 <li><a href="/settings">Settings</a></li>
