@@ -12,6 +12,7 @@ use sqlx::{pool::PoolConnection, PgPool, Postgres};
 pub struct UserRow {
     pub email: String,
     pub hashed_password: String,
+    pub role: String
 }
 
 #[get("users")]
