@@ -1,6 +1,13 @@
 export const ssr = false;
 
-export async function load({ fetch, params }) {
+export async function load({ fetch, params, cookies }) {
+    if (!cookies.get("Authorization")) {
+        return {
+            status: 401,
+            error: "You are not authorized to view this page",
+            projects: [] as Array<Project>
+        }
+    }
     const response = await fetch("/api/projects", { method: "GET" });
     if (response.status == 401) {
         return {

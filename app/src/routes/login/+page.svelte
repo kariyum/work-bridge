@@ -6,9 +6,9 @@
 	import { cyrb53, validateEmail } from '$lib/utils';
 	import { onMount } from 'svelte';
 
-	onMount(() => {
+	onMount(async () => {
 		if ($authStore) {
-			goto('/');
+			await goto('/');
 		}
 	});
 
@@ -38,7 +38,9 @@
 		const response = await login(email, cyrb53(password).toString());
 		if (response.ok) {
 			authStore.set(true);
-			goto('/');
+			// leave this commented, it will be handled by the onMount closure. 
+			// because otherwise, the GET api will fire twice
+			// await goto('/'); 
 		} else {
 			error_message = 'Wrong combination';
 		}

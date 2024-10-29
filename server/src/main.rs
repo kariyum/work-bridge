@@ -10,6 +10,7 @@ pub mod security {
     pub mod login;
     pub mod register;
     pub mod token;
+    pub mod logout;
 }
 
 pub mod repo {
@@ -182,6 +183,7 @@ async fn main() -> std::io::Result<()> {
             .service(project::repo::get_projects)
             .service(project::repo::delete_project)
             .service(project::repo::get_project)
+            .service(security::logout::logout)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
