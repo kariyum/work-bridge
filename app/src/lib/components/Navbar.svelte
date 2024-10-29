@@ -1,4 +1,15 @@
 <script>
+	import { goto } from "$app/navigation";
+	import { authStore } from "$lib/storage";
+
+    async function logout() {
+        const response = await fetch('/api/logout');
+
+        if (response.status === 200) {
+            authStore.set(false);
+            goto('/');
+        }
+    }
 </script>
 
 <section>
@@ -12,6 +23,9 @@
                 <li><a href="/messages">Discussions</a></li>
                 <li><a href="/notifications">Notifications</a></li>
                 <li><a href="/settings">Settings</a></li>
+                <li>
+                    <button onclick={logout}>Logout</button>
+                </li>
                 <!-- <li><a href="/"><span class="material-symbols-outlined"> person </span></a></li> -->
             </ul>
         </nav>
@@ -27,7 +41,7 @@
 			'opsz' 24;
 	}
 	nav {
-        width: 30%;
+        width: 40%;
         margin-left: auto;
 	}
     .container {
@@ -41,9 +55,18 @@
 	ul {
 		display: flex;
 		justify-content: space-around;
+        align-items: safe center;
 		list-style: none;
 		padding: 0;
 		margin: auto;
 	}
+
+    li, button {
+        height: fit-content;
+    }
+
+    button {
+        padding: 15%;
+    }
 
 </style>

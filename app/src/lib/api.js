@@ -3,8 +3,6 @@
  * @param {String} password
  */
 export async function login(email, password) {
-    // formData.append('email', 'karim');
-    // formData.append('password', 'karim');
     const response = await fetch('/api/login', {
         method: 'POST',
         headers: {
