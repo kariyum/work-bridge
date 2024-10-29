@@ -47,7 +47,7 @@ pub async fn register(
         .await
         .expect("Failed to insert user into database");
 
-    let cookie = generate_cookie(&register_request.email).unwrap();
+    let cookie = generate_cookie(&register_request.email, &register_request.role).unwrap();
     let mut request = HttpResponse::Ok().finish();
     request.add_cookie(&cookie).unwrap();
 

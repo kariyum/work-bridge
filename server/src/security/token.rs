@@ -8,9 +8,10 @@ use std::env;
 pub struct Claims {
     pub sub: String,
     pub exp: usize,
+    pub role: String,
 }
 
-pub fn generate_jwt(user_id: &str) -> Result<String, jsonwebtoken::errors::Error> {
+pub fn generate_jwt(user_id: &str, role: &str) -> Result<String, jsonwebtoken::errors::Error> {
     let expiration = Utc::now()
         .checked_add_signed(chrono::Duration::hours(24))
         .expect("valid timestamp")
@@ -19,8 +20,8 @@ pub fn generate_jwt(user_id: &str) -> Result<String, jsonwebtoken::errors::Error
     let my_claims = Claims {
         sub: user_id.to_owned(),
         exp: expiration, // 24 hours
+        role: role.to_owned()
     };
-    // let secret = env::var("SECRET_KEY").expect("SECRET_KEY must be set");
     let secret = env::var("SECRET_KEY").unwrap_or("secret".to_string());
     encode(
         &Header::default(),
@@ -40,8 +41,8 @@ pub fn validate_jwt(token: &str) -> Result<Claims, jsonwebtoken::errors::Error> 
     claims
 }
 
-pub fn generate_cookie(user_id: &str) -> Result<Cookie, jsonwebtoken::errors::Error> {
-    generate_jwt(user_id).map(|jwt| {
+pub fn generate_cookie<'a>(user_id: &'a str, role: &'a str) -> Result<Cookie<'a>, jsonwebtoken::errors::Error> {
+    generate_jwt(user_id, role).map(|jwt| {
         Cookie::build("Authorization", jwt)
             .path("/")
             .secure(true)
