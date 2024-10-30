@@ -1,10 +1,8 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { authStore } from '$lib/storage.js';
 
 	let { data, children } = $props();
 	if (data.status === 401) {
-		authStore.set(false);
 		goto('/');
 	}
 </script>

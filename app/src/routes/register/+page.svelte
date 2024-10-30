@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { authStore } from '$lib/storage';
 	import { cyrb53, validateEmail } from '$lib/utils.js';
 
 	let formElement: HTMLFormElement;
@@ -53,7 +52,6 @@
 			body: data
 		});
 		if (response.ok) {
-			authStore.set(true);
 			goto('/');
 		}
 	}

@@ -1,12 +1,13 @@
-<script context="module">
+<script lang="ts">
 	import Navbar from '$lib/components/Navbar.svelte';
-	import { authStore } from '$lib/storage';
 	import './styles.css';
+	import { userStore } from '$lib/storage';
+	let { data, children } = $props();
 </script>
 
-{#if $authStore}
-	<Navbar />
-	<slot />
+{#if $userStore}
+	<Navbar user={$userStore} />
+	{@render children()}
 {:else}
-	<slot />
+	{@render children()}
 {/if}

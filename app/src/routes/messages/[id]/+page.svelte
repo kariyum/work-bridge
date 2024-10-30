@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { authStore } from '$lib/storage';
 	import { onDestroy } from 'svelte';
 
 	const { data } = $props();
@@ -44,9 +43,6 @@
 	});
 	import { onMount } from 'svelte';
 	onMount(() => {
-		if (!$authStore) {
-			goto("/")
-		}
 		viewport.scrollTo(0, viewport.scrollHeight);
 		webSocket = new WebSocket(url);
 		webSocket.onmessage = function (event) {

@@ -1,13 +1,14 @@
-export const ssr = false;
+// when this API is invalidated for some reason 
+// the component is not re-rendered if the load function runs only on the server
 
-export async function load({ fetch, params, cookies }) {
-    if (!cookies.get("Authorization")) {
-        return {
-            status: 401,
-            error: "You are not authorized to view this page",
-            projects: [] as Array<Project>
-        }
-    }
+export async function load({ fetch, params }) {
+    // if (!cookies.get("Authorization")) {
+    //     return {
+    //         status: 401,
+    //         error: "You are not authorized to view this page",
+    //         projects: [] as Array<Project>
+    //     }
+    // }
     const response = await fetch("/api/projects", { method: "GET" });
     if (response.status == 401) {
         return {

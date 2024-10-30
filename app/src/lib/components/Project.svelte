@@ -20,9 +20,7 @@
 	<div>
 		{project.deadline}
 	</div>
-	<Task>
-		
-	</Task>
+	<Task></Task>
 	<div class="actions">
 		<button onclick={async () => await goto(`/project/${project.id}`)}>Edit</button>
 		<button onclick={deleteProject}>Delete</button>
@@ -35,7 +33,6 @@
 		border: 1px solid rgb(204, 204, 204);
 		border-radius: 5px;
 		margin: 1rem auto 1rem auto;
-		max-width: 60%;
 		white-space: pre-wrap;
 	}
 
@@ -58,5 +55,4 @@
 		display: block;
 		min-height: 1rem;
 	}
-	
 </style>
