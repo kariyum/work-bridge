@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
 	import { goto } from "$app/navigation";
-	import { authStore } from "$lib/storage";
-
+	import { userStore } from "$lib/storage";
+    let { user }: {user: User} = $props();
     async function logout() {
         const response = await fetch('/api/logout');
 
         if (response.status === 200) {
-            authStore.set(false);
-            goto('/');
+            userStore.set(undefined);
+            await goto('/');
         }
     }
 </script>
@@ -18,8 +18,8 @@
         <nav>
             <ul>
                 <!-- <li><a href="/"><span class="material-symbols-outlined">home</span></a></li> -->
+                <li><a href="/profile">(Avatar) {user.email}</a></li>
                 <li><a href="/project">Create a project</a></li>
-                <li><a href="/profile">(Avatar) Name Lastname</a></li>
                 <li><a href="/messages">Discussions</a></li>
                 <li><a href="/notifications">Notifications</a></li>
                 <li><a href="/settings">Settings</a></li>

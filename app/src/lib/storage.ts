@@ -1,4 +1,4 @@
-import { writable, get } from 'svelte/store'
+import { writable, get, type Writable } from 'svelte/store'
 
 export const storage = (key: string, initValue: any) => {
     const store = writable(initValue);
@@ -25,4 +25,10 @@ export const storage = (key: string, initValue: any) => {
     return store;
 }
 
-export const authStore = storage('auth', false);
+// export const authStore = storage('auth', false);
+interface User {
+    email: String,
+    role: String
+}
+
+export const userStore: Writable<User | undefined> = writable(undefined);

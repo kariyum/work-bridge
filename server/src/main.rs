@@ -184,6 +184,7 @@ async fn main() -> std::io::Result<()> {
             .service(project::repo::delete_project)
             .service(project::repo::get_project)
             .service(security::logout::logout)
+            .service(security::token::whoami)
     })
     .bind(("127.0.0.1", 8080))?
     .run()

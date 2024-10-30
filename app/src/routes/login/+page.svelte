@@ -1,15 +1,15 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import { login } from '$lib/api.js';
 	import AlreadyLoggedIn from '$lib/components/AlreadyLoggedIn.svelte';
-	import { authStore } from '$lib/storage';
+	import { userStore } from '$lib/storage';
 	import { cyrb53, validateEmail } from '$lib/utils';
 	import { onMount } from 'svelte';
 
 	onMount(async () => {
-		if ($authStore) {
-			await goto('/');
-		}
+		// if ($userStore !== null) {
+		// 	await goto('/');
+		// }
 	});
 
 	let form_element: HTMLFormElement;
@@ -37,10 +37,11 @@
 		}
 		const response = await login(email, cyrb53(password).toString());
 		if (response.ok) {
-			authStore.set(true);
+			// authStore.set(true);
 			// leave this commented, it will be handled by the onMount closure. 
 			// because otherwise, the GET api will fire twice
-			// await goto('/'); 
+			await invalidateAll();
+			await goto('/'); 
 		} else {
 			error_message = 'Wrong combination';
 		}
@@ -48,7 +49,7 @@
 	}
 </script>
 
-{#if $authStore}
+{#if $userStore}
 	<AlreadyLoggedIn />
 {:else}
 	<div class="container">

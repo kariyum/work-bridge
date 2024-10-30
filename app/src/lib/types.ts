@@ -8,3 +8,8 @@ interface Project {
     deadline: Date;
     created_at: Date;
 }
+
+interface User {
+    email: String,
+    role: String
+}

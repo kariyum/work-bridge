@@ -20,7 +20,7 @@ pub fn generate_jwt(user_id: &str, role: &str) -> Result<String, jsonwebtoken::e
     let my_claims = Claims {
         sub: user_id.to_owned(),
         exp: expiration, // 24 hours
-        role: role.to_owned()
+        role: role.to_owned(),
     };
     let secret = env::var("SECRET_KEY").unwrap_or("secret".to_string());
     encode(
@@ -41,7 +41,10 @@ pub fn validate_jwt(token: &str) -> Result<Claims, jsonwebtoken::errors::Error> 
     claims
 }
 
-pub fn generate_cookie<'a>(user_id: &'a str, role: &'a str) -> Result<Cookie<'a>, jsonwebtoken::errors::Error> {
+pub fn generate_cookie<'a>(
+    user_id: &'a str,
+    role: &'a str,
+) -> Result<Cookie<'a>, jsonwebtoken::errors::Error> {
     generate_jwt(user_id, role).map(|jwt| {
         Cookie::build("Authorization", jwt)
             .path("/")
@@ -50,4 +53,19 @@ pub fn generate_cookie<'a>(user_id: &'a str, role: &'a str) -> Result<Cookie<'a>
             .max_age(Duration::hours(24))
             .finish()
     })
+}
+
+use actix_web::{get, HttpRequest, HttpResponse, Responder};
+
+#[get("/whoami")]
+pub async fn whoami(request: HttpRequest) -> impl Responder {
+    let claims_option = request
+        .cookie("Authorization")
+        .map(|token| validate_jwt(token.value()).ok())
+        .flatten();
+    if let Some(claims) = claims_option {
+        HttpResponse::Ok().json(claims)
+    } else {
+        HttpResponse::Unauthorized().finish()
+    }
 }
