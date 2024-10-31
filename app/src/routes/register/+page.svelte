@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { cyrb53, validateEmail } from '$lib/utils.js';
 
 	let formElement: HTMLFormElement;
@@ -52,7 +52,8 @@
 			body: data
 		});
 		if (response.ok) {
-			goto('/');
+			await invalidate("/api/whoami")
+			await goto('/');
 		}
 	}
 </script>
