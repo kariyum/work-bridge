@@ -51,6 +51,11 @@ pub mod project {
     pub mod route;
 }
 
+pub mod proposals {
+    pub mod repo;
+    pub mod route;
+}
+
 use actix_ws::AggregatedMessage;
 use futures_util::StreamExt as _;
 
@@ -185,6 +190,7 @@ async fn main() -> std::io::Result<()> {
             .service(project::repo::get_project)
             .service(security::logout::logout)
             .service(security::token::whoami)
+            .service(proposals::route::proposal_routes())
     })
     .bind(("127.0.0.1", 8080))?
     .run()

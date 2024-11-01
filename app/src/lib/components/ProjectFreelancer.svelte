@@ -1,7 +1,26 @@
 <script lang="ts">
-	import { preloadCode } from '$app/navigation';
-
 	let { project }: { project: Project } = $props();
+
+	async function handleEasyApply() {
+		const response = await fetch('/api/proposals', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				project_id: project.id,
+			}),
+		});
+		if (response.ok) {
+			console.log("Applied");
+		} else {
+			console.log("Failed to apply", response.status);
+		}
+	}
+
+	function handleApply() {
+		console.log('Apply');
+	}
 </script>
 
 <div class="outer-container">
@@ -20,7 +39,8 @@
 			{@html project.content}
 		</div>
 		<div class="actions">
-			<button type="button">Apply</button>
+			<button type="button" onclick={handleEasyApply}>Easy apply</button>
+			<button type="button" onclick={handleApply}>Apply</button>
 			<button type="button">Not Interesed</button>
 			<button type="button">Report</button>
 		</div>
