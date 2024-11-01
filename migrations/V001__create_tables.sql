@@ -91,7 +91,7 @@ CREATE TABLE
         project_id INT NOT NULL,
         -- status: 0 - pending, 1 - accepted, 2 - rejected, 3 - cancelled
         status INT NOT NULL, -- ENUM
-        bugdet NUMERIC,
+        budget NUMERIC,
         content TEXT,
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (email),

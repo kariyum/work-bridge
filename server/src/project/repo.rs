@@ -8,15 +8,15 @@ use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 
 #[derive(Serialize, sqlx::FromRow)]
-struct ProjectRow {
-    id: i32,
-    user_id: String,
-    title: String,
-    content: String,
-    budget: f32,
-    currency_code: String,
-    deadline: chrono::DateTime<chrono::Utc>,
-    created_at: chrono::DateTime<chrono::Utc>,
+pub struct ProjectRow {
+    pub id: i32,
+    pub user_id: String,
+    pub title: String,
+    pub content: String,
+    pub budget: f32,
+    pub currency_code: String,
+    pub deadline: chrono::DateTime<chrono::Utc>,
+    pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
 #[derive(Deserialize)]
