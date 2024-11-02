@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { onDestroy } from 'svelte';
 
 	const { data } = $props();
@@ -8,14 +7,20 @@
 	let url = $derived(`/api/chat/${groupId}`);
 	let webSocket: WebSocket;
 	let message: string = $state('');
-	
+
 	type Message = {
-		sender: string,
-		content: string
+		sender: string;
+		content: string;
 	};
+	let localMessages: Array<Message> = $state([]);
+	let messages: Array<Message> = $derived(data.messages.concat(localMessages));
 
-	let messages: Array<Message> = $state(data.messages);
-
+	// $effect is used here to clear localMessages when data.messages changes; 
+	// meaning when the user clicks on another discussion
+	$effect.pre(() => {
+		data.messages;
+		localMessages = [];
+	});
 	function onClick(event: Event) {
 		event.preventDefault();
 		if (message.length == 0 || message.trim().length == 0) {
@@ -26,15 +31,16 @@
 			sender: 'me',
 			content: message
 		};
-		// messages.push(msg);
-		messages = [...messages, msg];
+		console.log('SENDING MESSAGE', message);
+		localMessages.push(msg);
 		message = '';
 	}
 	import { tick } from 'svelte';
 	let viewport: HTMLDivElement;
 	$effect.pre(() => {
 		messages;
-		const autoscroll = viewport && viewport.offsetHeight + viewport.scrollTop > viewport.scrollHeight - 100;
+		// const autoscroll =
+		// 	viewport && viewport.offsetHeight + viewport.scrollTop > viewport.scrollHeight - 100;
 		if (viewport) {
 			tick().then(() => {
 				viewport.scrollTo(0, viewport.scrollHeight);
@@ -51,26 +57,25 @@
 				sender: 'others',
 				content: event.data
 			};
-			// messages.push(msg);
-			messages = [...messages, msg];
+			localMessages.push(msg);
 		};
 	});
-
 	onDestroy(() => {
 		webSocket.close();
 	});
 </script>
 
+{localMessages.length}
 <div class="messages" bind:this={viewport}>
-    {#each messages as message}
-        <p class="message" data-sender={message.sender}>{message.content}</p>
-    {/each}
+	{#each messages as message}
+		<p class="message" data-sender={message.sender}>{message.content}</p>
+	{/each}
 </div>
 <div class="input">
-    <form onsubmit={onClick} class="input-form">
-        <input type="text" bind:value={message} />
-        <input type="submit" value="Send" />
-    </form>
+	<form onsubmit={onClick} class="input-form">
+		<input type="text" bind:value={message} />
+		<input type="submit" value="Send" />
+	</form>
 </div>
 
 <style>
@@ -83,7 +88,7 @@
 	.container {
 		display: flex;
 		width: 90%;
-        margin: auto;
+		margin: auto;
 		height: 100%;
 		gap: 1rem;
 	}
@@ -92,8 +97,8 @@
 		flex: 1;
 		padding: 1rem;
 		overflow-y: auto;
-        border: 1px solid rgb(204, 204, 204);
-        border-radius: 5px;
+		border: 1px solid rgb(204, 204, 204);
+		border-radius: 5px;
 	}
 
 	.messages-col {
@@ -107,8 +112,8 @@
 		font-size: 1.5rem;
 		margin-bottom: 1rem;
 		color: #333;
-        width: min-content;
-        margin: auto;
+		width: min-content;
+		margin: auto;
 	}
 
 	.messages {
@@ -162,5 +167,4 @@
 		border-radius: 5px;
 		cursor: pointer;
 	}
-
 </style>

@@ -12,7 +12,7 @@
 		<div class="discussions">
 			<h1 class="header">Discussions</h1>
 			{#each data.discussions as discussion}
-				<p><a href="/messages/{discussion.id}">{discussion.title}</a></p>
+				<p><a href="/messages/{discussion.id}">{discussion.title} {discussion.id}</a></p>
 			{/each}
 		</div>
 		<div class="messages-col">

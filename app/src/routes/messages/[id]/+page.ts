@@ -1,12 +1,9 @@
-export const ssr = false;
 
-export const load = async ( {fetch} ) => {
+export const load = async ( {fetch, params} ) => {
     // const response = await fetch("/api/messages");
-    type Message = {
-		sender: string,
-		content: string
-	};
+    console.log("Fetching messages", params.id);
     return await Promise.resolve({
+        discussion_id: params.id,
         messages: [
             {
                 sender: "me",
@@ -75,6 +72,10 @@ export const load = async ( {fetch} ) => {
             {
                 sender: "me",
                 content: "Bye"
+            },
+            {
+                sender: "me",
+                content: params.id
             },
         ]
     });

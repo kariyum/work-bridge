@@ -1,6 +1,6 @@
 <div class="messages-col">
 	<div class="messages">
-		<h1>Select a discussion please! 😊</h1>
+		<h1>Select a converstation please! 😊</h1>
 	</div>
 </div>
 
