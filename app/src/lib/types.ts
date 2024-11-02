@@ -13,3 +13,8 @@ interface User {
     email: String,
     role: String
 }
+
+type Message = {
+    sender: string;
+    content: string;
+};
