@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { userStore } from '$lib/storage.js';
 	import { onDestroy } from 'svelte';
+	import { tick } from 'svelte';
 
 	const { data } = $props();
 
@@ -7,57 +9,89 @@
 	let url = $derived(`/api/chat/${groupId}`);
 	let webSocket: WebSocket;
 	let message: string = $state('');
+	let smoothScroll: boolean = false;
+	let viewport: HTMLDivElement;
 
-	type Message = {
-		sender: string;
-		content: string;
-	};
-	let localMessages: Array<Message> = $state([]);
-	let messages: Array<Message> = $derived(data.messages.concat(localMessages));
+	let localMessages: Array<MessagesJsonResponse> = $state([]);
+	let messages: Array<MessagesJsonResponse> = $derived(data.messages.concat(localMessages));
 
-	// $effect is used here to clear localMessages when data.messages changes; 
+	// $effect is used here to clear localMessages when data.messages changes;
 	// meaning when the user clicks on another discussion
 	$effect.pre(() => {
 		data.messages;
 		localMessages = [];
+		smoothScroll = false;
+		if (viewport) {
+			// reset the scroll position
+			viewport.scrollTo({
+				left: 0,
+				top: 0,
+				behavior: 'instant'
+			});
+		}
 	});
+
+	function toClientMessage(str: string) {
+		let res: ClientMessage = {
+			disucssion_id: parseInt(data.discussion_id),
+			content: str
+		};
+		return JSON.stringify(res);
+	}
+
 	function onClick(event: Event) {
 		event.preventDefault();
 		if (message.length == 0 || message.trim().length == 0) {
 			return;
 		}
-		webSocket.send(message);
-		const msg: Message = {
-			sender: 'me',
-			content: message
+		webSocket.send(toClientMessage(message));
+		if ($userStore?.email == undefined) {
+			console.log('Email is undefined');
+			return;
+		}
+		const msg: MessagesJsonResponse = {
+			id: Math.random(),
+			from_user_id: $userStore?.email,
+			content: message,
+			created_at: new Date().toISOString()
 		};
 		console.log('SENDING MESSAGE', message);
 		localMessages.push(msg);
 		message = '';
 	}
-	import { tick } from 'svelte';
-	let viewport: HTMLDivElement;
+
 	$effect.pre(() => {
 		messages;
 		// const autoscroll =
 		// 	viewport && viewport.offsetHeight + viewport.scrollTop > viewport.scrollHeight - 100;
 		if (viewport) {
 			tick().then(() => {
-				viewport.scrollTo(0, viewport.scrollHeight);
+				viewport.scrollTo({
+					left: 0,
+					top: viewport.scrollHeight,
+					behavior: smoothScroll ? 'smooth' : 'instant'
+				});
+				smoothScroll = true;
 			});
 		}
 	});
 	import { onMount } from 'svelte';
 	onMount(() => {
-		viewport.scrollTo(0, viewport.scrollHeight);
+		viewport.scrollTo({ left: 0, top: viewport.scrollHeight, behavior: 'instant' });
+		smoothScroll = true;
 		webSocket = new WebSocket(url);
 		webSocket.onmessage = function (event) {
-			console.log('RECEIVED MESSAGE', event.data);
-			let msg: Message = {
-				sender: 'others',
-				content: event.data
+			// console.log('RECEIVED MESSAGE', event.data);
+			const data = JSON.parse(event.data);
+			const msg: MessagesJsonResponse = {
+				id: Math.random(),
+				from_user_id: data.sender_id, // TODO: get the sender from the server
+				content: data.content,
+				created_at: new Date().toISOString()
 			};
-			localMessages.push(msg);
+			if (msg.from_user_id != $userStore?.email) {
+				localMessages.push(msg);
+			}	
 		};
 	});
 	onDestroy(() => {
@@ -65,10 +99,19 @@
 	});
 </script>
 
-{localMessages.length}
 <div class="messages" bind:this={viewport}>
 	{#each messages as message}
-		<p class="message" data-sender={message.sender}>{message.content}</p>
+		<div
+			class="message"
+			data-sender={message.from_user_id == $userStore?.email ? 'me' : message.from_user_id}
+		>
+			{#if message.from_user_id != $userStore?.email}
+				<p style="background-color: inherit;">
+					{message.from_user_id}:
+				</p>
+			{/if}
+			{message.content}
+		</div>
 	{/each}
 </div>
 <div class="input">
@@ -130,7 +173,8 @@
 		border-radius: 9px;
 		background-color: #e0e0e0;
 		width: fit-content;
-		max-width: 70%;
+		max-width: 70ch;
+		word-wrap: break-word;
 	}
 
 	.message[data-sender='me'] {

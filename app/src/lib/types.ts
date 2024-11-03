@@ -9,12 +9,20 @@ interface Project {
     created_at: Date;
 }
 
+// TODO make this a type instead
 interface User {
-    email: String,
-    role: String
+    email: string,
+    role: string
 }
 
-type Message = {
-    sender: string;
-    content: string;
+type MessagesJsonResponse = {
+    id: number,
+    from_user_id: string,
+    content: string,
+    created_at: string
 };
+
+type ClientMessage = {
+    disucssion_id: number,
+    content: string,
+}

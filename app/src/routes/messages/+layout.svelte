@@ -1,10 +1,21 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { userStore } from '$lib/storage';
 
 	let { data, children } = $props();
 	if (data.status === 401) {
 		goto('/');
 	}
+	let titles = $derived.by(() => {
+		const result = new Map<number, string>();
+		data.discussions.map((discussion) => {
+			const title = discussion.user_ids
+				.filter((email) => email != $userStore?.email)
+				.reduce((userA, userB) => userA + userB, '');
+			result.set(discussion.id, title);
+		});
+		return result;
+	});
 </script>
 
 <div class="component">
@@ -12,11 +23,14 @@
 		<div class="discussions">
 			<h1 class="header">Discussions</h1>
 			{#each data.discussions as discussion}
-				<p><a href="/messages/{discussion.id}">{discussion.title} {discussion.id}</a></p>
+				{@const title = discussion.title ?? titles.get(discussion.id)}
+				<p>
+					<a href="/messages/{discussion.id}">{title}</a>
+				</p>
 			{/each}
 		</div>
 		<div class="messages-col">
-            {@render children()}
+			{@render children()}
 		</div>
 	</div>
 </div>
@@ -31,7 +45,7 @@
 	.container {
 		display: flex;
 		width: 90%;
-        margin: auto;
+		margin: auto;
 		height: 100%;
 		gap: 1rem;
 	}
@@ -40,8 +54,8 @@
 		flex: 1;
 		padding: 1rem;
 		overflow-y: auto;
-        border: 1px solid rgb(204, 204, 204);
-        border-radius: 5px;
+		border: 1px solid rgb(204, 204, 204);
+		border-radius: 5px;
 	}
 
 	.messages-col {
@@ -55,8 +69,8 @@
 		font-size: 1.5rem;
 		margin-bottom: 1rem;
 		color: #333;
-        width: min-content;
-        margin: auto;
+		width: min-content;
+		margin: auto;
 	}
 
 	.messages {
@@ -110,5 +124,4 @@
 		border-radius: 5px;
 		cursor: pointer;
 	}
-
 </style>
