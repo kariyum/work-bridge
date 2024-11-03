@@ -67,12 +67,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "User stories/User to project application.md",
+                "file": "User stories/2 - User to project application.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "User to project application"
+              "title": "2 - User to project application"
             }
           }
         ],
@@ -221,8 +221,9 @@
   },
   "active": "75476a957c3810d7",
   "lastOpenFiles": [
+    "User stories/1 - websocket pgpool.md",
+    "User stories/2 - User to project application.md",
     "Design/Websocket.md",
-    "User stories/User to project application.md",
     "User stories",
     "Design/Workflow designs.md",
     "Design/Web Design Inspirations.md",

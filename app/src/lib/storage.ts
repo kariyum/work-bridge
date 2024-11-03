@@ -27,8 +27,8 @@ export const storage = (key: string, initValue: any) => {
 
 // export const authStore = storage('auth', false);
 interface User {
-    email: String,
-    role: String
+    email: string,
+    role: string
 }
 
 export const userStore: Writable<User | undefined> = writable(undefined);

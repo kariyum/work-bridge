@@ -59,7 +59,7 @@ CREATE TABLE
         id SERIAL PRIMARY KEY,
         user_ids TEXT[] NOT NULL, -- array of user_id
         created_by VARCHAR(255) NOT NULL, -- admin
-        title VARCHAR(255) NOT NULL,
+        title VARCHAR(255), -- can be null if the user did not set a title for the converstation, UI takes care of generating a title to display
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (created_by) REFERENCES users (email)
     );

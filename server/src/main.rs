@@ -2,20 +2,25 @@ use std::future::ready;
 
 use actix_cors::Cors;
 use actix_web::{
-    dev::{Service, ServiceResponse}, get, middleware::Logger, rt, web::{self}, App, HttpRequest, HttpResponse, HttpServer, Responder
+    dev::{Service, ServiceResponse},
+    get,
+    middleware::Logger,
+    rt,
+    web::{self},
+    App, HttpRequest, HttpResponse, HttpServer, Responder,
 };
-use sqlx::postgres::PgPoolOptions;
+use sqlx::{postgres::PgPoolOptions, PgPool};
 
 pub mod security {
     pub mod login;
+    pub mod logout;
     pub mod register;
     pub mod token;
-    pub mod logout;
 }
 
 pub mod repo {
-    pub mod user;
     pub mod posts;
+    pub mod user;
 }
 
 pub mod messaging {
@@ -23,11 +28,11 @@ pub mod messaging {
 }
 use messaging::discussions::{get_discussions, post_discussions};
 
+use repo::posts::get_posts;
 use repo::user::get_users;
 use security::login::{login, preflight};
 use security::register::register;
 use security::token::validate_jwt;
-use repo::posts::get_posts;
 
 #[get("/")]
 async fn hello(request: HttpRequest) -> impl Responder {
@@ -39,16 +44,16 @@ async fn hello(request: HttpRequest) -> impl Responder {
 }
 use actix_web::Error;
 pub mod websocket {
-    pub mod ws;
-    pub mod messages;
     pub mod lobby;
+    pub mod messages;
+    pub mod ws;
 }
 use websocket::ws;
 
 pub mod project {
     pub mod repo;
-    pub mod service;
     pub mod route;
+    pub mod service;
 }
 
 pub mod proposals {
@@ -56,11 +61,16 @@ pub mod proposals {
     pub mod route;
 }
 
+pub mod messages {
+    pub mod repo;
+    // pub mod route;
+}
+
 use actix_ws::AggregatedMessage;
 use futures_util::StreamExt as _;
 
-use crate::ws::WsConn;
 use crate::websocket::lobby::Lobby;
+use crate::ws::WsConn;
 use actix::{Actor, Addr};
 use actix_web::{web::Data, web::Path, web::Payload};
 use uuid::Uuid;
@@ -71,13 +81,20 @@ async fn start_connection(
     stream: Payload,
     path: Path<Uuid>,
     lobby_addr: Data<Addr<Lobby>>,
+    pgpool: web::Data<PgPool>,
 ) -> Result<HttpResponse, Error> {
     let room = path.into_inner();
-    let ws = WsConn::new(
-        room,
-        lobby_addr.get_ref().clone(),
-    );
+    let user_id = req
+        .cookie("Authorization")
+        .map(|cookie| validate_jwt(cookie.value()).ok())
+        .flatten()
+        .map(|claims| claims.sub);
 
+    if user_id.is_none() {
+        return Ok(HttpResponse::Unauthorized().finish());
+    }
+
+    let ws = WsConn::new(room, lobby_addr.get_ref().clone(), pgpool, user_id.unwrap());
     let resp = actix_web_actors::ws::start(ws, &req, stream)?;
     Ok(resp)
 }
@@ -119,7 +136,6 @@ async fn echo(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Er
     Ok(res)
 }
 
-
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
@@ -144,7 +160,6 @@ async fn main() -> std::io::Result<()> {
             //                 .cookie("Authorization")
             //                 .map(|cookie| validate_jwt(cookie.value()).ok())
             //                 .flatten();
-
             //             // let fut = async move {
             //             //     if is_authorized.is_some() {
             //             //         let response = HttpResponse::Unauthorized().finish();
@@ -190,6 +205,7 @@ async fn main() -> std::io::Result<()> {
             .service(project::repo::get_project)
             .service(security::logout::logout)
             .service(security::token::whoami)
+            .service(messages::repo::get_messages)
             .service(proposals::route::proposal_routes())
     })
     .bind(("127.0.0.1", 8080))?

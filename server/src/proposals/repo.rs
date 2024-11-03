@@ -1,4 +1,8 @@
-use crate::{messaging::discussions, project::{self, repo::ProjectRow}, security::token::validate_jwt};
+use crate::{
+    messaging::discussions,
+    project::{self, repo::ProjectRow},
+    security::token::validate_jwt,
+};
 use actix_web::{
     delete, get, post,
     web::{self, Json, Path},
@@ -66,14 +70,21 @@ pub async fn create_proposal(
             .await
             .expect("Failed to fetch project from database");
         if let Some(project) = project {
-            sqlx::query("INSERT INTO discussions (user_ids, created_by, title, created_at) VALUES ($1, $2, $3, $4) RETURNING *")
+            let exists = sqlx::query("SELECT * FROM discussions where user_ids = $1")
                 .bind(vec![&claims.sub, &project.user_id])
-                .bind(&claims.sub)
-                .bind("Discussion about this project")
-                .bind(chrono::Utc::now())
-                .execute(&mut *client)
+                .fetch_optional(&mut *client)
                 .await
-                .expect("Failed to insert discussion into database");
+                .expect("Failed to fetch discussion from database")
+                .is_some();
+            if !exists {
+                sqlx::query("INSERT INTO discussions (user_ids, created_by, created_at) VALUES ($1, $2, $3) RETURNING *")
+                    .bind(vec![&claims.sub, &project.user_id])
+                    .bind(&claims.sub)
+                    .bind(chrono::Utc::now())
+                    .execute(&mut *client)
+                    .await
+                    .expect("Failed to insert discussion into database");
+            }
         }
 
         HttpResponse::Created().json(proposals)
