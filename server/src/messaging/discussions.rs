@@ -23,7 +23,7 @@ struct Discussion {
     id: i32,
     user_ids: Vec<String>,
     created_by: String,
-    title: String,
+    title: Option<String>,
     created_at: chrono::DateTime<chrono::Utc>,
 }
 

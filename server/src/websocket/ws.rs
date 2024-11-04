@@ -74,18 +74,20 @@ impl Actor for WsConn {
     type Context = ws::WebsocketContext<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
+        // called automatically from the websocket route
         println!("WsConn is started");
 
         // register heartbeats
         self.hb(ctx);
 
         let addr = ctx.address();
+        let connect = Connect {
+            addr: addr.recipient(),
+            lobby_id: self.room,
+            self_id: self.id,
+        };
         self.lobby_addr
-            .send(Connect {
-                addr: addr.recipient(),
-                lobby_id: self.room,
-                self_id: self.id,
-            })
+            .send(connect)
             .into_actor(self)
             .then(|res, _, ctx| {
                 match res {

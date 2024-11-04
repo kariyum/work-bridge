@@ -65,18 +65,16 @@
             "id": "75476a957c3810d7",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "excalidraw",
               "state": {
-                "file": "User stories/2 - User to project application.md",
-                "mode": "source",
-                "source": false
+                "file": "Design/websocket_2024-10-17 22.26.09.excalidraw.md"
               },
-              "icon": "lucide-file",
-              "title": "2 - User to project application"
+              "icon": "excalidraw-icon",
+              "title": "websocket_2024-10-17 22.26.09.excalidraw"
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -132,7 +130,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 300,
+    "collapsed": true
   },
   "right": {
     "id": "885ff3a0944b0df5",
@@ -219,15 +218,15 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "75476a957c3810d7",
+  "active": "8b7910ae4554c3d8",
   "lastOpenFiles": [
+    "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
+    "Design/Websocket.md",
     "User stories/1 - websocket pgpool.md",
     "User stories/2 - User to project application.md",
-    "Design/Websocket.md",
     "User stories",
     "Design/Workflow designs.md",
     "Design/Web Design Inspirations.md",
-    "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
     "Entity Relationship Diagram/ERP.md",
     "Diagram.svg",
     "Requirements/Entity Design Model.md",
