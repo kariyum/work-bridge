@@ -22,6 +22,7 @@
 	<div class="container">
 		<div class="discussions">
 			<h1 class="header">Discussions</h1>
+			<hr style="width: 100%;">
 			{#each data.discussions as discussion}
 				{@const title = discussion.title ?? titles.get(discussion.id)}
 				<p>
@@ -47,7 +48,7 @@
 		width: 90%;
 		margin: auto;
 		height: 100%;
-		gap: 1rem;
+		gap: 0.5rem;
 	}
 
 	.discussions {
@@ -59,7 +60,7 @@
 	}
 
 	.messages-col {
-		flex: 3;
+		flex: 5;
 		display: flex;
 		flex-direction: column;
 		background-color: #fff;
@@ -70,7 +71,7 @@
 		margin-bottom: 1rem;
 		color: #333;
 		width: min-content;
-		margin: auto;
+		/* margin: auto; */
 	}
 
 	.messages {

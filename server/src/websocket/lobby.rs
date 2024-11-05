@@ -78,7 +78,12 @@ impl Handler<Connect> for Lobby {
             .iter()
             .filter(|conn_id| *conn_id.to_owned() != msg.self_id)
             .for_each(|conn_id| {
-                // self.send_message(&format!("{} just joined!", msg.self_id), conn_id)
+                // let wsMessage = WsMessage {
+                //     disucssion_id: -1,
+                //     content: format!("{} just joined!", msg.self_id),
+                //     sender_id: msg.self_id.to_string(),
+                // };
+                // self.send_message(&wsMessage, conn_id)
             });
 
         self.sessions.insert(msg.self_id, msg.addr);
