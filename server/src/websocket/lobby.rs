@@ -6,8 +6,8 @@ use uuid::Uuid;
 type Socket = Recipient<WsMessage>;
 
 pub struct Lobby {
-    sessions: HashMap<Uuid, Socket>,     //self id to self
-    rooms: HashMap<Uuid, HashSet<Uuid>>, //room id  to list of users id
+    sessions: HashMap<Uuid, Socket>,     // actor id to actor address
+    rooms: HashMap<Uuid, HashSet<Uuid>>, //room id to list of actor ids
 }
 
 impl Default for Lobby {
@@ -21,13 +21,13 @@ impl Default for Lobby {
 
 impl Lobby {
     fn send_message(&self, message: &WsMessage, receiver_id: &Uuid) {
-        if let Some(socket) = self.sessions.get(receiver_id) {
+        if let Some(mailbox) = self.sessions.get(receiver_id) {
             let msg = WsMessage {
                 disucssion_id: message.disucssion_id,
                 content: message.content.clone(),
                 sender_id: message.sender_id.clone(),
             };
-            let _ = socket.do_send(msg);
+            let _ = mailbox.do_send(msg);
         } else {
             println!("attempting to send message but couldn't find user id.");
         }

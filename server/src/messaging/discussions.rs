@@ -54,13 +54,12 @@ pub async fn post_discussions(
             .fetch_optional(&mut *pg_client)
             .await
             .expect("Failed to fetch discussions");
-            
+
             HttpResponse::Ok().json(discussions)
         }
         None => HttpResponse::Unauthorized().finish(),
     }
 }
-
 
 #[get("/discussions")]
 pub async fn get_discussions(
@@ -84,7 +83,7 @@ pub async fn get_discussions(
             .fetch_all(&mut *pg_client)
             .await
             .expect("Failed to fetch discussions");
-            
+
             HttpResponse::Ok().json(discussions)
         }
         None => HttpResponse::Unauthorized().finish(),

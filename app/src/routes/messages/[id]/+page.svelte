@@ -31,10 +31,10 @@
 		}
 	});
 
-	function toClientMessage(str: string) {
+	function toClientMessage(content: string) {
 		let res: ClientMessage = {
 			disucssion_id: parseInt(data.discussion_id),
-			content: str
+			content: content
 		};
 		return JSON.stringify(res);
 	}
