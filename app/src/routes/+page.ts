@@ -14,7 +14,7 @@ export async function load({ fetch, params }) {
         return {
             status: response.status,
             error: "You are not authorized to view this page",
-            projects: [] as Array<Project>
+            projects: [] as Array<ProjectObject>
         }
     }
     if (response.status == 200) {
@@ -22,20 +22,20 @@ export async function load({ fetch, params }) {
             const data = await response.json();
             return {
                 status: response.status,
-                projects: data as Array<Project>
+                projects: data as Array<ProjectObject>
             }
         } catch (error) {
             return {
                 status: response.status,
                 error: `An error occurred while fetching projects: ${error}`,
-                projects: [] as Array<Project>
+                projects: [] as Array<ProjectObject>
             }
         }
     } else {
         return {
             status: response.status,
             error: "You are not authorized to view this page",
-            projects: [] as Array<Project>
+            projects: [] as Array<ProjectObject>
         }
     }
 }

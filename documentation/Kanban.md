@@ -13,11 +13,13 @@ kanban-plugin: board
 	Consider: 
 	- grpc-web
 	- MessagePack
+- [ ] add role switching
 
 
 ## p2
 
-- [ ] going to /login page should redirect you to the landing page if already logged in
+- [ ] add email verification
+- [ ] add phone number verification
 
 
 ## p1
@@ -26,6 +28,7 @@ kanban-plugin: board
 
 ## doing
 
+- [ ] add profile setup
 
 
 ## tested
@@ -34,6 +37,7 @@ kanban-plugin: board
 
 ## done
 
+- [ ] going to /login page should redirect you to the landing page if already logged in
 - [ ] fix token validation
 
 

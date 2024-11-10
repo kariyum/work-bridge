@@ -2,13 +2,22 @@
 	import { goto } from '$app/navigation';
 	import RichTextEditor from './RichTextEditor.svelte';
 	import Task from './Task.svelte';
+	import Tasks from './Tasks.svelte';
 
-	let { project }: { project: Project | undefined } = $props();
+	let { project }: { project: ProjectObject | undefined } = $props();
+	$effect(() => {
+		project;
+		title = project?.title || '';
+		content = project?.content || '';
+		budget = project?.budget.toString() || '';
+		deadline = toSimpleString(project?.deadline || new Date());
+		console.log(content);
+	})
 	let title = $state(project?.title || '');
 	let content = $state(project?.content || '');
 	let budget = $state(project?.budget.toString() || '');
 	let deadline = $state(toSimpleString(project?.deadline || new Date()));
-	
+
 	function toSimpleString(date: Date) {
 		return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 	}
@@ -81,34 +90,11 @@
 				<input type="text" placeholder="Start Date" />
 			</div> -->
 			<div style="width: 100%;">
-				<Task></Task>
+				<Tasks></Tasks>
 			</div>
 			<button onclick={handleSubmit}>Submit</button>
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->
 		</form>
-
-		<!-- <div>
-			<div class="header">
-				<div>Mobile fitness app</div>
-				<div>500 DT</div>
-			</div>
-
-			<div>Start date: 10-10-2024</div>
-
-			<div style="margin-top: 1rem;">
-				<p>
-					This project is about implementing and designin a mobile fitness app. Lorem ipsum dolor
-					sit amet consectetur adipisicing elit. Eius natus ex alias deserunt blanditiis facere hic
-					culpa, ipsa voluptas pariatur voluptatem quo deleniti? Unde, nihil consequuntur enim earum
-					rem molestiae.
-				</p>
-			</div>
-
-			<div style="margin-top: 1rem;">
-				<div>Applicants</div>
-				<div>....</div>
-			</div>
-		</div> -->
 	</div>
 </div>
 

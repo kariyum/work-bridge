@@ -26,7 +26,7 @@
 <svelte:body onclick={notificationClickHandler} />
 <section>
 	<div class="container">
-		<h1><a href="/">Word-bridge</a></h1>
+		<h1><a href="/">Word-bridge</a> | {$userStore?.role.toUpperCase()}</h1>
 		<nav>
 			<ul>
 				<!-- <li><a href="/"><span class="material-symbols-outlined">home</span></a></li> -->
