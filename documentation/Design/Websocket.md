@@ -1,4 +1,4 @@
-1. The user connects to the Websocket endpoint
+# 1. What happens when the user connects to the Websocket endpoint
 2. A `WsConn` actor is spawned and started
 3. The actor sends a `Connect` message to the `Lobby actor`. The Connect message contains
 	1. `WsConn` address
@@ -9,4 +9,7 @@
 	1. using the send_message function that gets actor's id as input
 	2. the send_message function then gets the socket (actor address) of that user from sessions hashmap in the lobby's actor state
 	3. it sends the message to the actor with `do_send`
-6. 
+6. updates sessions state to hold `actor_id -> actor address (mailbox)` 
+
+# 2. Scaling
+https://towardsdatascience.com/ace-the-system-interview-design-a-chat-application-3f34fd5b85d0
