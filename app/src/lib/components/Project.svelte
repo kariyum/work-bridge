@@ -2,7 +2,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import Task from './Task.svelte';
 
-	let { project }: { project: Project } = $props();
+	let { project }: { project: ProjectObject } = $props();
 
 	async function deleteProject() {
 		const response = await fetch(`/api/projects/${project.id}`, {
@@ -20,7 +20,7 @@
 	<div>
 		{project.deadline}
 	</div>
-	<Task></Task>
+	<Task taskObject={undefined}></Task>
 	<div class="actions">
 		<button onclick={async () => await goto(`/project/${project.id}`)}>Edit</button>
 		<button onclick={deleteProject}>Delete</button>

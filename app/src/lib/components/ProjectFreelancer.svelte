@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { project }: { project: Project } = $props();
+	let { project }: { project: ProjectObject } = $props();
 
 	async function handleEasyApply() {
 		const response = await fetch('/api/proposals', {

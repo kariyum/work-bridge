@@ -1,4 +1,4 @@
-interface Project {
+interface ProjectObject {
     id: number;
     user_id: string;
     title: string;
@@ -25,4 +25,15 @@ type MessagesJsonResponse = {
 type ClientMessage = {
     disucssion_id: number,
     content: string,
+}
+
+interface TaskObject {
+    id: number,
+    title: string,
+    assignee_id: string,
+    status: string,
+    description: string,
+    // deadline: Date,
+    // created_at: Date,
+    // completed_at: Date | null
 }

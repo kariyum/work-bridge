@@ -43,65 +43,66 @@
 	});
 </script>
 
-{#if editor}
-	<div class="outer-button-container">
-		<div class="button-container">
-			<div class="button-group">
-				<button
-					on:click={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
-					class:active={editor.isActive('heading', { level: 1 })}
-				>
-					H1
-				</button>
-				<button
-					on:click={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-					class:active={editor.isActive('heading', { level: 2 })}
-				>
-					H2
-				</button>
-				<button
-					on:click={() => editor?.chain().focus().setParagraph().run()}
-					class:active={editor.isActive('paragraph')}
-				>
-					P
-				</button>
-			</div>
-			<div class="vertical-separator"></div>
-			<div class="button-group">
-				<button
-					on:click={() => editor?.chain().focus().toggleBold().run()}
-					class:active={editor.isActive('bold')}
-				>
-					B
-				</button>
-				<button
-					on:click={() => editor?.chain().focus().toggleItalic().run()}
-					class:active={editor.isActive('italic')}
-				>
-					I
-				</button>
-			</div>
-			<div class="vertical-separator"></div>
-			<div class="button-group">
-				<!-- svelte-ignore a11y_consider_explicit_label -->
-				<button
-					on:click={() => editor?.chain().focus().toggleOrderedList().run()}
-					class:active={editor.isActive('orderedList')}
-				>
-					Ol
-				</button>
-				<button
-					on:click={() => editor?.chain().focus().toggleBulletList().run()}
-					class:active={editor.isActive('bulletList')}
-				>
-					Ul
-				</button>
+<div>
+	{#if editor}
+		<div class="outer-button-container">
+			<div class="button-container">
+				<div class="button-group">
+					<button
+						on:click={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
+						class:active={editor.isActive('heading', { level: 1 })}
+					>
+						H1
+					</button>
+					<button
+						on:click={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
+						class:active={editor.isActive('heading', { level: 2 })}
+					>
+						H2
+					</button>
+					<button
+						on:click={() => editor?.chain().focus().setParagraph().run()}
+						class:active={editor.isActive('paragraph')}
+					>
+						P
+					</button>
+				</div>
+				<div class="vertical-separator"></div>
+				<div class="button-group">
+					<button
+						on:click={() => editor?.chain().focus().toggleBold().run()}
+						class:active={editor.isActive('bold')}
+					>
+						B
+					</button>
+					<button
+						on:click={() => editor?.chain().focus().toggleItalic().run()}
+						class:active={editor.isActive('italic')}
+					>
+						I
+					</button>
+				</div>
+				<div class="vertical-separator"></div>
+				<div class="button-group">
+					<!-- svelte-ignore a11y_consider_explicit_label -->
+					<button
+						on:click={() => editor?.chain().focus().toggleOrderedList().run()}
+						class:active={editor.isActive('orderedList')}
+					>
+						Ol
+					</button>
+					<button
+						on:click={() => editor?.chain().focus().toggleBulletList().run()}
+						class:active={editor.isActive('bulletList')}
+					>
+						Ul
+					</button>
+				</div>
 			</div>
 		</div>
-	</div>
-{/if}
-
-<div bind:this={element}></div>
+	{/if}
+	<div bind:this={element}></div>
+</div>
 
 <!-- 
 <hr />

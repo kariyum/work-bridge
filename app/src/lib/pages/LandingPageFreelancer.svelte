@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ProjectFreelancer from "$lib/components/ProjectFreelancer.svelte";
 
-    let { projects }: {projects: Project[]} = $props();
+    let { projects }: {projects: ProjectObject[]} = $props();
 </script>
 
 <div>

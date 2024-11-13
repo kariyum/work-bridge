@@ -3,6 +3,12 @@ export const ssr = false;
 import { error } from '@sveltejs/kit';
 
 export async function load({ fetch, params }) {
+    if (!params.id) {
+        return {
+            status: 404,
+            project: undefined
+        }
+    }
     const request = await fetch(`/api/projects/${params.id}`);
     if (!request.ok) return {
         status: request.status,
