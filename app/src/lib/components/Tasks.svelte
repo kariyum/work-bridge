@@ -2,7 +2,8 @@
 	import { goto } from '$app/navigation';
 	import Task from '$lib/components/Task.svelte';
 	import RichTextEditor from './RichTextEditor.svelte';
-
+	let { projectId }: { projectId?: string } = $props();
+	const taskUrl = projectId ? `/project/${projectId}/task`: '/project/task';
 	let tasks: Array<TaskObject> = $state([]);
 	tasks.push({
 		id: 1,
@@ -12,16 +13,9 @@
 		status: 'Todo'
 	});
 
-	function addTask() {
-		// tasks.push({
-		// 	id: tasks.length + 1,
-		// 	title: `Task ${tasks.length + 1}`,
-		// 	description: `Description ${tasks.length + 1}`,
-		// 	assignee_id: 'User 1',
-		// 	status: 'Todo'
-		// });
-		// modal.showModal();
-        goto('/project/1/task')
+	async function addTask() {
+		console.log("Task url", taskUrl);
+		await goto(taskUrl);
 	}
 	let modal: HTMLDialogElement;
 	let content = $state('');
@@ -40,15 +34,14 @@
 			<h2>Add task</h2>
 			<div class="input-container">
 				<input type="text" placeholder="Title" />
-				<RichTextEditor bind:content></RichTextEditor>
+				<RichTextEditor bind:x={content}></RichTextEditor>
 				<input type="text" placeholder="Assignee" />
-                <input type="text" placeholder="Skills" />
-                <input type="text" placeholder="Deadline" />
-                <input type="text" placeholder="Estimated Efforts" />
-                
+				<input type="text" placeholder="Skills" />
+				<input type="text" placeholder="Deadline" />
+				<input type="text" placeholder="Estimated Efforts" />
 			</div>
 			<div class="act-task">
-                <button onclick={() => modal.close()}>Cancel</button>
+				<button onclick={() => modal.close()}>Cancel</button>
 				<button>Add</button>
 			</div>
 		</div>
@@ -56,26 +49,26 @@
 </div>
 
 <style>
-    .act-task {
-        margin-left: auto;
-    }
-    .input-container {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-    .create-task {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
+	.act-task {
+		margin-left: auto;
+	}
+	.input-container {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	.create-task {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
 	.popover {
 		margin: auto;
 		padding: 1rem;
 		border: 1px solid #eee;
 		border-radius: 5px;
-        width: 50%;
-        max-width: 1000px;
+		width: 50%;
+		max-width: 1000px;
 	}
 	.add-task {
 		background-color: #fcfcfc;

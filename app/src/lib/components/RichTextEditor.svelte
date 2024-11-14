@@ -5,10 +5,12 @@
 	import Link from '@tiptap/extension-link';
 
 	let element: HTMLDivElement;
-	let editor: Editor | undefined;
+	let editor: Editor | undefined = $state();
 
-	export let content = '';
+	let { x = $bindable() }: { x: string } = $props();
+	let cc: string = x;
 	onMount(() => {
+		console.log('RichTextEditor Mounted with content:', x);
 		editor = new Editor({
 			editorProps: {
 				attributes: {
@@ -24,15 +26,15 @@
 					defaultProtocol: 'https'
 				})
 			],
-			content: content,
+			content: x,
 			onTransaction: () => {
 				// force re-render so `editor.isActive` works as expected
-				editor = editor;
+				// editor = editor;
 			}
 		});
 		editor.on('update', ({ editor }) => {
 			// console.log('editor html', editor.getHTML());
-			content = editor.getHTML();
+			x = editor.getHTML();
 		});
 	});
 

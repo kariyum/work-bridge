@@ -1,22 +1,15 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import RichTextEditor from './RichTextEditor.svelte';
-	import Task from './Task.svelte';
 	import Tasks from './Tasks.svelte';
 
-	let { project }: { project: ProjectObject | undefined } = $props();
-	$effect(() => {
-		project;
-		title = project?.title || '';
-		content = project?.content || '';
-		budget = project?.budget.toString() || '';
-		deadline = toSimpleString(project?.deadline || new Date());
-		console.log(content);
-	})
-	let title = $state(project?.title || '');
-	let content = $state(project?.content || '');
-	let budget = $state(project?.budget.toString() || '');
-	let deadline = $state(toSimpleString(project?.deadline || new Date()));
+	let {
+		projectId = $bindable(),
+		title = $bindable(),
+		content = $bindable(""),
+		budget = $bindable(),
+		deadline = $bindable()
+	}: { projectId?: string; title?: string; content?: string; budget?: string; deadline?: Date } = $props();
 
 	function toSimpleString(date: Date) {
 		return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
@@ -24,11 +17,10 @@
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
-
 		const project = {
 			title,
 			content,
-			budget: parseFloat(budget),
+			budget: parseFloat(budget ?? "0"),
 			// deadline: parseInt((Date.parse(deadline) / 1000).toFixed(0)),
 			deadline: new Date().toISOString(),
 			currency_code: 'TD'
@@ -50,7 +42,7 @@
 
 <div class="outer-container">
 	<div class="container">
-		{#if project}
+		{#if title}
 			<h1>Update your project</h1>
 		{:else}
 			<h1>Create a project</h1>
@@ -62,7 +54,7 @@
 			</div>
 			<div class="input">
 				<label for="">Project Description</label>
-				<RichTextEditor bind:content></RichTextEditor>
+				<RichTextEditor bind:x={content}></RichTextEditor>
 				<!-- <textarea name="content" id="content" placeholder="The project is about designing and implementing..." bind:value={content}></textarea> -->
 			</div>
 
@@ -90,7 +82,7 @@
 				<input type="text" placeholder="Start Date" />
 			</div> -->
 			<div style="width: 100%;">
-				<Tasks></Tasks>
+				<Tasks projectId={projectId}></Tasks>
 			</div>
 			<button onclick={handleSubmit}>Submit</button>
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->
