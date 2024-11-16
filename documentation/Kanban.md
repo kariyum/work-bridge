@@ -29,6 +29,7 @@ kanban-plugin: board
 ## doing
 
 - [ ] add profile setup
+- [ ] add tasks
 
 
 ## tested

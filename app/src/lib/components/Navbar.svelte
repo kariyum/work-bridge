@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { userStore } from '$lib/storage';
+	import { Bell } from 'lucide-svelte';
+	import { LogOut } from 'lucide-svelte';
+
 	let { user }: { user: User } = $props();
 	async function logout() {
 		const response = await fetch('/api/logout');
@@ -15,8 +18,11 @@
 	let dropdownModal: HTMLDivElement;
 
 	function notificationClickHandler(event: MouseEvent) {
+		if ((event.target as Element)?.closest('.notification-container')) {
+			return;
+		}
 		if ((event.target as Element)?.closest('.notifications')) {
-			showNotifications = true;
+			showNotifications = !showNotifications;
 		} else {
 			showNotifications = false;
 		}
@@ -26,15 +32,21 @@
 <svelte:body onclick={notificationClickHandler} />
 <section>
 	<div class="container">
-		<h1><a href="/">Word-bridge</a> | {$userStore?.role.toUpperCase()}</h1>
+		<h1 style="display:inline-flex; gap:1rem; justify-content:stretch;">
+			<a href="/">Word-bridge</a>
+			<div style="width: 2px; border: 1px solid black;display:inline;"></div>
+			{$userStore?.role.toUpperCase()}
+		</h1>
 		<nav>
 			<ul>
 				<!-- <li><a href="/"><span class="material-symbols-outlined">home</span></a></li> -->
-				<li><a href="/profile">(Avatar) {user.email}</a></li>
+				<li>
+					<a href="/profile"> {user.email}</a>
+				</li>
 				<li><a href="/project">Create a project</a></li>
 				<li><a href="/messages">Discussions</a></li>
 				<li class="notifications">
-					<button>Notifications</button>
+					<button> Notifications </button>
 					<div class="notification-container" class:showNotifications bind:this={dropdownModal}>
 						<h1>Notifications</h1>
 						<div>Notification 1</div>
@@ -43,7 +55,7 @@
 				</li>
 				<li><a href="/settings">Settings</a></li>
 				<li>
-					<button onclick={logout}>Logout</button>
+					<button onclick={logout}> Logout </button>
 				</li>
 				<!-- <li><a href="/"><span class="material-symbols-outlined"> person </span></a></li> -->
 			</ul>
@@ -52,6 +64,10 @@
 </section>
 
 <style>
+	/* section {
+		border: 1px solid #eee;
+	} */
+
 	button {
 		background-color: transparent;
 		border: none;
@@ -83,16 +99,32 @@
 			'opsz' 24;
 	}
 	nav {
-		width: 40%;
 		margin-left: auto;
+	}
+
+	a {
+		text-decoration: none;
+		color: black;
+	}
+
+	nav > ul {
+		display: flex;
+		justify-content: flex-end;
+		align-items: safe center;
+		gap: 1rem;
+		list-style: none;
 	}
 	.container {
 		/* border: 2px solid black; */
 		display: flex;
 		flex-direction: row nowrap;
 		align-items: safe center;
+		/* max-width: 1500px; */
 		height: max-content;
-		margin: 1rem;
+		margin: 1rem auto;
+		padding: 0.5rem 2rem;
+		/* border: 2px solid #eee; */
+		border-radius: 7px;
 	}
 	ul {
 		display: flex;
@@ -106,5 +138,6 @@
 	li,
 	button {
 		height: fit-content;
+		font-size: medium;
 	}
 </style>
