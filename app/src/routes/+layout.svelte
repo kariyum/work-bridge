@@ -6,8 +6,19 @@
 </script>
 
 {#if $userStore}
-	<Navbar user={$userStore} />
-	{@render children()}
+	<div class="container">
+		<Navbar user={$userStore} />
+	</div>
+	<div class="container">
+		{@render children()}
+	</div>
 {:else}
 	{@render children()}
 {/if}
+
+<style>
+	.container {
+		margin: auto;
+		max-width: 1500px;
+	}
+</style>

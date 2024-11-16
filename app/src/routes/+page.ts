@@ -17,12 +17,28 @@ export async function load({ fetch, params }) {
             projects: [] as Array<ProjectObject>
         }
     }
+    const processData = (jsonData: any) => {
+        const result: Array<ProjectObject> = jsonData.map((json: any) => {
+            const x: ProjectObject = {
+                id: json.id,
+                user_id: json.user_id,
+                title: json.title,
+                budget: json.budget,
+                currency_code: json.currency_code,
+                content: json.content,
+                created_at: new Date(json.created_at),
+                deadline: new Date(json.deadline)
+            }
+            return x;
+        });
+        return result;
+    }
     if (response.status == 200) {
         try {
             const data = await response.json();
             return {
                 status: response.status,
-                projects: data as Array<ProjectObject>
+                projects: processData(data)
             }
         } catch (error) {
             return {

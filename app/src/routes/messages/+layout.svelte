@@ -45,7 +45,8 @@
 
 	.container {
 		display: flex;
-		width: 90%;
+		width: 100%;
+		padding: 0 2rem;
 		margin: auto;
 		height: 100%;
 		gap: 0.5rem;
