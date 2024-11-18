@@ -51,23 +51,14 @@
             "id": "8b7910ae4554c3d8",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "markdown",
               "state": {
-                "file": "Kanban.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": [
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false
-                  ]
-                }
+                "file": "Requirements/Project Requirements.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-trello",
-              "title": "Kanban"
+              "icon": "lucide-file",
+              "title": "Project Requirements"
             }
           },
           {
@@ -228,19 +219,19 @@
   },
   "active": "8b7910ae4554c3d8",
   "lastOpenFiles": [
-    "Requirements/Project Requirements.md",
+    "Requirements/Entity Design Model.md",
+    "User stories/2 - User to project application.md",
+    "User stories/1 - websocket pgpool.md",
     "Kanban.md",
+    "Requirements/Project Requirements.md",
     "Design/Websocket.md",
     "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
     "Pages/Register.md",
-    "User stories/1 - websocket pgpool.md",
-    "User stories/2 - User to project application.md",
     "User stories",
     "Design/Workflow designs.md",
     "Design/Web Design Inspirations.md",
     "Entity Relationship Diagram/ERP.md",
     "Diagram.svg",
-    "Requirements/Entity Design Model.md",
     "Problems encountered.md",
     "Diagram.svg.xml",
     "Entity Relationship Diagram/Untitled Diagram.svg",
