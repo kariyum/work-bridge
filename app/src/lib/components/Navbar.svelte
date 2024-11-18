@@ -34,7 +34,7 @@
 	<div class="container">
 		<h1 style="display:inline-flex; gap:1rem; justify-content:stretch;">
 			<a href="/">Word-bridge</a>
-			<div style="width: 2px; border: 1px solid black;display:inline;"></div>
+			<div style="width: 2px; border: 1px solid black;display:inline;background-color:black;"></div>
 			{$userStore?.role.toUpperCase()}
 		</h1>
 		<nav>
@@ -64,9 +64,9 @@
 </section>
 
 <style>
-	/* section {
-		border: 1px solid #eee;
-	} */
+	section {
+		padding: 0.3rem 0;
+	}
 
 	button {
 		background-color: transparent;
@@ -121,7 +121,7 @@
 		align-items: safe center;
 		/* max-width: 1500px; */
 		height: max-content;
-		margin: 1rem auto;
+		margin: auto;
 		padding: 0.5rem 2rem;
 		/* border: 2px solid #eee; */
 		border-radius: 7px;

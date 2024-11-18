@@ -21,13 +21,16 @@
 <div class="component">
 	<div class="container">
 		<div class="discussions">
-			<h1 class="header">Discussions</h1>
-			<hr style="width: 100%;">
+			<div class="header">
+				<div>Discussions</div>
+			</div>
 			{#each data.discussions as discussion}
 				{@const title = discussion.title ?? titles.get(discussion.id)}
-				<p>
-					<a href="/messages/{discussion.id}">{title}</a>
-				</p>
+				<div class="discussion-container">
+					<a href="/messages/{discussion.id}">
+						{title}
+					</a>
+				</div>
 			{/each}
 		</div>
 		<div class="messages-col">
@@ -39,8 +42,8 @@
 <style>
 	.component {
 		width: 100%;
-		height: 90vh;
 		display: flex;
+		height: calc(100vh - 4rem);
 	}
 
 	.container {
@@ -49,15 +52,14 @@
 		padding: 0 2rem;
 		margin: auto;
 		height: 100%;
-		gap: 0.5rem;
+		/* gap: 0.5rem; */
 	}
 
 	.discussions {
 		flex: 1;
-		padding: 1rem;
 		overflow-y: auto;
 		border: 1px solid rgb(204, 204, 204);
-		border-radius: 5px;
+		/* border-radius: 5px; */
 	}
 
 	.messages-col {
@@ -69,61 +71,26 @@
 
 	.header {
 		font-size: 1.5rem;
-		margin-bottom: 1rem;
 		color: #333;
-		width: min-content;
-		/* margin: auto; */
+		border-bottom: 1px solid #ccc;
 	}
 
-	.messages {
-		flex-grow: 1;
-		overflow-y: auto;
+	.header > div {
 		padding: 1rem;
-		border: 1px solid #ddd;
-		border-radius: 5px;
+		font-weight: 500;
+	}
+
+	.discussion-container > a {
+		display: block;
+		padding: 1rem;
+		text-decoration: none;
+		color: #333;
+		background-color: transparent;
+	}
+
+	.discussion-container:hover {
 		background-color: #f7f7f7;
 	}
 
-	.message {
-		padding: 0.75rem;
-		border-radius: 9px;
-		background-color: #e0e0e0;
-		width: fit-content;
-		max-width: 70%;
-	}
 
-	.message[data-sender='me'] {
-		margin-left: auto;
-		background-color: #007bff;
-		color: #fff;
-	}
-
-	.message {
-		margin: 0.5rem 0.5rem 0.5rem 0.5rem;
-	}
-
-	.input {
-		display: flex;
-		width: 100%;
-		padding-top: 1rem;
-	}
-
-	.input-form {
-		display: flex;
-		width: 100%;
-	}
-
-	.input-form input[type='text'] {
-		flex: 1;
-		padding: 0.75rem;
-		border: 1px solid #ccc;
-		border-radius: 5px;
-		margin-right: 0.5rem;
-	}
-
-	.input-form input[type='submit'] {
-		padding: 0.75rem 1rem;
-		border-radius: 5px;
-		cursor: pointer;
-	}
 </style>

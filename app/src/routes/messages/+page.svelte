@@ -1,6 +1,6 @@
 <div class="messages-col">
 	<div class="messages">
-		<h1>Select a converstation please! 😊</h1>
+		<h1>Select a discussion please! 😊</h1>
 	</div>
 </div>
 
@@ -57,7 +57,8 @@
 		overflow-y: auto;
 		padding: 1rem;
 		border: 1px solid #ddd;
-		border-radius: 5px;
+		border-left: none;
+		/* border-radius: 5px; */
 		background-color: #f7f7f7;
 	}
 

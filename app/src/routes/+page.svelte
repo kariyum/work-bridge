@@ -9,10 +9,14 @@
 	}
 </script>
 
-{#if $userStore?.role === 'recruiter'}
-	<LandingPageRecruiter projects={data.projects}></LandingPageRecruiter>
-{:else if $userStore?.role === 'freelancer'}
-	<LandingPageFreelancer projects={data.projects}></LandingPageFreelancer>
-{:else}
-	<LandingPage></LandingPage>
-{/if}
+{#await data.projects}
+	<h1>Fetching...</h1>
+{:then projects}
+	{#if $userStore?.role === 'recruiter'}
+		<LandingPageRecruiter {projects}></LandingPageRecruiter>
+	{:else if $userStore?.role === 'freelancer'}
+		<LandingPageFreelancer {projects}></LandingPageFreelancer>
+	{:else}
+		<LandingPage></LandingPage>
+	{/if}
+{/await}

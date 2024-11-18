@@ -9,17 +9,17 @@ export async function load({ fetch, params }) {
     //         projects: [] as Array<Project>
     //     }
     // }
-    const response = await fetch("/api/projects", { method: "GET" });
-    if (response.status == 401) {
-        return {
-            status: response.status,
-            error: "You are not authorized to view this page",
-            projects: [] as Array<ProjectObject>
-        }
-    }
+    const response = fetch("/api/projects", { method: "GET" });
+    // if (response.status == 401) {
+    //     return {
+    //         status: response.status,
+    //         error: "You are not authorized to view this page",
+    //         projects: [] as Array<ProjectObject>
+    //     }
+    // }
     const processData = (jsonData: any) => {
         const result: Array<ProjectObject> = jsonData.map((json: any) => {
-            const x: ProjectObject = {
+            const project: ProjectObject = {
                 id: json.id,
                 user_id: json.user_id,
                 title: json.title,
@@ -29,28 +29,22 @@ export async function load({ fetch, params }) {
                 created_at: new Date(json.created_at),
                 deadline: new Date(json.deadline)
             }
-            return x;
+            return project;
         });
         return result;
-    }
-    if (response.status == 200) {
-        try {
-            const data = await response.json();
-            return {
-                status: response.status,
-                projects: processData(data)
-            }
-        } catch (error) {
-            return {
-                status: response.status,
-                error: `An error occurred while fetching projects: ${error}`,
-                projects: [] as Array<ProjectObject>
-            }
-        }
-    } else {
+    };
+    console.log("I'm running again.");
+    try {
+        // const data = await response.json();
         return {
-            status: response.status,
-            error: "You are not authorized to view this page",
+            projects:
+                response
+                    .then((response) => response.json())
+                    .then((data) => processData(data)),
+        }
+    } catch (error) {
+        return {
+            error: `An error occurred while fetching projects: ${error}`,
             projects: [] as Array<ProjectObject>
         }
     }

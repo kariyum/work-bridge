@@ -20,15 +20,16 @@ kanban-plugin: board
 
 - [ ] add email verification
 - [ ] add phone number verification
+- [ ] keep header / navbar sticky
 
 
 ## p1
 
+- [ ] add profile setup
 
 
 ## doing
 
-- [ ] add profile setup
 - [ ] add tasks
 
 
