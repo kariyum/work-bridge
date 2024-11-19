@@ -39,12 +39,24 @@
             "id": "a467d09496a8e89b",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Design/Drawing 2024-10-17 22.26.09.excalidraw.md"
+                "file": "Entity Relationship Diagram/ERD.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "excalidraw-icon",
-              "title": "Drawing 2024-10-17 22.26.09.excalidraw"
+              "icon": "lucide-file",
+              "title": "ERD"
+            }
+          },
+          {
+            "id": "068df374d794d7d5",
+            "type": "leaf",
+            "state": {
+              "type": "diagrams-net",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "Diagram"
             }
           },
           {
@@ -217,21 +229,23 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "8b7910ae4554c3d8",
+  "active": "a467d09496a8e89b",
   "lastOpenFiles": [
+    "Requirements/Project Requirements.md",
+    "Entity Relationship Diagram/ERD.md",
+    "Design/Websocket.md",
     "Requirements/Entity Design Model.md",
+    "Diagram 1.svg",
+    "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
+    "Diagram 1.svg.xml",
+    "Diagram.svg",
     "User stories/2 - User to project application.md",
     "User stories/1 - websocket pgpool.md",
     "Kanban.md",
-    "Requirements/Project Requirements.md",
-    "Design/Websocket.md",
-    "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
     "Pages/Register.md",
     "User stories",
     "Design/Workflow designs.md",
     "Design/Web Design Inspirations.md",
-    "Entity Relationship Diagram/ERP.md",
-    "Diagram.svg",
     "Problems encountered.md",
     "Diagram.svg.xml",
     "Entity Relationship Diagram/Untitled Diagram.svg",
