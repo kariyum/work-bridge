@@ -36,30 +36,6 @@
             }
           },
           {
-            "id": "a467d09496a8e89b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Entity Relationship Diagram/ERD.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "ERD"
-            }
-          },
-          {
-            "id": "068df374d794d7d5",
-            "type": "leaf",
-            "state": {
-              "type": "diagrams-net",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "Diagram"
-            }
-          },
-          {
             "id": "8b7910ae4554c3d8",
             "type": "leaf",
             "state": {
@@ -86,7 +62,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -229,25 +205,26 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "a467d09496a8e89b",
+  "active": "8b7910ae4554c3d8",
   "lastOpenFiles": [
+    "User stories/2 - User to project application.md",
+    "User stories/1 - websocket pgpool.md",
     "Requirements/Project Requirements.md",
     "Entity Relationship Diagram/ERD.md",
-    "Design/Websocket.md",
+    "Diagram.svg.xml",
+    "Diagram.svg",
     "Requirements/Entity Design Model.md",
+    "Entity Relationship Diagram/ERP.md",
+    "Design/Websocket.md",
     "Diagram 1.svg",
     "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
     "Diagram 1.svg.xml",
-    "Diagram.svg",
-    "User stories/2 - User to project application.md",
-    "User stories/1 - websocket pgpool.md",
     "Kanban.md",
     "Pages/Register.md",
     "User stories",
     "Design/Workflow designs.md",
     "Design/Web Design Inspirations.md",
     "Problems encountered.md",
-    "Diagram.svg.xml",
     "Entity Relationship Diagram/Untitled Diagram.svg",
     "Entity Relationship Diagram",
     "Pages/Login.md",

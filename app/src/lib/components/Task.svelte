@@ -1,13 +1,18 @@
 <script lang="ts">
+	import type { TaskClass } from "$lib/states.svelte";
 	import RichTextEditor from "./RichTextEditor.svelte";
 
-	let { taskObject }: { taskObject: TaskObject | undefined } = $props();
+	// let { taskObject, onclick }: { taskObject: TaskClass | undefined } = $props();
+	let props = $props();
+	let taskObject = props.taskObject;
     let content = $state('');
     let modal: HTMLDialogElement;
 </script>
 
 {#if taskObject}
-	<div class="container">
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div class="container" onclick={props.onclick}>
 		<div>{taskObject.title}</div>
         <div class="right-container">
             <div>{taskObject.assignee_id}</div>

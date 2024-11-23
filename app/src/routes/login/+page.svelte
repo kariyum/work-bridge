@@ -1,16 +1,22 @@
 <script lang="ts">
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
-	import { login } from '$lib/api.js';
 	import AlreadyLoggedIn from '$lib/components/AlreadyLoggedIn.svelte';
 	import { userStore } from '$lib/storage';
 	import { cyrb53, validateEmail } from '$lib/utils';
 	import { onMount } from 'svelte';
 
-	onMount(async () => {
-		// if ($userStore !== null) {
-		// 	await goto('/');
-		// }
-	});
+	function login(email: string, password: string): Promise<Response> {
+		return fetch('/api/login', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: new URLSearchParams({
+				email: email,
+				password: password
+			})
+		});
+	}
 
 	let form_element: HTMLFormElement;
 	let email_element: HTMLInputElement;
@@ -35,16 +41,18 @@
 		} else {
 			password_element.style.border = '';
 		}
-		const response = await login(email, cyrb53(password).toString());
-		if (response.ok) {
-			// authStore.set(true);
-			// leave this commented, it will be handled by the onMount closure. 
-			// because otherwise, the GET api will fire twice
-			await invalidateAll();
-			await goto('/'); 
-		} else {
-			error_message = 'Wrong combination';
-		}
+		await login(email, cyrb53(password).toString()).then(
+			async (response) => {
+				if (response.ok) {
+					await invalidateAll();
+					await goto('/');
+				} else {
+					error_message = 'Wrong combination';
+				}
+			},
+			(reason) => console.log("Connection issues, retry later")
+		);
+
 		final_error_message = error_message;
 	}
 </script>

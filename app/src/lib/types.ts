@@ -28,7 +28,7 @@ type ClientMessage = {
 }
 
 interface TaskObject {
-    id: number,
+    id?: number,
     title: string,
     assignee_id: string,
     status: string,
@@ -37,3 +37,13 @@ interface TaskObject {
     // created_at: Date,
     // completed_at: Date | null
 }
+
+// interface TaskObject {
+//     id?: number;
+//     title: string;
+//     content: string;
+//     assignee: string;
+//     skills: string;
+//     deadline: string;
+//     estimatedEfforts: string;
+// }

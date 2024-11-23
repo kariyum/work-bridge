@@ -14,11 +14,9 @@
 
 <style>
 	.outer-container {
-		/* max-width: 1500px; */
-		padding: 0 1rem;
 		margin: auto;
 	}
     .container {
-        margin: 1rem;
+        margin: 1rem 0rem;
     }
 </style>

@@ -1,3 +1,5 @@
+use std::vec;
+
 use crate::security::token::validate_jwt;
 use actix_web::{
     delete, get, post,
@@ -19,13 +21,23 @@ pub struct ProjectRow {
     pub created_at: chrono::DateTime<chrono::Utc>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
+struct TaskCreate {
+    title: String,
+    description: String,
+    budget: f32,
+    currency_code: String,
+    deadline: chrono::DateTime<chrono::Utc>,
+}
+
+#[derive(Deserialize, Debug)]
 struct ProjectCreate {
     title: String,
     content: String,
     budget: f32,
     currency_code: String,
     deadline: chrono::DateTime<chrono::Utc>,
+    tasks: Vec<TaskCreate>,
 }
 
 #[post("projects")]
@@ -48,6 +60,7 @@ pub async fn create_project(
         .await
         .expect("Failed to acquire a Postgres connection from the pool");
 
+    println!("{:?}", project_create);
     let projects = sqlx::query_as::<_, ProjectRow>(
         "INSERT INTO projects (
         user_id, 
@@ -67,6 +80,7 @@ pub async fn create_project(
     .fetch_optional(&mut *client)
     .await
     .expect("Failed to insert project into database");
+    client.close().await.unwrap();
 
     HttpResponse::Created().json(projects)
 }

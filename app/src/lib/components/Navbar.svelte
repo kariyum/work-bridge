@@ -122,7 +122,7 @@
 		/* max-width: 1500px; */
 		height: max-content;
 		margin: auto;
-		padding: 0.5rem 2rem;
+		padding: 0.5rem 0rem;
 		/* border: 2px solid #eee; */
 		border-radius: 7px;
 	}
