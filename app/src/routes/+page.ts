@@ -1,27 +1,23 @@
 // when this API is invalidated for some reason 
 // the component is not re-rendered if the load function runs only on the server
 
-export async function load({ fetch, params }) {
-    // if (!cookies.get("Authorization")) {
-    //     return {
-    //         status: 401,
-    //         error: "You are not authorized to view this page",
-    //         projects: [] as Array<Project>
-    //     }
-    // }
+export async function load({ fetch }) {
     const response = fetch("/api/projects", { method: "GET" });
-    // if (response.status == 401) {
-    //     return {
-    //         status: response.status,
-    //         error: "You are not authorized to view this page",
-    //         projects: [] as Array<ProjectObject>
-    //     }
-    // }
-    const processData = (jsonData: any) => {
-        const result: Array<ProjectObject> = jsonData.map((json: any) => {
+    interface JSONProject {
+        id: number;
+        user_id: number;
+        title: string;
+        budget: number;
+        currency_code: string;
+        content: string;
+        created_at: string;
+        deadline: string;
+    }
+    const parseProjectJSON = (jsonData: Array<JSONProject>) => {
+        const result: Array<ProjectObject> = jsonData.map((json: JSONProject) => {
             const project: ProjectObject = {
                 id: json.id,
-                user_id: json.user_id,
+                user_id: json.user_id.toString(),
                 title: json.title,
                 budget: json.budget,
                 currency_code: json.currency_code,
@@ -33,19 +29,27 @@ export async function load({ fetch, params }) {
         });
         return result;
     };
-    console.log("I'm running again.");
-    try {
-        // const data = await response.json();
-        return {
-            projects:
-                response
-                    .then((response) => response.json())
-                    .then((data) => processData(data)),
-        }
-    } catch (error) {
-        return {
-            error: `An error occurred while fetching projects: ${error}`,
-            projects: [] as Array<ProjectObject>
-        }
-    }
+    const result = response
+        .then((response) => {
+            if (response.ok) {
+                return response.json() as Promise<Array<JSONProject>>
+            } else {
+                return Promise.resolve([] as Array<JSONProject>);
+            }
+        })
+        .then((jsonData) => Promise.resolve(parseProjectJSON(jsonData)))
+        .then((projects) => Promise.resolve({
+            projects: projects,
+            error: undefined
+        }))
+        .catch((exception) => {
+            console.error(exception);
+            return Promise.resolve({
+                projects: [] as Array<ProjectObject>,
+                error: exception
+            });
+        })
+    return {
+        result: result
+    };
 }

@@ -9,14 +9,19 @@
 	}
 </script>
 
-{#await data.projects}
+{#await data.result}
 	<h1>Fetching...</h1>
-{:then projects}
-	{#if $userStore?.role === 'recruiter'}
-		<LandingPageRecruiter {projects}></LandingPageRecruiter>
-	{:else if $userStore?.role === 'freelancer'}
-		<LandingPageFreelancer {projects}></LandingPageFreelancer>
+{:then value}
+	{#if value.error}
+		<h1>There was an error, please try again...</h1>
 	{:else}
-		<LandingPage></LandingPage>
+		{@const projects = value.projects}
+		{#if $userStore?.role === 'recruiter'}
+			<LandingPageRecruiter {projects}></LandingPageRecruiter>
+		{:else if $userStore?.role === 'freelancer'}
+			<LandingPageFreelancer {projects}></LandingPageFreelancer>
+		{:else}
+			<LandingPage></LandingPage>
+		{/if}
 	{/if}
 {/await}

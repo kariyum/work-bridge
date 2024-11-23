@@ -1,0 +1,112 @@
+<script lang="ts">
+	import RichTextEditor from '$lib/components/RichTextEditor.svelte';
+	import { selectedTask, TaskClass, tasksStore } from '$lib/states.svelte';
+	import type { PageLoad } from '../../$types';
+	let content = $state('');
+
+	function initTaskClass() {
+		let result;
+		if (selectedTask.index != -1) {
+			result = TaskClass.fromSelf(tasksStore[selectedTask.index]);
+		} else {
+			result = new TaskClass('', '', '', '');
+		}
+		return result;
+	}
+
+	function updateTaskClass() {
+		if (selectedTask.index != -1) {
+			tasksStore[selectedTask.index].assignFrom(taskClass);
+		} else {
+			tasksStore.push(taskClass);
+		}
+	}
+
+	let taskClass = initTaskClass();
+
+	function add(event: Event) {
+		event.preventDefault();
+		updateTaskClass();
+		selectedTask.index = -1;
+		history.back();
+	}
+
+	function cancel() {
+		selectedTask.index = -1;
+		history.back();
+	}
+</script>
+
+<div class="blur">
+	<div class="popover">
+		<div class="create-task">
+			<h2>Add task</h2>
+			<form class="input-container">
+				<input type="text" placeholder="Title" bind:value={taskClass.title} />
+				<RichTextEditor bind:x={taskClass.content}></RichTextEditor>
+				<input type="text" placeholder="Assignee" bind:value={taskClass.assignee_id} />
+				<input type="text" placeholder="Skills" bind:value={taskClass.skills} />
+				<!-- <input type="text" placeholder="Status" bind:value={taskClass.status} /> -->
+				<select name="status" id="status" bind:value={taskClass.status}>
+					<option value="todo">Todo</option>
+					<option value="inprogress">In Progress</option>
+					<option value="done">Done</option>
+				</select>
+				<input type="text" placeholder="Budget" bind:value={taskClass.budget} />
+				<input type="text" placeholder="Deadline" bind:value={taskClass.deadline} />
+				<!-- <input type="text" placeholder="Estimated Efforts" /> -->
+				<div class="act-task">
+					<button onclick={cancel}>Cancel</button>
+					<button onclick={add}>Add</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<style>
+	.act-task {
+		margin-left: auto;
+	}
+	.input-container {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	.create-task {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	.popover2 {
+		margin: auto;
+		padding: 1rem;
+		border: 1px solid #eee;
+		border-radius: 5px;
+		width: 50%;
+		max-width: 1000px;
+	}
+	.popover {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 50%;
+		max-width: 1000px;
+		transform: translate(-50%, -50%);
+		padding: 1rem;
+		border: 1px solid #eee;
+		border-radius: 5px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		/* blur */
+	}
+
+	.blur {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		backdrop-filter: blur(2px);
+		background-color: rgba(0, 0, 0, 0.1);
+	}
+</style>

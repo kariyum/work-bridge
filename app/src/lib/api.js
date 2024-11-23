@@ -2,8 +2,8 @@
  * @param {String} email
  * @param {String} password
  */
-export async function login(email, password) {
-    const response = await fetch('/api/login', {
+export function login(email, password) {
+    return fetch('/api/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -13,7 +13,6 @@ export async function login(email, password) {
             'password': password,
         })
     });
-    return response;
 }
 
 export async function register() {

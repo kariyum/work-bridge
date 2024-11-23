@@ -66,6 +66,10 @@ pub mod messages {
     // pub mod route;
 }
 
+pub mod tasks {
+    pub mod repo;
+}
+
 use actix_ws::AggregatedMessage;
 use futures_util::StreamExt as _;
 
@@ -207,8 +211,10 @@ async fn main() -> std::io::Result<()> {
             .service(security::token::whoami)
             .service(messages::repo::get_messages)
             .service(proposals::route::proposal_routes())
+            .service(tasks::repo::create_task)
+            .service(tasks::repo::get_tasks)
     })
-    .bind(("127.0.0.1", 8080))?
-    .run()
-    .await
+        .bind(("127.0.0.1", 8080))?
+        .run()
+        .await
 }

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
+	import { tasksStore } from '$lib/states.svelte';
 	import RichTextEditor from './RichTextEditor.svelte';
 	import Tasks from './Tasks.svelte';
 
@@ -26,12 +27,30 @@
 			currency_code: 'TD'
 		};
 
+		const tasks = tasksStore.map(task => {
+			return {
+				title: task.title,
+				content: task.content,
+				assignee_id: task.assignee_id,
+				skills: task.skills,
+				status: task.status,
+				budget: parseFloat(task.budget?.toString() ?? "0"),
+				deadline: new Date().toISOString(),
+				currency_code: 'TD'
+			}
+		});
+
+		const payload = {
+			...project,
+			tasks
+		}
+
 		const response = await fetch('/api/projects', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify(project)
+			body: JSON.stringify(payload)
 		});
 
 		if (response.status === 201) {
@@ -94,6 +113,8 @@
 	.input {
 		width: 100%;
 		margin: 0 0 0.5rem 0;
+		display: flex;
+		flex-direction: column;
 	}
 
 	.input > input,
