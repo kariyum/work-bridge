@@ -10,7 +10,7 @@ use sqlx::{pool::maybe, Pool, Postgres};
 
 use super::token::generate_cookie;
 use serde::Deserialize;
-use crate::repository::user::{self, get_user};
+use crate::repository::user::{self, get_user_by_credentials};
 
 #[derive(Deserialize)]
 struct LoginRequest {
@@ -31,7 +31,7 @@ pub async fn login(
     let mut hasher = DefaultHasher::new();
     form.password.hash(&mut hasher);
     let hashed_password = hasher.finish().to_string();
-    let maybe_user_row = get_user(form.email.clone(), hashed_password.clone(), pg_pool.as_ref()).await;
+    let maybe_user_row = get_user_by_credentials(form.email.clone(), hashed_password.clone(), pg_pool.as_ref()).await;
     match maybe_user_row {
         Ok(Some(user_row)) if user_row.hashed_password == hashed_password => {
             let cookie = generate_cookie(form.email.as_str(), user_row.role.as_str()).unwrap();

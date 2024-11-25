@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::{Error, Executor, PgPool, Postgres, Row};
 use std::future::Future;
 use std::hash::{BuildHasher, DefaultHasher, Hash, Hasher};
+
 #[derive(sqlx::FromRow, Debug, Clone)]
 pub struct UserRow {
     pub email: String,
@@ -10,19 +11,20 @@ pub struct UserRow {
     pub role: String,
 }
 
+pub async fn get_user_by_credentials(email: String, password: String, conn: impl Executor<'_, Database=Postgres>) -> Result<Option<UserRow>, Error> {
+    let hashed_password = hash_password(&password);
+    get_user(email, hashed_password, conn).await
+}
+
 pub async fn get_user(email: String, password: String, conn: impl Executor<'_, Database=Postgres>) -> Result<Option<UserRow>, Error> {
-    let mut hasher = DefaultHasher::new();
-    password.hash(&mut hasher);
-    let hashed_password = hasher.finish().to_string();
     let user = sqlx::query_as::<_, UserRow>("SELECT * FROM users WHERE email = $1 AND hashed_password = $2")
         .bind(&email)
-        .bind(&hashed_password)
+        .bind(&password)
         .fetch_optional(conn)
         .await;
-    let copied = user.as_ref();
-    println!("Getting user {:?}", copied.unwrap());
     user
 }
+
 #[derive(Deserialize, Debug)]
 struct RegisterRequest {
     email: String,
@@ -31,12 +33,10 @@ struct RegisterRequest {
     first_name: String,
     last_name: String,
 }
+
 pub async fn insert_user(register_request: &RegisterRequest, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
-    // let sql_query = include_str!("./sql/insert_user.sql");
-    let mut hasher = DefaultHasher::new();
-    register_request.password.hash(&mut hasher);
-    let hashed_password = hasher.finish().to_string();
-    let x = sqlx::query("
+    let hashed_password = hash_password(&register_request.password);
+    sqlx::query("
             INSERT INTO users (email, hashed_password, role, first_name, last_name)
             VALUES ($1, $2, $3, $4, $5)
         "
@@ -49,11 +49,14 @@ pub async fn insert_user(register_request: &RegisterRequest, conn: impl Executor
         .execute(conn)
         .await
         .expect("Failed to insert user into database");
-    println!("Inserting user {:?}", register_request.email);
-    println!("PgQueryResult {:?}", x);
     Ok(())
 }
 
+fn hash_password(password: &String) -> String {
+    let mut hasher = DefaultHasher::new();
+    password.hash(&mut hasher);
+    hasher.finish().to_string()
+}
 
 mod tests {
     use super::*;
@@ -77,7 +80,7 @@ mod tests {
             last_name: "last".to_string(),
         };
         let _ = insert_user(&register_request, &pool).await?;
-        let user = get_user("test_email@gmail.com".to_string(), "password".to_string(), &pool)
+        let user = get_user_by_credentials("test_email@gmail.com".to_string(), "password".to_string(), &pool)
             .await
             .expect("Failed to get user");
         assert!(user.is_some());

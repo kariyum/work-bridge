@@ -1,6 +1,6 @@
 use std::vec;
 
-use crate::security::token::validate_jwt;
+use crate::security::token::{validate_jwt, Claims};
 use actix_web::{
     delete, get, post,
     web::{self, Json, Path},
@@ -42,19 +42,10 @@ struct ProjectCreate {
 
 #[post("projects")]
 pub async fn create_project(
-    request: HttpRequest,
     project_create: Json<ProjectCreate>,
     pgpool: web::Data<PgPool>,
+    claims: Claims
 ) -> impl Responder {
-    let cookie = request
-        .cookie("Authorization")
-        .map(|token| validate_jwt(token.value()).ok())
-        .flatten();
-
-    if cookie.is_none() {
-        return HttpResponse::Unauthorized().finish();
-    }
-
     let mut client = pgpool
         .acquire()
         .await
@@ -71,7 +62,7 @@ pub async fn create_project(
         deadline
     ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
     )
-    .bind(&cookie.unwrap().sub)
+    .bind(&claims.sub)
     .bind(&project_create.title)
     .bind(&project_create.content)
     .bind(&project_create.budget)
@@ -86,15 +77,7 @@ pub async fn create_project(
 }
 
 #[get("projects")]
-pub async fn get_projects(request: HttpRequest, pgpool: web::Data<PgPool>) -> impl Responder {
-    let cookie = request
-        .cookie("Authorization")
-        .map(|token| validate_jwt(token.value()).ok())
-        .flatten();
-
-    if cookie.is_none() {
-        return HttpResponse::Unauthorized().finish();
-    }
+pub async fn get_projects(_: Claims, pgpool: web::Data<PgPool>) -> impl Responder {
 
     let mut client = pgpool
         .acquire()

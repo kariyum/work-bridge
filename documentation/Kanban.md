@@ -32,6 +32,7 @@ kanban-plugin: board
 
 - [ ] add authorization middlewear
 - [ ] update websocket messages implementation
+- [ ] add errors.rs and map each error to our own custom error
 
 
 ## doing
