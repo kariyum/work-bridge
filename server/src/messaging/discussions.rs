@@ -1,22 +1,16 @@
-use std::hash::{DefaultHasher, Hash, Hasher};
+use std::hash::{Hash, Hasher};
 
 use actix_web::{
-    cookie::{time::Duration, Cookie},
-    options, post,
-    web::{self, Form},
+    post,
+    web::{self},
     HttpRequest, HttpResponse, Responder,
 };
-use sqlx::{pool::maybe, Pool, Postgres};
-use std::future::Future;
+use sqlx::{Pool, Postgres};
 
-use crate::{
-    repo::user::{self, get_user},
-    security::token::{validate_jwt, Claims},
-};
+use crate::security::token::validate_jwt;
 use actix_web::get;
 use serde::Deserialize;
 use serde::Serialize;
-use sqlx::{pool::PoolConnection, PgPool};
 
 #[derive(Deserialize, sqlx::FromRow, Serialize)]
 struct Discussion {

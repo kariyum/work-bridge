@@ -7,7 +7,7 @@ use actix_web::{
     HttpRequest, HttpResponse, Responder,
 };
 use serde::{Deserialize, Serialize};
-use sqlx::PgPool;
+use sqlx::{PgPool, Row};
 
 #[derive(Serialize, sqlx::FromRow)]
 pub struct ProjectRow {

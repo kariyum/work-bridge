@@ -1,3 +1,4 @@
+-- Add migration script here
 CREATE TABLE
     IF NOT EXISTS users (
         email VARCHAR(255) PRIMARY KEY,
@@ -11,7 +12,7 @@ CREATE TYPE skill AS ENUM ('developer', 'engineer', 'designer', 'manager', 'anal
 
 CREATE TABLE
     IF NOT EXISTS profiles (
-        user_id VARCHAR(255) PRIMARY KEY,
+       user_id VARCHAR(255) PRIMARY KEY,
         skills text[], -- array of skill
         birthdate DATE NOT NULL,
         phone VARCHAR(255) NOT NULL,
@@ -38,7 +39,7 @@ CREATE TABLE
         project_id INT NOT NULL, -- could be used to determine needed skills for the whole project
         task_id INT NOT NULL,
         skill VARCHAR(255) NOT NULL, -- enum
-        PRIMARY KEY (task_id, skill)
+    PRIMARY KEY (task_id, skill)
     );
 
 CREATE TABLE
@@ -73,7 +74,7 @@ CREATE TABLE
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (discussion_id) REFERENCES discussions (id)
     ); -- ordered by created_at most recent first
- 
+
 CREATE TABLE
     IF NOT EXISTS notifications (
         id SERIAL PRIMARY KEY,

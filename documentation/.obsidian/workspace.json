@@ -74,6 +74,18 @@
             }
           },
           {
+            "id": "257dd72aeb94298f",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2024-11-25 13.03.53.excalidraw.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "Drawing 2024-11-25 13.03.53.excalidraw"
+            }
+          },
+          {
             "id": "75476a957c3810d7",
             "type": "leaf",
             "state": {
@@ -231,10 +243,12 @@
   },
   "active": "5668d5bc6827f415",
   "lastOpenFiles": [
+    "Excalidraw/Drawing 2024-11-25 13.03.53.excalidraw.md",
+    "Kanban.md",
+    "Excalidraw",
     "Entity Relationship Diagram/ERD.md",
     "Entities/Task.md",
     "Entities/Project.md",
-    "Kanban.md",
     "Requirements/Project Requirements.md",
     "Entities",
     "User stories/2 - User to project application.md",
