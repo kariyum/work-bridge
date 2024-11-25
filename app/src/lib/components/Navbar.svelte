@@ -8,7 +8,7 @@
 	async function logout() {
 		const response = await fetch('/api/logout');
 
-		if (response.status === 200) {
+		if (response.ok) {
 			userStore.set(undefined);
 			await goto('/');
 		}

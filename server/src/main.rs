@@ -67,6 +67,8 @@ pub mod messages {
 pub mod tasks {
     pub mod repo;
 }
+pub mod routes;
+mod error;
 
 use actix_ws::AggregatedMessage;
 use futures_util::StreamExt as _;
@@ -161,43 +163,6 @@ async fn main() -> std::io::Result<()> {
             .app_data(web::Data::new(pool.clone()))
             .app_data(web::Data::new(chat_server.clone())) //register the lobby
             .wrap(Logger::default())
-            // .service(
-            //     web::scope("")
-            //         .wrap_fn(|req, srv| {
-            //             let is_authorized = req
-            //                 .cookie("Authorization")
-            //                 .map(|cookie| validate_jwt(cookie.value()).ok())
-            //                 .flatten();
-            //             // let fut = async move {
-            //             //     if is_authorized.is_some() {
-            //             //         let response = HttpResponse::Unauthorized().finish();
-            //             //         let (req, _pl) = req.into_parts();
-            //             //         return Ok(ServiceResponse::new(req, response));
-            //             //     }
-            //             //     let res = srv.call(req).await?;
-            //             //     Ok(res.into())
-            //             // };
-            //             // Box::pin(fut)
-            //             // let short_circuit = HttpResponse::Unauthorized().finish().map_into_boxed_body();
-            //             let short_circuit_response: std::future::Ready<Result<ServiceResponse, actix_web::Error>> = {
-            //                 if is_authorized.is_some() {
-            //                     let response = HttpResponse::Unauthorized().finish();
-            //                     let (req, _pl) = req.into_parts();
-            //                     ready(Ok(ServiceResponse::new(req, response).map_into_boxed_body()))
-            //                 } else {
-            //                     let fut = srv.call(req);
-            //                     Ok(fut.await?.into())
-            //                 }
-            //             };
-            //             Box::pin(short_circuit_response)
-            //             // Box::pin(async move { Ok(fut.await?) })
-            //         })
-            //         .wrap(Logger::new("%a %{User-Agent}i"))
-            //         .service(hello)
-            //         .service(preflight)
-            //         .service(register)
-            //         .service(get_users),
-            // )
             .service(login)
             .service(hello)
             .service(preflight)
