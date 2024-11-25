@@ -4,8 +4,13 @@ kanban-plugin: board
 
 ---
 
+## tobe
+
+
+
 ## p3
 
+- [ ] change id to uuid for entities that needs this change
 - [ ] add unit tests
 - [ ] add dynamic postgres schema support
 - [ ] fix cors
@@ -18,6 +23,9 @@ kanban-plugin: board
 
 ## p2
 
+- [ ] add profile setup
+- [ ] update websocket messages implementation
+- [ ] update apis for each entity
 - [ ] add email verification
 - [ ] add phone number verification
 - [ ] keep header / navbar sticky
@@ -25,12 +33,11 @@ kanban-plugin: board
 
 ## p1
 
-- [ ] add profile setup
 
 
 ## doing
 
-- [ ] add tasks
+- [ ] fix attributes of each entity
 
 
 ## tested
@@ -39,6 +46,7 @@ kanban-plugin: board
 
 ## done
 
+- [ ] add tasks
 - [ ] going to /login page should redirect you to the landing page if already logged in
 - [ ] fix token validation
 
@@ -47,6 +55,6 @@ kanban-plugin: board
 
 %% kanban:settings
 ```
-{"kanban-plugin":"board","list-collapse":[false,false,false,false,false,false]}
+{"kanban-plugin":"board","list-collapse":[false,false,false,false,false,false,false]}
 ```
 %%

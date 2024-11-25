@@ -12,7 +12,7 @@ CREATE TYPE skill AS ENUM ('developer', 'engineer', 'designer', 'manager', 'anal
 CREATE TABLE
     IF NOT EXISTS profiles (
         user_id VARCHAR(255) PRIMARY KEY,
-        skills skill[],
+        skills text[], -- array of skill
         birthdate DATE NOT NULL,
         phone VARCHAR(255) NOT NULL,
         -- country VARCHAR(255) NOT NULL,
@@ -26,7 +26,7 @@ CREATE TABLE
         user_id VARCHAR(255) NOT NULL,
         title VARCHAR(255) NOT NULL,
         content TEXT NOT NULL,
-        deadline TIMESTAMPTZ NOT NULL,
+        deadline TIMESTAMPTZ NOT NULL, -- maybe start_date would be better
         budget FLOAT4 NOT NULL,
         currency_code VARCHAR(255) NOT NULL, -- enum TD
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
@@ -34,10 +34,10 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    IF NOT EXISTS project_skills (
+    IF NOT EXISTS skills (
         project_id INT NOT NULL, -- could be used to determine needed skills for the whole project
         task_id INT NOT NULL,
-        skill skill NOT NULL, -- enum
+        skill VARCHAR(255) NOT NULL, -- enum
         PRIMARY KEY (task_id, skill)
     );
 
