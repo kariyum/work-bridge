@@ -11,7 +11,6 @@ kanban-plugin: board
 ## p3
 
 - [ ] change id to uuid for entities that needs this change
-- [ ] add unit tests
 - [ ] add dynamic postgres schema support
 - [ ] fix cors
 - [ ] use bson intead of json to obfuscate request responses (not human readable) 
@@ -24,8 +23,6 @@ kanban-plugin: board
 ## p2
 
 - [ ] add profile setup
-- [ ] update websocket messages implementation
-- [ ] update apis for each entity
 - [ ] add email verification
 - [ ] add phone number verification
 - [ ] keep header / navbar sticky
@@ -33,11 +30,17 @@ kanban-plugin: board
 
 ## p1
 
+- [ ] add authorization middlewear
+- [ ] update websocket messages implementation
 
 
 ## doing
 
-- [ ] fix attributes of each entity
+- [ ] update apis for each entity
+- [ ] check CRUD capabilities of each entity
+- [ ] update project structure
+- [ ] add unit tests
+- [ ] replace flywaydb with sqlx migrate
 
 
 ## tested
@@ -46,6 +49,7 @@ kanban-plugin: board
 
 ## done
 
+- [ ] fix attributes of each entity
 - [ ] add tasks
 - [ ] going to /login page should redirect you to the landing page if already logged in
 - [ ] fix token validation

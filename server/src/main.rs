@@ -1,3 +1,5 @@
+mod repository;
+
 use std::future::ready;
 
 use actix_cors::Cors;
@@ -18,18 +20,14 @@ pub mod security {
     pub mod token;
 }
 
-pub mod repo {
-    pub mod posts;
-    pub mod user;
-}
+
 
 pub mod messaging {
     pub mod discussions;
 }
 use messaging::discussions::{get_discussions, post_discussions};
 
-use repo::posts::get_posts;
-use repo::user::get_users;
+
 use security::login::{login, preflight};
 use security::register::register;
 use security::token::validate_jwt;
@@ -148,6 +146,12 @@ async fn main() -> std::io::Result<()> {
         .connect("postgres://user:password@localhost:5432/main")
         .await
         .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
+
+    sqlx::migrate!("./migrations")
+        .run(&pool)
+        .await
+        .expect("Migrations failed");
+
     let chat_server = Lobby::default().start(); //create and spin up a lobby
 
     HttpServer::new(move || {
@@ -198,8 +202,6 @@ async fn main() -> std::io::Result<()> {
             .service(hello)
             .service(preflight)
             .service(register)
-            .service(get_users)
-            .service(get_posts)
             .service(get_discussions)
             .route("/echo", web::get().to(echo))
             .service(start_connection)
