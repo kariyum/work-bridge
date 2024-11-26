@@ -1,10 +1,8 @@
 mod repository;
 
-use std::future::ready;
-
 use actix_cors::Cors;
 use actix_web::{
-    dev::{Service, ServiceResponse},
+    dev::Service,
     get,
     middleware::Logger,
     rt,
@@ -13,24 +11,14 @@ use actix_web::{
 };
 use sqlx::{postgres::PgPoolOptions, PgPool};
 
-pub mod security {
-    pub mod login;
-    pub mod logout;
-    pub mod register;
-    pub mod token;
-}
-
-
 
 pub mod messaging {
     pub mod discussions;
 }
-use messaging::discussions::{get_discussions, post_discussions};
+use messaging::discussions::get_discussions;
 
 
-use security::login::{login, preflight};
-use security::register::register;
-use security::token::validate_jwt;
+use crate::services::token::validate_jwt;
 
 #[get("/")]
 async fn hello(request: HttpRequest) -> impl Responder {
@@ -46,7 +34,10 @@ pub mod websocket {
     pub mod messages;
     pub mod ws;
 }
-use websocket::ws;
+
+pub mod services {
+    pub mod token;
+}
 
 pub mod project {
     pub mod repo;
@@ -74,7 +65,7 @@ use actix_ws::AggregatedMessage;
 use futures_util::StreamExt as _;
 
 use crate::websocket::lobby::Lobby;
-use crate::ws::WsConn;
+use crate::websocket::ws::WsConn;
 use actix::{Actor, Addr};
 use actix_web::{web::Data, web::Path, web::Payload};
 use uuid::Uuid;
@@ -160,21 +151,15 @@ async fn main() -> std::io::Result<()> {
         let cors = Cors::permissive();
         App::new()
             .wrap(cors)
-            .app_data(web::Data::new(pool.clone()))
-            .app_data(web::Data::new(chat_server.clone())) //register the lobby
+            .app_data(Data::new(pool.clone()))
+            .app_data(Data::new(chat_server.clone())) //register the lobby
             .wrap(Logger::default())
-            .service(login)
-            .service(hello)
-            .service(preflight)
-            .service(register)
+            .service(routes::user_handler::routes())
+            .service(routes::project_handler::routes())
             .service(get_discussions)
             .route("/echo", web::get().to(echo))
             .service(start_connection)
             .service(project::repo::create_project)
-            .service(routes::project_handler::routes())
-            .service(project::repo::delete_project)
-            .service(security::logout::logout)
-            .service(security::token::whoami)
             .service(messages::repo::get_messages)
             .service(proposals::route::proposal_routes())
             .service(tasks::repo::create_task)

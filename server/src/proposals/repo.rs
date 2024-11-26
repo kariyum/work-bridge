@@ -1,8 +1,4 @@
-use crate::{
-    messaging::discussions,
-    project::{self, repo::ProjectRow},
-    security::token::validate_jwt,
-};
+use crate::project::repo::ProjectRow;
 use actix_web::{
     delete, get, post,
     web::{self, Json, Path},
@@ -10,6 +6,7 @@ use actix_web::{
 };
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
+use crate::services::token::validate_jwt;
 
 #[derive(Serialize, sqlx::FromRow)]
 struct ProposalRow {
@@ -56,14 +53,14 @@ pub async fn create_proposal(
                 content
             ) VALUES ($1, $2, $3, $4, $5) RETURNING *",
         )
-        .bind(&claims.sub)
-        .bind(&proposal_create.project_id)
-        .bind(0)
-        .bind(&proposal_create.budget)
-        .bind(&proposal_create.content)
-        .fetch_optional(&mut *client)
-        .await
-        .expect("Failed to insert proposal into database");
+            .bind(&claims.sub)
+            .bind(&proposal_create.project_id)
+            .bind(0)
+            .bind(&proposal_create.budget)
+            .bind(&proposal_create.content)
+            .fetch_optional(&mut *client)
+            .await
+            .expect("Failed to insert proposal into database");
         let project = sqlx::query_as::<_, ProjectRow>("SELECT * FROM projects WHERE id = $1")
             .bind(&proposal_create.project_id)
             .fetch_optional(&mut *client)

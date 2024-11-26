@@ -1,6 +1,7 @@
 use chrono::{DateTime, Utc};
+use futures_util::{stream, StreamExt};
 use serde::Serialize;
-use sqlx::{Executor, Postgres};
+use sqlx::{Executor, PgPool, Postgres};
 
 #[derive(sqlx::FromRow, Serialize)]
 pub struct RawTask {
@@ -20,13 +21,13 @@ pub async fn read_tasks_by_project_id(project_id: i32, conn: impl Executor<'_, D
         .fetch_all(conn).await
 }
 
-struct CreateTask {
-    project_id: i32,
-    title: String,
-    content: String,
-    deadline: DateTime<Utc>,
-    assignee: String,
-    budget: f32,
+pub struct CreateTask {
+    pub project_id: i32,
+    pub title: String,
+    pub content: String,
+    pub deadline: DateTime<Utc>,
+    pub assignee: String,
+    pub budget: f32,
 }
 
 pub async fn insert_task(create_task: CreateTask, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
@@ -43,11 +44,31 @@ pub async fn insert_task(create_task: CreateTask, conn: impl Executor<'_, Databa
         .map(|_| {})
 }
 
+pub async fn insert_tasks_sequentially(tasks: Vec<CreateTask>, conn: &PgPool) -> Result<(), sqlx::Error> {
+    for task in tasks {
+        insert_task(task, conn).await.expect("Failed to insert task");
+    }
+    Ok(())
+}
+
+pub async fn insert_tasks_concurrently(tasks: Vec<CreateTask>, conn: &PgPool) -> Result<(), sqlx::Error> {
+    let insertions = stream::iter(tasks)
+        .map(|task| insert_task(task, conn))
+        .buffer_unordered(3)
+        .collect::<Vec<_>>()
+        .await;
+
+    for insertion in insertions {
+        insertion.expect("Failed to insert task");
+    }
+
+    Ok(())
+}
 
 mod test {
+    use crate::repository::tasks::{insert_task, read_tasks_by_project_id, CreateTask};
     use chrono::Utc;
     use sqlx::PgPool;
-    use crate::repository::tasks::{insert_task, read_tasks_by_project_id, CreateTask};
 
     #[sqlx::test(fixtures(path = "./fixtures", scripts("projects.sql")))]
     async fn insert_task_test(pg_pool: PgPool) {

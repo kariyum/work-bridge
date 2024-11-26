@@ -1,13 +1,14 @@
 use crate::repository;
-use crate::repository::project::ProjectRaw;
-use crate::security::token::Claims;
+use crate::repository::project::{delete_project, insert_project, ProjectInsert, ProjectRaw};
+use crate::repository::tasks::{insert_tasks_sequentially, CreateTask, RawTask};
+use crate::services::token::Claims;
+use crate::tasks::repo::TaskCreate;
 use actix_web::dev::HttpServiceFactory;
-use actix_web::web::Path;
+use actix_web::web::{Json, Path};
 use actix_web::{web, HttpResponse, Responder};
 use chrono::{DateTime, Utc};
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
-use crate::repository::tasks::RawTask;
 
 #[derive(Serialize)]
 struct ProjectResponse {
@@ -19,7 +20,7 @@ struct ProjectResponse {
     budget: f32,
     currency_code: String,
     created_at: DateTime<Utc>,
-    tasks: Option<Vec<RawTask>>
+    tasks: Option<Vec<RawTask>>,
 }
 
 impl From<ProjectRaw> for ProjectResponse {
@@ -33,7 +34,7 @@ impl From<ProjectRaw> for ProjectResponse {
             budget: project.budget,
             currency_code: project.currency_code,
             created_at: project.created_at,
-            tasks: None
+            tasks: None,
         }
     }
 }
@@ -93,8 +94,70 @@ pub async fn get_project_with_tasks(
     }
 }
 
+#[derive(Deserialize)]
+struct ProjectPost {
+    user_id: String,
+    title: String,
+    content: String,
+    deadline: DateTime<Utc>,
+    budget: f32,
+    currency_code: String,
+    tasks: Vec<TaskCreate>,
+}
+pub async fn create_project_handler(
+    Json(project_post): Json<ProjectPost>,
+    pgpool: web::Data<PgPool>,
+    claims: Claims,
+) -> impl Responder {
+    // user_id is fetched from the cookie
+    let project_create = ProjectInsert {
+        user_id: claims.sub,
+        title: project_post.title,
+        content: project_post.content,
+        deadline: project_post.deadline,
+        budget: project_post.budget,
+        currency_code: project_post.currency_code,
+    };
+
+    let _ = insert_project(project_create, pgpool.as_ref())
+        .await
+        .expect("Failed to insert project");
+
+    let tasks_insert = project_post.tasks.into_iter()
+        .map(|task| {
+            CreateTask {
+                project_id: 1,
+                title: task.title,
+                content: task.content,
+                deadline: task.deadline,
+                assignee: task.assignee,
+                budget: task.budget,
+            }
+        }).collect::<Vec<CreateTask>>();
+
+    insert_tasks_sequentially(tasks_insert, pgpool.as_ref())
+        .await.expect("Failed to insert tasks");
+
+    HttpResponse::Created().finish()
+}
+
+pub async fn delete_project_handler(
+    path: Path<i32>,
+    pgpool: web::Data<PgPool>,
+    _: Claims,
+) -> impl Responder {
+    let pool = pgpool.as_ref();
+    let _ = delete_project(path.into_inner(), pool)
+        .await
+        .expect("Failed to delete project");
+
+    HttpResponse::Ok().finish()
+}
+
 pub fn routes() -> impl HttpServiceFactory {
     web::scope("/projects")
         .route("", web::get().to(get_projects))
+        .route("", web::post().to(create_project_handler))
         .route("/{id}", web::get().to(get_project_with_tasks))
+        .route("/{id}", web::delete().to(delete_project_handler))
 }

@@ -1,8 +1,8 @@
-use crate::security::token::validate_jwt;
 use actix_web::{get, post, web::{self, Path}, HttpRequest, HttpResponse, Responder};
 use actix_web::web::Json;
 use serde::{Deserialize, Serialize};
 use sqlx::{pool::PoolConnection, PgPool, Postgres};
+use crate::services::token::validate_jwt;
 
 #[derive(Serialize, sqlx::FromRow)]
 struct TaskRow {
@@ -23,7 +23,7 @@ pub struct TaskCreate {
     pub content: String,
     pub deadline: chrono::DateTime<chrono::Utc>,
     pub assignee: String,
-    pub budget: i32,
+    pub budget: f32,
 }
 
 #[post("/tasks")]
