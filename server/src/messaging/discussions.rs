@@ -7,10 +7,10 @@ use actix_web::{
 };
 use sqlx::{Pool, Postgres};
 
-use crate::security::token::validate_jwt;
 use actix_web::get;
 use serde::Deserialize;
 use serde::Serialize;
+use crate::services::token::validate_jwt;
 
 #[derive(Deserialize, sqlx::FromRow, Serialize)]
 struct Discussion {

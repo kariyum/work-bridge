@@ -26,10 +26,10 @@ pub async fn get_user(email: String, password: String, conn: impl Executor<'_, D
 }
 
 #[derive(Deserialize, Debug)]
-struct RegisterRequest {
-    email: String,
+pub struct RegisterRequest {
+    pub email: String,
     password: String,
-    role: String,
+    pub role: String,
     first_name: String,
     last_name: String,
 }

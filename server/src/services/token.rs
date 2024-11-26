@@ -37,7 +37,7 @@ pub fn validate_jwt(token: &str) -> Result<Claims, jsonwebtoken::errors::Error> 
         &DecodingKey::from_secret(secret.as_ref()),
         &Validation::default(),
     )
-    .map(|data| data.claims);
+        .map(|data| data.claims);
     claims
 }
 
@@ -53,19 +53,4 @@ pub fn generate_cookie<'a>(
             .max_age(Duration::hours(24))
             .finish()
     })
-}
-
-use actix_web::{get, HttpRequest, HttpResponse, Responder};
-
-#[get("/whoami")]
-pub async fn whoami(request: HttpRequest) -> impl Responder {
-    let claims_option = request
-        .cookie("Authorization")
-        .map(|token| validate_jwt(token.value()).ok())
-        .flatten();
-    if let Some(claims) = claims_option {
-        HttpResponse::Ok().json(claims)
-    } else {
-        HttpResponse::Unauthorized().finish()
-    }
 }

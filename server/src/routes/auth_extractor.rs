@@ -1,8 +1,8 @@
 use crate::error::ServiceError;
-use crate::security::token::{validate_jwt, Claims};
 use actix_web::dev::Payload;
 use actix_web::{Error, FromRequest, HttpRequest};
 use futures_util::future::ready;
+use crate::services::token::{validate_jwt, Claims};
 
 impl FromRequest for Claims {
     type Error = Error;

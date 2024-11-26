@@ -1,6 +1,5 @@
 use std::vec;
 
-use crate::security::token::{validate_jwt, Claims};
 use actix_web::{
     delete, get, post,
     web::{self, Json, Path},
@@ -8,6 +7,7 @@ use actix_web::{
 };
 use serde::{Deserialize, Serialize};
 use sqlx::{PgPool, Row};
+use crate::services::token::{validate_jwt, Claims};
 
 #[derive(Serialize, sqlx::FromRow)]
 pub struct ProjectRow {
@@ -74,37 +74,5 @@ pub async fn create_project(
     client.close().await.unwrap();
 
     HttpResponse::Created().json(projects)
-}
-
-
-
-#[delete("projects/{id}")]
-pub async fn delete_project(
-    request: HttpRequest,
-    path: Path<i32>,
-    pgpool: web::Data<PgPool>,
-) -> impl Responder {
-    let cookie = request
-        .cookie("Authorization")
-        .map(|token| validate_jwt(token.value()).ok())
-        .flatten();
-
-    if cookie.is_none() {
-        return HttpResponse::Unauthorized().finish();
-    }
-
-    let mut client = pgpool
-        .acquire()
-        .await
-        .expect("Failed to acquire a Postgres connection from the pool");
-
-    let project_id = path.into_inner();
-    let _ = sqlx::query("DELETE FROM projects WHERE id = $1")
-        .bind(&project_id)
-        .execute(&mut *client)
-        .await
-        .expect(format!("Failed to delete project from the database {project_id}").as_str());
-    
-    HttpResponse::Ok().finish()
 }
 

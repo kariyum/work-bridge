@@ -31,17 +31,16 @@ pub async fn get_projects(conn: impl Executor<'_, Database=Postgres>) -> Result<
 }
 
 #[derive(Deserialize)]
-pub struct ProjectCreate {
-    user_id: String,
-    title: String,
-    content: String,
-    deadline: DateTime<Utc>,
-    budget: f32,
-    currency_code: String,
-    tasks: Vec<TaskCreate>
+pub struct ProjectInsert {
+    pub user_id: String,
+    pub title: String,
+    pub content: String,
+    pub deadline: DateTime<Utc>,
+    pub budget: f32,
+    pub currency_code: String,
 }
 
-async fn insert_project(create_project: ProjectCreate, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
+pub async fn insert_project(create_project: ProjectInsert, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
     sqlx::query("
         INSERT INTO projects (user_id, title, content, deadline, budget, currency_code)
         VALUES ($1, $2, $3, $4, $5, $6)
@@ -56,6 +55,16 @@ async fn insert_project(create_project: ProjectCreate, conn: impl Executor<'_, D
         .execute(conn)
         .await
         .map(|_| ())
+}
+
+pub async fn delete_project(project_id: i32, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
+    let _ = sqlx::query("DELETE FROM projects WHERE id = $1")
+        .bind(&project_id)
+        .execute(conn)
+        .await
+        .expect(format!("Failed to delete project from the database {project_id}").as_str());
+
+    Ok(())
 }
 
 mod tests {
@@ -75,14 +84,13 @@ mod tests {
 
     #[sqlx::test(fixtures(path = "./fixtures", scripts("projects.sql")))]
     async fn create_project_test(conn: PgPool) {
-        let project_details = ProjectCreate {
+        let project_details = ProjectInsert {
             user_id: "user@gmail.com".to_string(),
             title: "title".to_string(),
             content: "content".to_string(),
             deadline: Utc::now(),
             budget: 10.5,
-            currency_code: "TD".to_string(),
-            tasks: vec!()
+            currency_code: "TD".to_string()
         };
 
         insert_project(project_details, &conn)
@@ -96,6 +104,14 @@ mod tests {
             .await
             .unwrap();
         assert_ne!(projects.len(), 0);
+
+    }
+
+    #[sqlx::test(fixtures(path = "./fixtures", scripts("projects.sql")))]
+    async fn delete_project_test(conn: PgPool) {
+        let projects = delete_project(1, &conn)
+            .await;
+        assert!(projects.is_ok());
 
     }
 }
