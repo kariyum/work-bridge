@@ -61,7 +61,7 @@
 
 <div class="outer-container">
 	<div class="container">
-		{#if title}
+		{#if projectId}
 			<h1>Update your project</h1>
 		{:else}
 			<h1>Create a project</h1>
