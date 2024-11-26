@@ -18,6 +18,7 @@ kanban-plugin: board
 	- grpc-web
 	- MessagePack
 - [ ] add role switching
+- [ ] don't show "loading" when on the overview page!
 
 
 ## p2
@@ -30,18 +31,13 @@ kanban-plugin: board
 
 ## p1
 
-- [ ] add authorization middlewear
 - [ ] update websocket messages implementation
-- [ ] add errors.rs and map each error to our own custom error
 
 
 ## doing
 
 - [ ] update apis for each entity
 - [ ] check CRUD capabilities of each entity
-- [ ] update project structure
-- [ ] add unit tests
-- [ ] replace flywaydb with sqlx migrate
 
 
 ## tested
@@ -50,6 +46,12 @@ kanban-plugin: board
 
 ## done
 
+- [ ] add errors.rs and map each error to our own custom error
+- [ ] add authorization middlewear
+	- Done with extractors instead of middlewear, the better known approach
+- [ ] replace flywaydb with sqlx migrate
+- [ ] add unit tests
+- [ ] update project structure
 - [ ] fix attributes of each entity
 - [ ] add tasks
 - [ ] going to /login page should redirect you to the landing page if already logged in

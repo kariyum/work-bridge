@@ -6,9 +6,13 @@
 <div class="outer-container">
 	<div class="container">
 		<h1>My Projects</h1>
-		{#each projects as project}
-			<Project project={project} />
-		{/each}
+		{#if projects.length === 0}
+			<p>No projects found, please create one!</p>
+		{:else}
+			{#each projects as project}
+				<Project {project} />
+			{/each}
+		{/if}
 	</div>
 </div>
 
@@ -16,7 +20,7 @@
 	.outer-container {
 		margin: auto;
 	}
-    .container {
-        margin: 1rem 0rem;
-    }
+	.container {
+		margin: 1rem 0rem;
+	}
 </style>
