@@ -6,7 +6,7 @@
 
 	let { user }: { user: User } = $props();
 	async function logout() {
-		const response = await fetch('/api/logout');
+		const response = await fetch('/api/auth/logout');
 
 		if (response.ok) {
 			userStore.set(undefined);

@@ -96,7 +96,6 @@ pub async fn get_project_with_tasks(
 
 #[derive(Deserialize)]
 struct ProjectPost {
-    user_id: String,
     title: String,
     content: String,
     deadline: DateTime<Utc>,
@@ -155,7 +154,7 @@ pub async fn delete_project_handler(
 }
 
 pub fn routes() -> impl HttpServiceFactory {
-    web::scope("/projects")
+    web::scope("projects")
         .route("", web::get().to(get_projects))
         .route("", web::post().to(create_project_handler))
         .route("/{id}", web::get().to(get_project_with_tasks))

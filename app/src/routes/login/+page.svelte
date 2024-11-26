@@ -6,7 +6,7 @@
 	import { onMount } from 'svelte';
 
 	function login(email: string, password: string): Promise<Response> {
-		return fetch('/api/login', {
+		return fetch('/api/auth/login', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded'

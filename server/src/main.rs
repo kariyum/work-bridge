@@ -159,7 +159,6 @@ async fn main() -> std::io::Result<()> {
             .service(get_discussions)
             .route("/echo", web::get().to(echo))
             .service(start_connection)
-            .service(project::repo::create_project)
             .service(messages::repo::get_messages)
             .service(proposals::route::proposal_routes())
             .service(tasks::repo::create_task)
