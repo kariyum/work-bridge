@@ -50,7 +50,7 @@ CREATE TABLE
         content TEXT NOT NULL,
         deadline TIMESTAMPTZ NOT NULL,
         assignee VARCHAR(255) NOT NULL,
-        bugdet NUMERIC NOT NULL,
+        budget FLOAT4 NOT NULL,
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (project_id) REFERENCES projects (id)
     );
