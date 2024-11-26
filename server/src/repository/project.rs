@@ -1,21 +1,21 @@
-use chrono::{DateTime, Utc};
-use serde::Deserialize;
-use sqlx::{Executor, Postgres};
 use crate::tasks::repo::TaskCreate;
+use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
+use sqlx::{Executor, Postgres};
 
 #[derive(sqlx::FromRow)]
-struct ProjectRaw {
-    id: i32,
-    user_id: String,
-    title: String,
-    content: String,
-    deadline: DateTime<Utc>,
-    budget: f32,
-    currency_code: String,
-    created_at: DateTime<Utc>,
+pub struct ProjectRaw {
+    pub id: i32,
+    pub user_id: String,
+    pub title: String,
+    pub content: String,
+    pub deadline: DateTime<Utc>,
+    pub budget: f32,
+    pub currency_code: String,
+    pub created_at: DateTime<Utc>,
 }
 
-async fn get_project_by_id(project_id: i32, conn: impl Executor<'_, Database=Postgres>) -> Result<Option<ProjectRaw>, sqlx::Error> {
+pub async fn get_project_by_id(project_id: i32, conn: impl Executor<'_, Database=Postgres>) -> Result<Option<ProjectRaw>, sqlx::Error> {
     let project = sqlx::query_as::<_, ProjectRaw>("select * from projects where id = $1")
         .bind(project_id)
         .fetch_optional(conn)
@@ -23,7 +23,7 @@ async fn get_project_by_id(project_id: i32, conn: impl Executor<'_, Database=Pos
     project
 }
 
-async fn get_projects(conn: impl Executor<'_, Database=Postgres>) -> Result<Vec<ProjectRaw>, sqlx::Error> {
+pub async fn get_projects(conn: impl Executor<'_, Database=Postgres>) -> Result<Vec<ProjectRaw>, sqlx::Error> {
     let projects = sqlx::query_as::<_, ProjectRaw>("select * from projects")
         .fetch_all(conn)
         .await;

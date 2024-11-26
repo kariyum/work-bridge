@@ -1,8 +1,9 @@
 use chrono::{DateTime, Utc};
+use serde::Serialize;
 use sqlx::{Executor, Postgres};
 
-#[derive(sqlx::FromRow)]
-struct RawTask {
+#[derive(sqlx::FromRow, Serialize)]
+pub struct RawTask {
     id: i32,
     project_id: i32,
     title: String,
