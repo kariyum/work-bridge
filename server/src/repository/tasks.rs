@@ -27,6 +27,7 @@ struct CreateTask {
     assignee: String,
     budget: f32,
 }
+
 pub async fn insert_task(create_task: CreateTask, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
     sqlx::query("INSERT INTO tasks (project_id, title, content, deadline, assignee, budget)
                      VALUES ($1, $2, $3, $4, $5, $6)")
