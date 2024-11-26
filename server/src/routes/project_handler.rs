@@ -119,21 +119,22 @@ pub async fn create_project_handler(
         currency_code: project_post.currency_code,
     };
 
-    let _ = insert_project(project_create, pgpool.as_ref())
+    let project_raw = insert_project(project_create, pgpool.as_ref())
         .await
         .expect("Failed to insert project");
 
     let tasks_insert = project_post.tasks.into_iter()
         .map(|task| {
             CreateTask {
-                project_id: 1,
+                project_id: project_raw.id,
                 title: task.title,
                 content: task.content,
                 deadline: task.deadline,
                 assignee: task.assignee,
                 budget: task.budget,
             }
-        }).collect::<Vec<CreateTask>>();
+        })
+        .collect::<Vec<CreateTask>>();
 
     insert_tasks_sequentially(tasks_insert, pgpool.as_ref())
         .await.expect("Failed to insert tasks");
@@ -146,8 +147,7 @@ pub async fn delete_project_handler(
     pgpool: web::Data<PgPool>,
     _: Claims,
 ) -> impl Responder {
-    let pool = pgpool.as_ref();
-    let _ = delete_project(path.into_inner(), pool)
+    let _ = delete_project(path.into_inner(), pgpool.as_ref())
         .await
         .expect("Failed to delete project");
 

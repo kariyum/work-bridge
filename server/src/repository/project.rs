@@ -40,11 +40,11 @@ pub struct ProjectInsert {
     pub currency_code: String,
 }
 
-pub async fn insert_project(create_project: ProjectInsert, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
-    sqlx::query("
+pub async fn insert_project(create_project: ProjectInsert, conn: impl Executor<'_, Database=Postgres>) -> Result<ProjectRaw, sqlx::Error> {
+    sqlx::query_as::<_, ProjectRaw>("
         INSERT INTO projects (user_id, title, content, deadline, budget, currency_code)
         VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING id
+        RETURNING *
         ")
         .bind(create_project.user_id)
         .bind(create_project.title)
@@ -52,9 +52,9 @@ pub async fn insert_project(create_project: ProjectInsert, conn: impl Executor<'
         .bind(create_project.deadline)
         .bind(create_project.budget)
         .bind(create_project.currency_code)
-        .execute(conn)
+        .fetch_one(conn)
         .await
-        .map(|_| ())
+
 }
 
 pub async fn delete_project(project_id: i32, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
