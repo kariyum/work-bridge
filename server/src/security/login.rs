@@ -23,17 +23,10 @@ pub async fn login(
     Form(form): Form<LoginRequest>,
     pg_pool: web::Data<Pool<Postgres>>,
 ) -> impl Responder {
-    let pg_client = pg_pool
-        .acquire()
-        .await
-        .expect("Failed to acquire a Postgres connection from the pool");
-    
-    let mut hasher = DefaultHasher::new();
-    form.password.hash(&mut hasher);
-    let hashed_password = hasher.finish().to_string();
-    let maybe_user_row = get_user_by_credentials(form.email.clone(), hashed_password.clone(), pg_pool.as_ref()).await;
+    let maybe_user_row = get_user_by_credentials(form.email.clone(), form.password.clone(), pg_pool.as_ref())
+        .await;
     match maybe_user_row {
-        Ok(Some(user_row)) if user_row.hashed_password == hashed_password => {
+        Ok(Some(user_row)) => {
             let cookie = generate_cookie(form.email.as_str(), user_row.role.as_str()).unwrap();
             let mut response = HttpResponse::Ok().finish();
             response.add_cookie(&cookie).unwrap();
