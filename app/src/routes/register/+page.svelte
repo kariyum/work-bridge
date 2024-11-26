@@ -52,7 +52,7 @@
 			body: data
 		});
 		if (response.ok) {
-			await invalidate("/api/whoami")
+			await invalidate("/api/auth/whoami")
 			await goto('/');
 		}
 	}

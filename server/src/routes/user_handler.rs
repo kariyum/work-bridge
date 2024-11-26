@@ -61,9 +61,9 @@ async fn whoami(claims: Claims) -> impl Responder {
     HttpResponse::Ok().json(claims)
 }
 pub fn routes() -> impl HttpServiceFactory {
-    web::scope("")
+    web::scope("auth")
         .route("login", web::post().to(login))
         .route("register", web::post().to(register))
-        .route("logout", web::post().to(logout))
+        .route("logout", web::get().to(logout))
         .route("whoami", web::get().to(whoami))
 }

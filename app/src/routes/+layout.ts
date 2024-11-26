@@ -2,7 +2,7 @@ import { userStore } from '$lib/storage.js';
 
 
 export async function load({ fetch }) {
-    const response = await fetch("/api/whoami");
+    const response = await fetch("/api/auth/whoami");
     try {
         if (response.ok) {
             const jsonResponse = await response.json();
