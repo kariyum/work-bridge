@@ -76,21 +76,7 @@ pub async fn create_project(
     HttpResponse::Created().json(projects)
 }
 
-#[get("projects")]
-pub async fn get_projects(_: Claims, pgpool: web::Data<PgPool>) -> impl Responder {
 
-    let mut client = pgpool
-        .acquire()
-        .await
-        .expect("Failed to acquire a Postgres connection from the pool");
-
-    let projects = sqlx::query_as::<_, ProjectRow>("SELECT * FROM projects")
-        .fetch_all(&mut *client)
-        .await
-        .expect("Failed to insert project into database");
-
-    HttpResponse::Ok().json(projects)
-}
 
 #[delete("projects/{id}")]
 pub async fn delete_project(
@@ -122,32 +108,3 @@ pub async fn delete_project(
     HttpResponse::Ok().finish()
 }
 
-#[get("projects/{id}")]
-pub async fn get_project(
-    request: HttpRequest,
-    path: Path<i32>,
-    pgpool: web::Data<PgPool>,
-) -> impl Responder {
-    let cookie = request
-        .cookie("Authorization")
-        .map(|token| validate_jwt(token.value()).ok())
-        .flatten();
-
-    if cookie.is_none() {
-        return HttpResponse::Unauthorized().finish();
-    }
-
-    let mut client = pgpool
-        .acquire()
-        .await
-        .expect("Failed to acquire a Postgres connection from the pool");
-
-    let project_id = path.into_inner();
-    let project = sqlx::query_as::<_, ProjectRow>("SELECT * FROM projects WHERE id = $1")
-        .bind(&project_id)
-        .fetch_optional(&mut *client)
-        .await
-        .expect(format!("Failed to delete project from the database {project_id}").as_str());
-    
-    HttpResponse::Ok().json(project)
-}

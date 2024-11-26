@@ -19,6 +19,7 @@ kanban-plugin: board
 	- MessagePack
 - [ ] add role switching
 - [ ] don't show "loading" when on the overview page!
+- [ ] add integration tests
 
 
 ## p2
