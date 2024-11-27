@@ -1,13 +1,12 @@
 <script lang="ts">
 	import RichTextEditor from '$lib/components/RichTextEditor.svelte';
-	import { selectedTask, TaskClass, tasksStore } from '$lib/states.svelte';
-	import type { PageLoad } from '../../$types';
+	import { TaskClass, tasksStore } from '$lib/states.svelte';
 	let content = $state('');
 
 	function initTaskClass() {
 		let result;
-		if (selectedTask.index != -1) {
-			result = TaskClass.fromSelf(tasksStore[selectedTask.index]);
+		if (tasksStore.selected != -1) {
+			result = TaskClass.fromSelf(tasksStore.tasks[tasksStore.selected]);
 		} else {
 			result = new TaskClass('', '', '', '');
 		}
@@ -15,10 +14,10 @@
 	}
 
 	function updateTaskClass() {
-		if (selectedTask.index != -1) {
-			tasksStore[selectedTask.index].assignFrom(taskClass);
+		if (tasksStore.selected != -1) {
+			tasksStore.tasks[tasksStore.selected].assignFrom(taskClass);
 		} else {
-			tasksStore.push(taskClass);
+			tasksStore.tasks.push(taskClass);
 		}
 	}
 
@@ -27,12 +26,12 @@
 	function add(event: Event) {
 		event.preventDefault();
 		updateTaskClass();
-		selectedTask.index = -1;
+		tasksStore.selected = -1;
 		history.back();
 	}
 
 	function cancel() {
-		selectedTask.index = -1;
+		tasksStore.selected = -1;
 		history.back();
 	}
 </script>

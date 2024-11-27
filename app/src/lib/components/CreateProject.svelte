@@ -1,49 +1,66 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { tasksStore } from '$lib/states.svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import RichTextEditor from './RichTextEditor.svelte';
 	import Tasks from './Tasks.svelte';
 
 	let {
 		projectId = $bindable(),
 		title = $bindable(),
-		content = $bindable(""),
+		content = $bindable(''),
 		budget = $bindable(),
 		deadline = $bindable()
-	}: { projectId?: string; title?: string; content?: string; budget?: string; deadline?: Date } = $props();
+	}: {
+		projectId?: string;
+		title?: string;
+		content?: string;
+		budget?: string;
+		deadline?: Date;
+	} = $props();
 
 	function toSimpleString(date: Date) {
 		return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 	}
+
+	onMount(() => {
+		tasksStore.tasks = [];
+		tasksStore.selected = -1;
+	});
+
+	onDestroy(() => {
+		tasksStore.tasks = [];
+		tasksStore.selected = -1;
+	});
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 		const project = {
 			title,
 			content,
-			budget: parseFloat(budget ?? "0"),
+			budget: parseFloat(budget ?? '0'),
 			// deadline: parseInt((Date.parse(deadline) / 1000).toFixed(0)),
 			deadline: new Date().toISOString(),
 			currency_code: 'TD'
 		};
 
-		const tasks = tasksStore.map(task => {
+		const tasks = tasksStore.tasks.map((task) => {
 			return {
 				title: task.title,
 				content: task.content,
 				assignee_id: task.assignee_id,
 				skills: task.skills,
 				status: task.status,
-				budget: parseFloat(task.budget?.toString() ?? "0"),
+				budget: parseFloat(task.budget?.toString() ?? '0'),
 				deadline: new Date().toISOString(),
 				currency_code: 'TD'
-			}
+			};
 		});
 
 		const payload = {
 			...project,
 			tasks
-		}
+		};
 
 		const response = await fetch('/api/projects', {
 			method: 'POST',
@@ -101,7 +118,7 @@
 				<input type="text" placeholder="Start Date" />
 			</div> -->
 			<div style="width: 100%;">
-				<Tasks projectId={projectId}></Tasks>
+				<Tasks {projectId}></Tasks>
 			</div>
 			<button onclick={handleSubmit}>Submit</button>
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->

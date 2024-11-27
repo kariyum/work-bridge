@@ -1,7 +1,6 @@
 // used for storing added tasks that are not saved yet!
 // way of communication between /project/task and /project
-export const tasksStore: Array<TaskClass> = $state<Array<TaskClass>>([]);
-export const selectedTask = $state({ index: -1 });
+export const tasksStore = $state<{ tasks: Array<TaskClass>, selected: number }>({ tasks: [], selected: -1 });
 
 export class TaskClass {
     title: string = $state('');
@@ -11,7 +10,7 @@ export class TaskClass {
     deadline: string = $state('');
     budget?: number = $state(0);
     skills: string = $state('');
-    
+
     constructor(
         title: string = '',
         assignee_id: string = 'None',
@@ -53,5 +52,5 @@ export class TaskClass {
         this.budget = task.budget;
         this.skills = task.skills;
     }
-    
+
 }

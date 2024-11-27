@@ -47,7 +47,7 @@
 		let data = new URLSearchParams(
 			Array.from(formData.entries()).map(([key, value]) => [key, value.toString()])
 		);
-		const response = await fetch('/api/register', {
+		const response = await fetch('/api/auth/register', {
 			method: 'POST',
 			body: data
 		});

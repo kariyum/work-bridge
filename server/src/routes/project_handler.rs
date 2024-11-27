@@ -39,7 +39,7 @@ impl From<ProjectRaw> for ProjectResponse {
     }
 }
 
-pub async fn get_projects(_: Claims, pgpool: web::Data<PgPool>) -> impl Responder {
+async fn get_projects(_: Claims, pgpool: web::Data<PgPool>) -> impl Responder {
     let projects: Vec<ProjectResponse> = repository::project::get_projects(pgpool.as_ref())
         .await
         .expect("Failed to get projects")
@@ -50,7 +50,7 @@ pub async fn get_projects(_: Claims, pgpool: web::Data<PgPool>) -> impl Responde
     HttpResponse::Ok().json(projects)
 }
 
-pub async fn get_project(
+async fn get_project(
     _: Claims,
     path: Path<i32>,
     pgpool: web::Data<PgPool>,
@@ -67,7 +67,7 @@ pub async fn get_project(
     }
 }
 
-pub async fn get_project_with_tasks(
+async fn get_project_with_tasks(
     _: Claims,
     path: Path<i32>,
     pgpool: web::Data<PgPool>,
@@ -101,14 +101,23 @@ struct ProjectPost {
     deadline: DateTime<Utc>,
     budget: f32,
     currency_code: String,
-    tasks: Vec<TaskCreate>,
+    tasks: Vec<TaskPost>,
 }
-pub async fn create_project_handler(
+
+#[derive(Deserialize)]
+struct TaskPost {
+    title: String,
+    content: String,
+    deadline: DateTime<Utc>,
+    assignee_id: String,
+    budget: f32,
+}
+
+async fn create_project_handler(
     Json(project_post): Json<ProjectPost>,
     pgpool: web::Data<PgPool>,
     claims: Claims,
 ) -> impl Responder {
-    // user_id is fetched from the cookie
     let project_create = ProjectInsert {
         user_id: claims.sub,
         title: project_post.title,
@@ -129,7 +138,7 @@ pub async fn create_project_handler(
                 title: task.title,
                 content: task.content,
                 deadline: task.deadline,
-                assignee: task.assignee,
+                assignee_id: task.assignee_id,
                 budget: task.budget,
             }
         })
@@ -141,7 +150,7 @@ pub async fn create_project_handler(
     HttpResponse::Created().finish()
 }
 
-pub async fn delete_project_handler(
+async fn delete_project_handler(
     path: Path<i32>,
     pgpool: web::Data<PgPool>,
     _: Claims,

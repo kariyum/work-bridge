@@ -1,13 +1,12 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import Task from '$lib/components/Task.svelte';
-	import { selectedTask, tasksStore } from '$lib/states.svelte';
-	import RichTextEditor from './RichTextEditor.svelte';
+	import { tasksStore } from '$lib/states.svelte';
 	let { projectId }: { projectId?: string } = $props();
 	const taskUrl = projectId ? `/project/${projectId}/task` : '/project/task';
 
 	async function openTask(index: number) {
-		selectedTask.index = index;
+		tasksStore.selected = index;
 		await goto(taskUrl);
 	}
 
@@ -22,7 +21,7 @@
 	<h2>Tasks</h2>
 </div>
 <div class="tasks-container">
-	{#each tasksStore as task, i}
+	{#each tasksStore.tasks as task, i}
 		<Task taskObject={task} onclick={() => openTask(i)}></Task>
 	{/each}
 	<button onclick={addTask} class="add-task">Add Task</button>
