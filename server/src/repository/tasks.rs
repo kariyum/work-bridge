@@ -10,7 +10,7 @@ pub struct RawTask {
     title: String,
     content: String,
     deadline: DateTime<Utc>,
-    assignee: String,
+    assignee_id: String,
     budget: f32,
     created_at: DateTime<Utc>,
 }
@@ -26,18 +26,18 @@ pub struct CreateTask {
     pub title: String,
     pub content: String,
     pub deadline: DateTime<Utc>,
-    pub assignee: String,
+    pub assignee_id: String,
     pub budget: f32,
 }
 
 pub async fn insert_task(create_task: CreateTask, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
-    sqlx::query("INSERT INTO tasks (project_id, title, content, deadline, assignee, budget)
+    sqlx::query("INSERT INTO tasks (project_id, title, content, deadline, assignee_id, budget)
                      VALUES ($1, $2, $3, $4, $5, $6)")
         .bind(create_task.project_id)
         .bind(create_task.title)
         .bind(create_task.content)
         .bind(create_task.deadline)
-        .bind(create_task.assignee)
+        .bind(create_task.assignee_id)
         .bind(create_task.budget)
         .execute(conn)
         .await
@@ -77,7 +77,7 @@ mod test {
             title: "Task 1".to_string(),
             content: "content".to_string(),
             deadline: Utc::now(),
-            assignee: "Assignee1".to_string(),
+            assignee_id: "Assignee1".to_string(),
             budget: 10.5,
         };
         let result = insert_task(create_task, &pg_pool).await;

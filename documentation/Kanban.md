@@ -20,6 +20,8 @@ kanban-plugin: board
 - [ ] add role switching
 - [ ] don't show "loading" when on the overview page!
 - [ ] add integration tests
+- [ ] make richtexteditor buttons unfocused with TAB
+- [ ] Assign tasks to applicants after accepting the proposal
 
 
 ## p2
@@ -39,6 +41,7 @@ kanban-plugin: board
 
 - [ ] update apis for each entity
 - [ ] check CRUD capabilities of each entity
+- [ ] rename assign to assign_id column
 
 
 ## tested
