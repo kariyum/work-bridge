@@ -85,7 +85,6 @@
 							P
 						</button>
 					</div>
-				{/key}
 
 				<div class="vertical-separator"></div>
 				<div class="button-group">
@@ -129,6 +128,8 @@
 						Ul
 					</button>
 				</div>
+				{/key}
+
 			</div>
 		</div>
 	{/if}
