@@ -1,4 +1,6 @@
 import { error } from '@sveltejs/kit';
+import { processProjectJson, type ProjectJSON } from '$lib/types/project';
+
 import type { LayoutLoad } from './$types';
 export const ssr = false;
 export const load: LayoutLoad = async ({ fetch, params }) => {
@@ -17,16 +19,7 @@ export const load: LayoutLoad = async ({ fetch, params }) => {
         const response = await request.json();
         return {
             status: request.status,
-            project: {
-                id: response.id,
-                user_id: response.user_id,
-                title: response.title,
-                content: response.content,
-                budget: response.budget,
-                currency_code: response.currency_code,
-                deadline: new Date(response.deadline),
-                created_at: new Date(response.created_at)
-            }
+            project: processProjectJson(response)
         }
     } catch (error) {
         return {

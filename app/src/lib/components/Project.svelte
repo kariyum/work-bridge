@@ -2,7 +2,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import Task from './Task.svelte';
 
-	let { project }: { project: ProjectObject } = $props();
+	let { project }: { project: ProjectGET } = $props();
 
 	async function deleteProject() {
 		const response = await fetch(`/api/projects/${project.id}`, {

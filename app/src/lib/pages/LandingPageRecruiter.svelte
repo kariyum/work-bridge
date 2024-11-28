@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Project from '$lib/components/Project.svelte';
-	let { projects }: { projects: ProjectObject[] } = $props();
+	let { projects }: { projects: ProjectGET[] } = $props();
 </script>
 
 <div class="outer-container">

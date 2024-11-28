@@ -1,30 +1,26 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { tasksStore } from '$lib/states.svelte';
+	import { TaskClass, tasksStore } from '$lib/states.svelte';
 	import { onDestroy, onMount } from 'svelte';
 	import RichTextEditor from './RichTextEditor.svelte';
 	import Tasks from './Tasks.svelte';
+	import type { ProjectGET, ProjectForm } from '$lib/types/project';
 
-	let {
-		projectId = $bindable(),
-		title = $bindable(),
-		content = $bindable(''),
-		budget = $bindable(),
-		deadline = $bindable()
-	}: {
-		projectId?: string;
-		title?: string;
-		content?: string;
-		budget?: string;
-		deadline?: Date;
-	} = $props();
+	let { projectIn }: { projectIn?: ProjectGET } = $props();
+	let projectFormInput: ProjectForm = $state({
+		title: projectIn?.title ?? '',
+		content: projectIn?.content ?? '',
+		budget: projectIn?.budget.toString() ?? '',
+		currency_code: projectIn?.currency_code ?? '',
+		deadline: projectIn?.deadline.toISOString() ?? ''
+	});
 
 	function toSimpleString(date: Date) {
 		return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 	}
 
 	onMount(() => {
-		tasksStore.tasks = [];
+		tasksStore.tasks = projectIn?.tasks?.map((task) => TaskClass.fromGET(task)) ?? [];
 		tasksStore.selected = -1;
 	});
 
@@ -35,13 +31,12 @@
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
-		const project = {
-			title,
-			content,
-			budget: parseFloat(budget ?? '0'),
-			// deadline: parseInt((Date.parse(deadline) / 1000).toFixed(0)),
-			deadline: new Date().toISOString(),
-			currency_code: 'TD'
+		const projectPost = {
+			title: projectFormInput.title,
+			content: projectFormInput.content,
+			budget: parseFloat(projectFormInput.budget),
+			currency_code: projectFormInput.currency_code,
+			deadline: new Date(projectFormInput.deadline).toISOString()
 		};
 
 		const tasks = tasksStore.tasks.map((task) => {
@@ -58,7 +53,7 @@
 		});
 
 		const payload = {
-			...project,
+			...projectPost,
 			tasks
 		};
 
@@ -78,7 +73,7 @@
 
 <div class="outer-container">
 	<div class="container">
-		{#if projectId}
+		{#if projectIn}
 			<h1>Update your project</h1>
 		{:else}
 			<h1>Create a project</h1>
@@ -86,22 +81,32 @@
 		<form action="" onsubmit={(event) => event.preventDefault()}>
 			<div class="input">
 				<label for="title">Project Title</label>
-				<input type="text" id="title" placeholder="e.g. Business Website" bind:value={title} />
+				<input
+					type="text"
+					id="title"
+					placeholder="e.g. Business Website"
+					bind:value={projectFormInput.title}
+				/>
 			</div>
 			<div class="input">
 				<label for="">Project Description</label>
-				<RichTextEditor bind:x={content}></RichTextEditor>
+				<RichTextEditor bind:x={projectFormInput.content}></RichTextEditor>
 				<!-- <textarea name="content" id="content" placeholder="The project is about designing and implementing..." bind:value={content}></textarea> -->
 			</div>
 
 			<div class="input">
 				<label for="">Budget</label>
-				<input type="text" id="budget" placeholder="500 DT" bind:value={budget} />
+				<input type="text" id="budget" placeholder="500 DT" bind:value={projectFormInput.budget} />
 			</div>
 
 			<div class="input">
 				<label for="">Deadline</label>
-				<input type="date" id="deadline" placeholder="Project deadline" bind:value={deadline} />
+				<input
+					type="date"
+					id="deadline"
+					placeholder="Project deadline"
+					bind:value={projectFormInput.deadline}
+				/>
 			</div>
 			<!-- <div class="input">
 				<label for="">Project Categories</label>
@@ -118,7 +123,7 @@
 				<input type="text" placeholder="Start Date" />
 			</div> -->
 			<div style="width: 100%;">
-				<Tasks {projectId}></Tasks>
+				<Tasks projectId={projectIn?.id}></Tasks>
 			</div>
 			<button onclick={handleSubmit}>Submit</button>
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->
