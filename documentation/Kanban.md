@@ -30,18 +30,18 @@ kanban-plugin: board
 - [ ] add email verification
 - [ ] add phone number verification
 - [ ] keep header / navbar sticky
+- [ ] deleting a project makes the screen refresh because of the asynchronous behavior. Fix that.
 
 
 ## p1
 
 - [ ] update websocket messages implementation
+- [ ] deleting a project must delete a task!
 
 
 ## doing
 
-- [ ] update apis for each entity
 - [ ] check CRUD capabilities of each entity
-- [ ] rename assign to assign_id column
 
 
 ## tested
@@ -50,6 +50,8 @@ kanban-plugin: board
 
 ## done
 
+- [ ] rename assign to assign_id column
+- [ ] update apis for each entity
 - [ ] add errors.rs and map each error to our own custom error
 - [ ] add authorization middlewear
 	- Done with extractors instead of middlewear, the better known approach

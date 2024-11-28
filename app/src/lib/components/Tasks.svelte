@@ -2,8 +2,8 @@
 	import { goto } from '$app/navigation';
 	import Task from '$lib/components/Task.svelte';
 	import { tasksStore } from '$lib/states.svelte';
-	let { projectId }: { projectId?: string } = $props();
-	const taskUrl = projectId ? `/project/${projectId}/task` : '/project/task';
+	let { projectId }: { projectId?: number } = $props();
+	const taskUrl = $derived(projectId ? `/project/${projectId}/task?s=${tasksStore.selected}` : '/project/task');
 
 	async function openTask(index: number) {
 		tasksStore.selected = index;

@@ -1,15 +1,29 @@
 <script lang="ts">
 	import RichTextEditor from '$lib/components/RichTextEditor.svelte';
 	import { TaskClass, tasksStore } from '$lib/states.svelte';
-	let content = $state('');
+	import { untrack } from 'svelte';
+	let { data } = $props();
+
+	$effect(() => {
+		data.selectedIndex;
+		untrack(() => {
+			console.log('s IS', data.selectedIndex);
+			if (data.selectedIndex != undefined && data.selectedIndex != null) {
+				console.log('Settings selected to ', data.selectedIndex);
+				tasksStore.selected = data.selectedIndex;
+				taskClass = initTaskClass();
+			}
+		});
+	});
 
 	function initTaskClass() {
 		let result;
 		if (tasksStore.selected != -1) {
-			result = TaskClass.fromSelf(tasksStore.tasks[tasksStore.selected]);
+			result = tasksStore.tasks[tasksStore.selected].copy();
 		} else {
 			result = new TaskClass('', '', '', '');
 		}
+		console.log('TaskClass:', result);
 		return result;
 	}
 
@@ -21,7 +35,7 @@
 		}
 	}
 
-	let taskClass = initTaskClass();
+	let taskClass = $state(initTaskClass());
 
 	function add(event: Event) {
 		event.preventDefault();
@@ -42,7 +56,9 @@
 			<h2>Add task</h2>
 			<form class="input-container">
 				<input type="text" placeholder="Title" bind:value={taskClass.title} />
-				<RichTextEditor bind:x={taskClass.content}></RichTextEditor>
+				{#key taskClass}
+					<RichTextEditor bind:x={taskClass.content}></RichTextEditor>
+				{/key}
 				<input type="text" placeholder="Assignee" bind:value={taskClass.assignee_id} />
 				<input type="text" placeholder="Skills" bind:value={taskClass.skills} />
 				<!-- <input type="text" placeholder="Status" bind:value={taskClass.status} /> -->

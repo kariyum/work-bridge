@@ -1,4 +1,7 @@
 // used for storing added tasks that are not saved yet!
+
+import type { TaskGET } from "./types/task";
+
 // way of communication between /project/task and /project
 export const tasksStore = $state<{ tasks: Array<TaskClass>, selected: number }>({ tasks: [], selected: -1 });
 
@@ -30,15 +33,15 @@ export class TaskClass {
     }
 
 
-    static fromSelf(self: TaskClass): TaskClass {
+    copy(): TaskClass {
         return new TaskClass(
-            self.title,
-            self.assignee_id,
-            self.status,
-            self.content,
-            self.deadline,
-            self.budget,
-            self.skills
+            this.title,
+            this.assignee_id,
+            this.status,
+            this.content,
+            this.deadline,
+            this.budget,
+            this.skills
         )
     }
 
@@ -51,6 +54,28 @@ export class TaskClass {
         this.deadline = task.deadline;
         this.budget = task.budget;
         this.skills = task.skills;
+    }
+
+    // id: number,
+    // project_id: number,
+    // title: string,
+    // content: string,
+    // assignee_id: string,
+    // bdget: number,
+    // deadline: Date,
+    // created_at: Date,
+
+    static fromGET(task: TaskGET): TaskClass {
+        console.log("Converting TaskGET to TaskClass");
+        return new TaskClass(
+            task.title,
+            task.assignee_id,
+            "status",
+            task.content,
+            task.deadline.toISOString(),
+            task.budget,
+            "skills"
+        );
     }
 
 }

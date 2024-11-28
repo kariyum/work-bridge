@@ -5,12 +5,18 @@
 	import Link from '@tiptap/extension-link';
 
 	let element: HTMLDivElement;
+	let rerender = $state(false);
 	let editor: Editor | undefined = $state();
 
+	$effect(() => {
+		if (editor) {
+			console.log('EDITOR STATE CHANGED!!!');
+		}
+	});
+
 	let { x = $bindable() }: { x: string } = $props();
-	let cc: string = x;
 	onMount(() => {
-		console.log('RichTextEditor Mounted with content:', x);
+		console.log('Onmount richtexteditor');
 		editor = new Editor({
 			editorProps: {
 				attributes: {
@@ -30,10 +36,10 @@
 			onTransaction: () => {
 				// force re-render so `editor.isActive` works as expected
 				// editor = editor;
+				// rerender = !rerender;
 			}
 		});
 		editor.on('update', ({ editor }) => {
-			// console.log('editor html', editor.getHTML());
 			x = editor.getHTML();
 		});
 	});
@@ -49,36 +55,54 @@
 	{#if editor}
 		<div class="outer-button-container">
 			<div class="button-container">
-				<div class="button-group">
-					<button
-						on:click={() => editor?.chain().focus().toggleHeading({ level: 1 }).run()}
-						class:active={editor.isActive('heading', { level: 1 })}
-					>
-						H1
-					</button>
-					<button
-						on:click={() => editor?.chain().focus().toggleHeading({ level: 2 }).run()}
-						class:active={editor.isActive('heading', { level: 2 })}
-					>
-						H2
-					</button>
-					<button
-						on:click={() => editor?.chain().focus().setParagraph().run()}
-						class:active={editor.isActive('paragraph')}
-					>
-						P
-					</button>
-				</div>
+				{#key rerender}
+					<div class="button-group">
+						<button
+							onclick={() => {
+								editor?.chain().focus().toggleHeading({ level: 1 }).run();
+								rerender = !rerender;
+							}}
+							class:active={editor.isActive('heading', { level: 1 })}
+						>
+							H1
+						</button>
+						<button
+							onclick={() => {
+								editor?.chain().focus().toggleHeading({ level: 2 }).run();
+								rerender = !rerender;
+							}}
+							class:active={editor.isActive('heading', { level: 2 })}
+						>
+							H2
+						</button>
+						<button
+							onclick={() => {
+								editor?.chain().focus().setParagraph().run();
+								rerender = !rerender;
+							}}
+							class:active={editor.isActive('paragraph')}
+						>
+							P
+						</button>
+					</div>
+				{/key}
+
 				<div class="vertical-separator"></div>
 				<div class="button-group">
 					<button
-						on:click={() => editor?.chain().focus().toggleBold().run()}
+						onclick={() => {
+							editor?.chain().focus().toggleBold().run();
+							rerender = !rerender;
+						}}
 						class:active={editor.isActive('bold')}
 					>
 						B
 					</button>
 					<button
-						on:click={() => editor?.chain().focus().toggleItalic().run()}
+						onclick={() => {
+							editor?.chain().focus().toggleItalic().run();
+							rerender = !rerender;
+						}}
 						class:active={editor.isActive('italic')}
 					>
 						I
@@ -86,15 +110,20 @@
 				</div>
 				<div class="vertical-separator"></div>
 				<div class="button-group">
-					<!-- svelte-ignore a11y_consider_explicit_label -->
 					<button
-						on:click={() => editor?.chain().focus().toggleOrderedList().run()}
+						onclick={() => {
+							editor?.chain().focus().toggleOrderedList().run();
+							rerender = !rerender;
+						}}
 						class:active={editor.isActive('orderedList')}
 					>
 						Ol
 					</button>
 					<button
-						on:click={() => editor?.chain().focus().toggleBulletList().run()}
+						onclick={() => {
+							editor?.chain().focus().toggleBulletList().run();
+							rerender = !rerender;
+						}}
 						class:active={editor.isActive('bulletList')}
 					>
 						Ul

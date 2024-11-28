@@ -5,13 +5,7 @@
 </script>
 
 {#key data}
-	<CreateProject
-		projectId={data.project?.id}
-		title={data.project?.title}
-		content={data.project?.content}
-		budget={data.project?.budget}
-		deadline={data.project?.deadline}
-	></CreateProject>
+	<CreateProject projectIn={data.project}></CreateProject>
 {/key}
 
 {@render children()}
