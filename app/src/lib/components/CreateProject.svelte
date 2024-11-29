@@ -4,7 +4,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import RichTextEditor from './RichTextEditor.svelte';
 	import Tasks from './Tasks.svelte';
-	import type { ProjectGET, ProjectForm } from '$lib/types/project';
+	import type { ProjectGET, ProjectForm, ProjectPOST } from '$lib/types/project';
 
 	let { projectIn }: { projectIn?: ProjectGET } = $props();
 	let projectFormInput: ProjectForm = $state({
@@ -31,7 +31,7 @@
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
-		const projectPost = {
+		const projectPost: ProjectPOST = {
 			title: projectFormInput.title,
 			content: projectFormInput.content,
 			budget: parseFloat(projectFormInput.budget),

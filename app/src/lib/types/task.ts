@@ -5,6 +5,7 @@ export interface TaskJSON {
     content: string,
     assignee_id: string,
     budget: number,
+    status: string,
     deadline: string,
     created_at: string,
 }
@@ -16,6 +17,7 @@ export interface TaskGET {
     content: string,
     assignee_id: string,
     budget: number,
+    status: string,
     deadline: Date,
     created_at: Date,
 }
@@ -28,6 +30,7 @@ export function processTaskJson(json: TaskJSON) {
         content: json.content,
         assignee_id: json.assignee_id,
         budget: json.budget,
+        status: json.status,
         deadline: new Date(json.deadline),
         created_at: new Date(json.created_at),
     };
@@ -40,7 +43,8 @@ export interface TaskPOST {
     title: string,
     content: string,
     assignee_id: string,
-    bdget: number,
+    budget: number,
+    status: string,
     deadline: string,
     created_at: string,
 }

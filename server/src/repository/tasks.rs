@@ -12,6 +12,7 @@ pub struct RawTask {
     deadline: DateTime<Utc>,
     assignee_id: String,
     budget: f32,
+    status: String,
     created_at: DateTime<Utc>,
 }
 
@@ -28,17 +29,19 @@ pub struct CreateTask {
     pub deadline: DateTime<Utc>,
     pub assignee_id: String,
     pub budget: f32,
+    pub status: String,
 }
 
 pub async fn insert_task(create_task: CreateTask, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
-    sqlx::query("INSERT INTO tasks (project_id, title, content, deadline, assignee_id, budget)
-                     VALUES ($1, $2, $3, $4, $5, $6)")
+    sqlx::query("INSERT INTO tasks (project_id, title, content, deadline, assignee_id, budget, status)
+                     VALUES ($1, $2, $3, $4, $5, $6, $7)")
         .bind(create_task.project_id)
         .bind(create_task.title)
         .bind(create_task.content)
         .bind(create_task.deadline)
         .bind(create_task.assignee_id)
         .bind(create_task.budget)
+        .bind(create_task.status)
         .execute(conn)
         .await
         .map(|_| {})
@@ -79,6 +82,7 @@ mod test {
             deadline: Utc::now(),
             assignee_id: "Assignee1".to_string(),
             budget: 10.5,
+            status: "todo".to_string()
         };
         let result = insert_task(create_task, &pg_pool).await;
         assert!(result.is_ok());

@@ -111,6 +111,7 @@ struct TaskPost {
     deadline: DateTime<Utc>,
     assignee_id: String,
     budget: f32,
+    status: String
 }
 
 async fn create_project_handler(
@@ -140,6 +141,7 @@ async fn create_project_handler(
                 deadline: task.deadline,
                 assignee_id: task.assignee_id,
                 budget: task.budget,
+                status: task.status
             }
         })
         .collect::<Vec<CreateTask>>();
@@ -159,6 +161,15 @@ async fn delete_project_handler(
         .await
         .expect("Failed to delete project");
 
+    HttpResponse::Ok().finish()
+}
+
+async fn put_project_handler(
+    path: Path<i32>,
+    pgpool: web::Data<PgPool>,
+    _: Claims,
+) -> impl Responder {
+    let project_id = path.into_inner();
     HttpResponse::Ok().finish()
 }
 
