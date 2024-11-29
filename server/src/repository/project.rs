@@ -114,4 +114,11 @@ mod tests {
         assert!(projects.is_ok());
 
     }
+
+    #[sqlx::test(fixtures(path = "./fixtures", scripts("tasks.sql")))]
+    async fn delete_project_with_tasks_test(conn: PgPool) {
+        let projects = delete_project(1, &conn)
+            .await;
+        assert!(projects.is_ok());
+    }
 }

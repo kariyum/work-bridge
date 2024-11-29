@@ -27,13 +27,11 @@ export interface ProjectGET {
 
 export interface ProjectPOST {
     id?: number;
-    user_id: string;
     title: string;
     content: string;
     budget: number;
     currency_code: string;
     deadline: string;
-    created_at: string;
     tasks?: Array<TaskPOST>;
 }
 

@@ -66,7 +66,7 @@
 					<option value="done">Done</option>
 				</select>
 				<input type="text" placeholder="Budget" bind:value={taskClass.budget} />
-				<input type="text" placeholder="Deadline" bind:value={taskClass.deadline} />
+				<input type="date" placeholder="Deadline" bind:value={taskClass.deadline} />
 				<!-- <input type="text" placeholder="Estimated Efforts" /> -->
 				<div class="act-task">
 					<button onclick={cancel}>Cancel</button>
