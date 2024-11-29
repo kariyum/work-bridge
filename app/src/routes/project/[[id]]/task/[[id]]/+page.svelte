@@ -7,9 +7,7 @@
 	$effect(() => {
 		data.selectedIndex;
 		untrack(() => {
-			console.log('s IS', data.selectedIndex);
 			if (data.selectedIndex != undefined && data.selectedIndex != null) {
-				console.log('Settings selected to ', data.selectedIndex);
 				tasksStore.selected = data.selectedIndex;
 				taskClass = initTaskClass();
 			}

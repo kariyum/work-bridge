@@ -4,7 +4,7 @@ export interface TaskJSON {
     title: string,
     content: string,
     assignee_id: string,
-    bdget: number,
+    budget: number,
     deadline: string,
     created_at: string,
 }
@@ -27,7 +27,7 @@ export function processTaskJson(json: TaskJSON) {
         title: json.title,
         content: json.content,
         assignee_id: json.assignee_id,
-        budget: json.bdget,
+        budget: json.budget,
         deadline: new Date(json.deadline),
         created_at: new Date(json.created_at),
     };

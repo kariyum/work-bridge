@@ -70,11 +70,11 @@ export class TaskClass {
         return new TaskClass(
             task.title,
             task.assignee_id,
-            "status",
+            "NOT ADDED TO RESPONSE",
             task.content,
             task.deadline.toISOString(),
             task.budget,
-            "skills"
+            "NOT ADDED TO RESPONSE"
         );
     }
 
