@@ -40,21 +40,38 @@ pub struct ProjectInsert {
     pub currency_code: String,
 }
 
-pub async fn insert_project(create_project: ProjectInsert, conn: impl Executor<'_, Database=Postgres>) -> Result<ProjectRaw, sqlx::Error> {
+pub async fn insert_project(project_insert: ProjectInsert, conn: impl Executor<'_, Database=Postgres>) -> Result<ProjectRaw, sqlx::Error> {
     sqlx::query_as::<_, ProjectRaw>("
         INSERT INTO projects (user_id, title, content, deadline, budget, currency_code)
         VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING *
         ")
-        .bind(create_project.user_id)
-        .bind(create_project.title)
-        .bind(create_project.content)
-        .bind(create_project.deadline)
-        .bind(create_project.budget)
-        .bind(create_project.currency_code)
+        .bind(project_insert.user_id)
+        .bind(project_insert.title)
+        .bind(project_insert.content)
+        .bind(project_insert.deadline)
+        .bind(project_insert.budget)
+        .bind(project_insert.currency_code)
         .fetch_one(conn)
         .await
+}
 
+
+pub async fn put_project(project_id: i32, project_insert: ProjectInsert, conn: impl Executor<'_, Database=Postgres>) -> Result<ProjectRaw, sqlx::Error> {
+    sqlx::query_as::<_, ProjectRaw>("
+        UPDATE projects SET user_id = $1, title = $2, content = $3, deadline = $4, budget = $5, currency_code = $6
+        WHERE id = $7
+        RETURNING *
+        ")
+        .bind(project_insert.user_id)
+        .bind(project_insert.title)
+        .bind(project_insert.content)
+        .bind(project_insert.deadline)
+        .bind(project_insert.budget)
+        .bind(project_insert.currency_code)
+        .bind(project_id)
+        .fetch_one(conn)
+        .await
 }
 
 pub async fn delete_project(project_id: i32, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
@@ -120,5 +137,19 @@ mod tests {
         let projects = delete_project(1, &conn)
             .await;
         assert!(projects.is_ok());
+    }
+
+    #[sqlx::test(fixtures(path = "./fixtures", scripts("projects.sql")))]
+    async fn put_project_test(conn: PgPool) {
+        let project_insert = ProjectInsert {
+            user_id: "user@gmail.com".to_string(),
+            title: "title_updated".to_string(),
+            content: "content".to_string(),
+            deadline: Utc::now(),
+            budget: 10.5,
+            currency_code: "TD".to_string()
+        };
+        let updated_project = put_project(1, project_insert, &conn).await.unwrap();
+        assert_eq!(updated_project.title, "title_updated");
     }
 }

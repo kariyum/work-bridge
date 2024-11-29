@@ -47,6 +47,22 @@ pub async fn insert_task(create_task: CreateTask, conn: impl Executor<'_, Databa
         .map(|_| {})
 }
 
+pub async fn update_task(task_id: i32, create_task: CreateTask, conn: impl Executor<'_, Database=Postgres>) -> Result<RawTask, sqlx::Error> {
+    sqlx::query_as::<_, RawTask>("UPDATE tasks SET project_id = $1, title = $2, content = $3, deadline = $4, assignee_id = $5, budget = $6, status = $7
+                     WHERE id = $8
+                     RETURNING *")
+        .bind(create_task.project_id)
+        .bind(create_task.title)
+        .bind(create_task.content)
+        .bind(create_task.deadline)
+        .bind(create_task.assignee_id)
+        .bind(create_task.budget)
+        .bind(create_task.status)
+        .bind(task_id)
+        .fetch_one(conn)
+        .await
+}
+
 pub async fn insert_tasks_sequentially(tasks: Vec<CreateTask>, conn: &PgPool) -> Result<(), sqlx::Error> {
     for task in tasks {
         insert_task(task, conn).await.expect("Failed to insert task");
@@ -69,7 +85,7 @@ pub async fn insert_tasks_concurrently(tasks: Vec<CreateTask>, conn: &PgPool) ->
 }
 
 mod test {
-    use crate::repository::tasks::{insert_task, read_tasks_by_project_id, CreateTask};
+    use crate::repository::tasks::{insert_task, read_tasks_by_project_id, update_task, CreateTask};
     use chrono::Utc;
     use sqlx::PgPool;
 
@@ -94,5 +110,20 @@ mod test {
         let result = read_tasks_by_project_id(project_id, &pg_pool).await;
         assert!(result.is_ok());
         assert!(result.unwrap().len() > 0);
+    }
+
+    #[sqlx::test(fixtures(path = "./fixtures", scripts("tasks.sql")))]
+    async fn update_task_test(pg_pool: PgPool) {
+        let create_task = CreateTask {
+            project_id: 1,
+            title: "Updated".to_string(),
+            content: "content".to_string(),
+            deadline: Utc::now(),
+            assignee_id: "Assignee1".to_string(),
+            budget: 10.5,
+            status: "todo".to_string()
+        };
+        let result = update_task(2, create_task, &pg_pool).await.unwrap();
+        assert_eq!(result.title, "Updated");
     }
 }

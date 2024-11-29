@@ -40,7 +40,7 @@
 		};
 
 		const tasks = tasksStore.tasks.map((task) => {
-			return {
+			const attributes = {
 				title: task.title,
 				content: task.content,
 				assignee_id: task.assignee_id,
@@ -50,6 +50,10 @@
 				deadline: new Date().toISOString(),
 				currency_code: 'TD'
 			};
+			return {
+				...attributes,
+				id: task.id
+			}
 		});
 
 		const payload = {
@@ -57,16 +61,31 @@
 			tasks
 		};
 
-		const response = await fetch('/api/projects', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(payload)
-		});
+		if (projectIn?.id) {
+			const response = await fetch(`/api/projects/${projectIn.id}`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			});
 
-		if (response.status === 201) {
-			await goto('/');
+			if (response.status === 200) {
+				await goto('/');
+			}
+			return;
+		} else {
+			const response = await fetch('/api/projects', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			});
+
+			if (response.status === 201) {
+				await goto('/');
+			}
 		}
 	}
 </script>
@@ -125,7 +144,7 @@
 			<div style="width: 100%;">
 				<Tasks projectId={projectIn?.id}></Tasks>
 			</div>
-			<button onclick={handleSubmit}>Submit</button>
+			<button onclick={handleSubmit}>{projectIn ? "Update" : "Submit"}</button>
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->
 		</form>
 	</div>
