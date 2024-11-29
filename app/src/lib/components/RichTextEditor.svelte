@@ -8,15 +8,8 @@
 	let rerender = $state(false);
 	let editor: Editor | undefined = $state();
 
-	$effect(() => {
-		if (editor) {
-			console.log('EDITOR STATE CHANGED!!!');
-		}
-	});
-
 	let { x = $bindable() }: { x: string } = $props();
 	onMount(() => {
-		console.log('Onmount richtexteditor');
 		editor = new Editor({
 			editorProps: {
 				attributes: {
