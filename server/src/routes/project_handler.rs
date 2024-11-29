@@ -1,6 +1,6 @@
 use crate::repository;
-use crate::repository::project::{delete_project, insert_project, ProjectInsert, ProjectRaw};
-use crate::repository::tasks::{insert_tasks_sequentially, CreateTask, RawTask};
+use crate::repository::project::{delete_project, insert_project, put_project, ProjectInsert, ProjectRaw};
+use crate::repository::tasks::{insert_tasks_sequentially, update_task, CreateTask, RawTask};
 use crate::services::token::Claims;
 use crate::tasks::repo::TaskCreate;
 use actix_web::dev::HttpServiceFactory;
@@ -106,6 +106,7 @@ struct ProjectPost {
 
 #[derive(Deserialize)]
 struct TaskPost {
+    id: Option<i32>,
     title: String,
     content: String,
     deadline: DateTime<Utc>,
@@ -166,11 +167,59 @@ async fn delete_project_handler(
 
 async fn put_project_handler(
     path: Path<i32>,
+    Json(project_post): Json<ProjectPost>,
     pgpool: web::Data<PgPool>,
-    _: Claims,
+    claims: Claims,
 ) -> impl Responder {
     let project_id = path.into_inner();
-    HttpResponse::Ok().finish()
+    let project_insert = ProjectInsert {
+        user_id: claims.sub,
+        title: project_post.title,
+        content: project_post.content,
+        deadline: project_post.deadline,
+        budget: project_post.budget,
+        currency_code: project_post.currency_code,
+    };
+    let response: ProjectResponse = put_project(project_id, project_insert, pgpool.as_ref())
+        .await
+        .expect(&format!("Failed to put project {}", project_id))
+        .into();
+
+
+    let (tasks_to_update, tasks_to_insert): (Vec<TaskPost>, Vec<TaskPost>) = project_post.tasks.into_iter().partition(|task| {
+        task.id.is_some()
+    });
+    let tasks = tasks_to_insert.into_iter()
+        .map(|task| {
+            CreateTask {
+                project_id: response.id,
+                title: task.title,
+                content: task.content,
+                deadline: task.deadline,
+                assignee_id: task.assignee_id,
+                budget: task.budget,
+                status: task.status
+            }
+        })
+        .collect::<Vec<CreateTask>>();
+
+    insert_tasks_sequentially(tasks, pgpool.as_ref())
+        .await.expect("Failed to insert tasks");
+
+    for task in tasks_to_update {
+        let pl = CreateTask {
+            project_id: response.id,
+            title: task.title,
+            content: task.content,
+            deadline: task.deadline,
+            assignee_id: task.assignee_id,
+            budget: task.budget,
+            status: task.status
+        };
+        update_task(task.id.unwrap(), pl, pgpool.as_ref()).await.expect("Failed to update task");
+    }
+
+    HttpResponse::Ok().json(response)
 }
 
 pub fn routes() -> impl HttpServiceFactory {
@@ -179,4 +228,5 @@ pub fn routes() -> impl HttpServiceFactory {
         .route("", web::post().to(create_project_handler))
         .route("/{id}", web::get().to(get_project_with_tasks))
         .route("/{id}", web::delete().to(delete_project_handler))
+        .route("/{id}", web::put().to(put_project_handler))
 }

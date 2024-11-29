@@ -13,6 +13,7 @@ export class TaskClass {
     deadline: string = $state('');
     budget?: number = $state(0);
     skills: string = $state('');
+    id?: number = $state(undefined);
 
     constructor(
         title: string = '',
@@ -64,9 +65,11 @@ export class TaskClass {
     // bdget: number,
     // deadline: Date,
     // created_at: Date,
-
+    withId(id: number): TaskClass {
+        this.id = id;
+        return this;
+    }
     static fromGET(task: TaskGET): TaskClass {
-        console.log("Converting TaskGET to TaskClass");
         return new TaskClass(
             task.title,
             task.assignee_id,
@@ -75,7 +78,7 @@ export class TaskClass {
             task.deadline.toISOString(),
             task.budget,
             "NOT ADDED TO RESPONSE"
-        );
+        ).withId(task.id);
     }
 
 }
