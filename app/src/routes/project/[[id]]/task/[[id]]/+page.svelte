@@ -19,7 +19,7 @@
 		if (tasksStore.selected != -1) {
 			result = tasksStore.tasks[tasksStore.selected].copy();
 		} else {
-			result = new TaskClass('', '', '', '');
+			result = new TaskClass('', '', 'todo', '');
 		}
 		console.log('TaskClass:', result);
 		return result;
@@ -78,6 +78,11 @@
 </div>
 
 <style>
+	select {
+		padding: 0.5rem;
+		border-radius: 5px;
+		border-color: #bbb;
+	}
 	.act-task {
 		margin-left: auto;
 	}
@@ -91,14 +96,7 @@
 		flex-direction: column;
 		gap: 0.5rem;
 	}
-	.popover2 {
-		margin: auto;
-		padding: 1rem;
-		border: 1px solid #eee;
-		border-radius: 5px;
-		width: 50%;
-		max-width: 1000px;
-	}
+
 	.popover {
 		position: absolute;
 		top: 50%;

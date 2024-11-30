@@ -75,7 +75,7 @@ export class TaskClass {
             task.assignee_id,
             task.status,
             task.content,
-            task.deadline.toISOString(),
+            task.deadline.toLocaleDateString('en-CA'),
             task.budget,
             "NOT ADDED TO RESPONSE"
         ).withId(task.id);

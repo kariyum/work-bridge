@@ -12,7 +12,7 @@
 		content: projectIn?.content ?? '',
 		budget: projectIn?.budget.toString() ?? '',
 		currency_code: projectIn?.currency_code ?? '',
-		deadline: projectIn?.deadline.toISOString() ?? ''
+		deadline: projectIn?.deadline.toLocaleDateString('en-CA') ?? ''
 	});
 
 	function toSimpleString(date: Date) {
