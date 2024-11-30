@@ -2,7 +2,6 @@
 	import type { TaskClass } from "$lib/states.svelte";
 	import RichTextEditor from "./RichTextEditor.svelte";
 
-	// let { taskObject, onclick }: { taskObject: TaskClass | undefined } = $props();
 	let props = $props();
 	let taskObject = props.taskObject;
     let content = $state('');
@@ -37,6 +36,7 @@
 	}
 	div {
 		border-radius: 5px;
+		background-color: inherit;
 	}
 	.container {
 		display: flex;
@@ -45,5 +45,10 @@
 		border: 1px solid #eee;
 		border-radius: 5px;
 		padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+	}
+	.container:hover {
+		cursor: pointer;
+		border: 1px solid #aaa;
+		background-color: #f0f0fa;
 	}
 </style>
