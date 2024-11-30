@@ -1,13 +1,7 @@
 <script>
-	function fetchProposals() {
-		fetch('/api/proposals')
-			.then((response) => response.json())
-			.then((data) => {
-				console.log(data);
-			});
-	}
+	import Skills from "$lib/components/Skills.svelte";
+
+
 </script>
 
-<button onclick={fetchProposals}>
-	Fetch Proposals
-</button>
+<Skills skills={["Test here"]} />

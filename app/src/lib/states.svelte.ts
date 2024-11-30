@@ -12,7 +12,7 @@ export class TaskClass {
     content: string = $state('')
     deadline: string = $state('');
     budget?: number = $state(0);
-    skills: string = $state('');
+    skills: string[] = $state([]);
     id?: number = $state(undefined);
 
     constructor(
@@ -22,7 +22,7 @@ export class TaskClass {
         content: string = '',
         deadline: string = '',
         budget: number | undefined = undefined,
-        skills: string = ''
+        skills: string[] = []
     ) {
         this.title = title;
         this.assignee_id = assignee_id;
@@ -77,7 +77,7 @@ export class TaskClass {
             task.content,
             task.deadline.toLocaleDateString('en-CA'),
             task.budget,
-            "NOT ADDED TO RESPONSE"
+            ["NOT ADDED TO RESPONSE"]
         ).withId(task.id);
     }
 

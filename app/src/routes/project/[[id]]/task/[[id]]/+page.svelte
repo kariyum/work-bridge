@@ -1,5 +1,6 @@
 <script lang="ts">
 	import RichTextEditor from '$lib/components/RichTextEditor.svelte';
+	import Skills from '$lib/components/Skills.svelte';
 	import { TaskClass, tasksStore } from '$lib/states.svelte';
 	import { untrack } from 'svelte';
 	let { data } = $props();
@@ -58,7 +59,10 @@
 					<RichTextEditor bind:x={taskClass.content}></RichTextEditor>
 				{/key}
 				<input type="text" placeholder="Assignee" bind:value={taskClass.assignee_id} />
-				<input type="text" placeholder="Skills" bind:value={taskClass.skills} />
+				<!-- <input type="text" placeholder="Skills" bind:value={taskClass.skills} /> -->
+				<div class="skills-input">
+					<Skills skills={taskClass.skills} ></Skills>
+				</div>
 				<!-- <input type="text" placeholder="Status" bind:value={taskClass.status} /> -->
 				<select name="status" id="status" bind:value={taskClass.status}>
 					<option value="todo">Todo</option>
@@ -98,6 +102,7 @@
 	}
 
 	.popover {
+		background-color: white;
 		position: absolute;
 		top: 50%;
 		left: 50%;
@@ -119,5 +124,12 @@
 		height: 100%;
 		backdrop-filter: blur(2px);
 		background-color: rgba(0, 0, 0, 0.1);
+	}
+
+	.skills-input {
+		border: 1px solid #aaa;
+		padding: 0.5rem 0.5rem;
+		border-radius: 5px;
+		width: max-width;
 	}
 </style>
