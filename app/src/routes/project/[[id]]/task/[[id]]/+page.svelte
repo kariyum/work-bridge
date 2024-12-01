@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import RichTextEditor from '$lib/components/RichTextEditor.svelte';
 	import Skills from '$lib/components/Skills.svelte';
 	import { TaskClass, tasksStore } from '$lib/states.svelte';
@@ -6,9 +7,10 @@
 	let { data } = $props();
 
 	$effect(() => {
+		// effect needed when the page is refreshed
 		data.selectedIndex;
 		untrack(() => {
-			if (data.selectedIndex != undefined && data.selectedIndex != null) {
+			if (data.selectedIndex != undefined && data.selectedIndex != null && tasksStore.selected === -1) {
 				tasksStore.selected = data.selectedIndex;
 				taskClass = initTaskClass();
 			}
@@ -43,17 +45,19 @@
 		history.back();
 	}
 
-	function cancel() {
+	async function cancel() {
 		tasksStore.selected = -1;
-		history.back();
+		const url = window.location.pathname.split('/').slice(0, -1).join('/');
+		await goto(url);
 	}
+
 </script>
 
 <div class="blur">
 	<div class="popover">
 		<div class="create-task">
 			<h2>Add task</h2>
-			<form class="input-container">
+			<form class="input-container" onsubmit={(event) => event.preventDefault()}>
 				<input type="text" placeholder="Title" bind:value={taskClass.title} />
 				{#key taskClass}
 					<RichTextEditor bind:x={taskClass.content}></RichTextEditor>
