@@ -45,7 +45,6 @@
 			async (response) => {
 				if (response.ok) {
 					await invalidateAll();
-					await goto('/');
 				} else {
 					error_message = 'Wrong combination';
 				}

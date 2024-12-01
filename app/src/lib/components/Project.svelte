@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
+	import type { ProjectGET } from '$lib/types/project';
 	import Task from './Task.svelte';
 
 	let { project }: { project: ProjectGET } = $props();

@@ -37,6 +37,7 @@ kanban-plugin: board
 
 - [ ] update websocket messages implementation
 - [ ] deleting a project must delete a task!
+- [ ] remove accessing writeable store in the +layout.ts page /
 
 
 ## doing
