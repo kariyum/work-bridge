@@ -53,7 +53,7 @@
 			return {
 				...attributes,
 				id: task.id
-			}
+			};
 		});
 
 		const payload = {
@@ -144,13 +144,26 @@
 			<div style="width: 100%;">
 				<Tasks projectId={projectIn?.id}></Tasks>
 			</div>
-			<button onclick={handleSubmit}>{projectIn ? "Update" : "Submit"}</button>
+			<hr />
+			<div class="action-buttons">
+				<button onclick={() => goto("/")}>Cancel</button>
+				<button onclick={handleSubmit}>{projectIn ? 'Update Project' : 'Save Project'}</button>
+			</div>
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->
 		</form>
 	</div>
 </div>
 
 <style>
+	.action-buttons {
+		display: flex;
+		gap: 1rem;
+		margin-left: auto;
+	}
+	hr {
+		width: 100%;
+		margin: 1rem 0 0.3rem 0;
+	}
 	.input {
 		width: 100%;
 		margin: 0 0 0.5rem 0;
@@ -158,9 +171,7 @@
 		flex-direction: column;
 	}
 
-	.input > input,
-	textarea,
-	select {
+	.input > input {
 		margin-top: 0.5rem;
 		width: 100%;
 	}
@@ -195,16 +206,8 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		gap: 0.3rem;
 	}
-
-	textarea {
-		resize: none;
-	}
-
-	/* 
-	*:focus {
-		outline: none;
-	} */
 
 	input,
 	textarea {

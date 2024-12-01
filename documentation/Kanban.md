@@ -22,6 +22,7 @@ kanban-plugin: board
 - [ ] add integration tests
 - [ ] make richtexteditor buttons unfocused with TAB
 - [ ] Assign tasks to applicants after accepting the proposal
+- [ ] ritchtexteditor buttons do not react when the cursor is on H1 H2 text while before the cursor was writing in P
 
 
 ## p2
@@ -38,6 +39,7 @@ kanban-plugin: board
 - [ ] update websocket messages implementation
 - [ ] deleting a project must delete a task!
 - [ ] remove accessing writeable store in the +layout.ts page /
+- [ ] upon logging in route the user to home page
 
 
 ## doing
