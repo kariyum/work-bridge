@@ -65,7 +65,7 @@
 				<input type="text" placeholder="Assignee" bind:value={taskClass.assignee_id} />
 				<!-- <input type="text" placeholder="Skills" bind:value={taskClass.skills} /> -->
 				<div class="skills-input">
-					<Skills skills={taskClass.skills} ></Skills>
+					<Skills bind:skills={taskClass.skills} ></Skills>
 				</div>
 				<!-- <input type="text" placeholder="Status" bind:value={taskClass.status} /> -->
 				<select name="status" id="status" bind:value={taskClass.status}>

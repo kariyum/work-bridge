@@ -5,6 +5,7 @@
 	import RichTextEditor from './RichTextEditor.svelte';
 	import Tasks from './Tasks.svelte';
 	import type { ProjectGET, ProjectForm, ProjectPOST } from '$lib/types/project';
+	import type { TaskPOST } from '$lib/types/task';
 
 	let { projectIn }: { projectIn?: ProjectGET } = $props();
 	let projectFormInput: ProjectForm = $state({
@@ -40,15 +41,14 @@
 		};
 
 		const tasks = tasksStore.tasks.map((task) => {
-			const attributes = {
+			const attributes: TaskPOST = {
 				title: task.title,
 				content: task.content,
 				assignee_id: task.assignee_id,
 				skills: task.skills,
 				status: task.status,
 				budget: parseFloat(task.budget?.toString() ?? '0'),
-				deadline: new Date().toISOString(),
-				currency_code: 'TD'
+				deadline: new Date().toISOString()
 			};
 			return {
 				...attributes,
@@ -137,16 +137,12 @@
 				</select>
 			</div> -->
 
-			<!-- <div class="input">
-				<label for="">Start Date</label>
-				<input type="text" placeholder="Start Date" />
-			</div> -->
 			<div style="width: 100%;">
 				<Tasks projectId={projectIn?.id}></Tasks>
 			</div>
 			<hr />
 			<div class="action-buttons">
-				<button onclick={() => goto("/")}>Cancel</button>
+				<button onclick={() => goto('/')}>Cancel</button>
 				<button onclick={handleSubmit}>{projectIn ? 'Update Project' : 'Save Project'}</button>
 			</div>
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->
