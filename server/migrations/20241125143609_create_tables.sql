@@ -52,6 +52,7 @@ CREATE TABLE
         assignee_id VARCHAR(255) NOT NULL,
         budget FLOAT4 NOT NULL,
         status VARCHAR(255) NOT NULL,
+        skills TEXT[] NOT NULL,
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE
     );

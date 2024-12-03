@@ -112,7 +112,8 @@ struct TaskPost {
     deadline: DateTime<Utc>,
     assignee_id: String,
     budget: f32,
-    status: String
+    status: String,
+    skills: Vec<String>,
 }
 
 async fn create_project_handler(
@@ -142,7 +143,8 @@ async fn create_project_handler(
                 deadline: task.deadline,
                 assignee_id: task.assignee_id,
                 budget: task.budget,
-                status: task.status
+                status: task.status,
+                skills: task.skills
             }
         })
         .collect::<Vec<CreateTask>>();
@@ -198,7 +200,8 @@ async fn put_project_handler(
                 deadline: task.deadline,
                 assignee_id: task.assignee_id,
                 budget: task.budget,
-                status: task.status
+                status: task.status,
+                skills: task.skills
             }
         })
         .collect::<Vec<CreateTask>>();
@@ -214,7 +217,8 @@ async fn put_project_handler(
             deadline: task.deadline,
             assignee_id: task.assignee_id,
             budget: task.budget,
-            status: task.status
+            status: task.status,
+            skills: task.skills
         };
         update_task(task.id.unwrap(), pl, pgpool.as_ref()).await.expect("Failed to update task");
     }
