@@ -8,6 +8,7 @@ export interface TaskJSON {
     status: string,
     deadline: string,
     created_at: string,
+    skills: string[],
 }
 
 export interface TaskGET {
@@ -18,6 +19,7 @@ export interface TaskGET {
     assignee_id: string,
     budget: number,
     status: string,
+    skills: string[],
     deadline: Date,
     created_at: Date,
 }
@@ -33,18 +35,17 @@ export function processTaskJson(json: TaskJSON) {
         status: json.status,
         deadline: new Date(json.deadline),
         created_at: new Date(json.created_at),
+        skills: json.skills
     };
     return result;
 }
 
 export interface TaskPOST {
-    id: number,
-    project_id: number,
     title: string,
     content: string,
     assignee_id: string,
+    skills: string[]
     budget: number,
     status: string,
     deadline: string,
-    created_at: string,
 }
