@@ -1,4 +1,6 @@
 <script lang="ts">
+	import type { ProjectGET } from "$lib/types/project";
+
 	let { project }: { project: ProjectGET } = $props();
 
 	async function handleEasyApply() {

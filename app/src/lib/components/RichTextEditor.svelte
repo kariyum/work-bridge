@@ -5,12 +5,11 @@
 	import Link from '@tiptap/extension-link';
 
 	let element: HTMLDivElement;
-	let rerender = $state(false);
-	let editor: Editor | undefined = $state();
+	let myEditor: Editor | undefined = $state();
 
 	let { x = $bindable() }: { x: string } = $props();
 	onMount(() => {
-		editor = new Editor({
+		myEditor = new Editor({
 			editorProps: {
 				attributes: {
 					class: 'editor'
@@ -26,106 +25,94 @@
 				})
 			],
 			content: x,
-			onTransaction: () => {
+			onTransaction: (editor) => {
 				// force re-render so `editor.isActive` works as expected
-				// editor = editor;
-				// rerender = !rerender;
+				myEditor = undefined;
+				myEditor = editor.editor;
 			}
 		});
-		editor.on('update', ({ editor }) => {
+		myEditor.on('update', ({ editor }) => {
 			x = editor.getHTML();
 		});
 	});
 
 	onDestroy(() => {
-		if (editor) {
-			editor.destroy();
+		if (myEditor) {
+			myEditor.destroy();
 		}
 	});
 </script>
 
 <div>
-	{#if editor}
-		<div class="outer-button-container">
-			<div class="button-container">
-				{#key rerender}
-					<div class="button-group">
-						<button
-							onclick={() => {
-								editor?.chain().focus().toggleHeading({ level: 1 }).run();
-								rerender = !rerender;
-							}}
-							class:active={editor.isActive('heading', { level: 1 })}
-						>
-							H1
-						</button>
-						<button
-							onclick={() => {
-								editor?.chain().focus().toggleHeading({ level: 2 }).run();
-								rerender = !rerender;
-							}}
-							class:active={editor.isActive('heading', { level: 2 })}
-						>
-							H2
-						</button>
-						<button
-							onclick={() => {
-								editor?.chain().focus().setParagraph().run();
-								rerender = !rerender;
-							}}
-							class:active={editor.isActive('paragraph')}
-						>
-							P
-						</button>
-					</div>
+	<div class="outer-button-container">
+		<div class="button-container">
+			<div class="button-group">
+				<button
+					onclick={() => {
+						myEditor?.chain().focus().toggleHeading({ level: 1 }).run();
+					}}
+					class:active={myEditor?.isActive('heading', { level: 1 })}
+				>
+					H1
+				</button>
+				<button
+					onclick={() => {
+						myEditor?.chain().focus().toggleHeading({ level: 2 }).run();
+					}}
+					class:active={myEditor?.isActive('heading', { level: 2 })}
+				>
+					H2
+				</button>
+				<button
+					onclick={() => {
+						myEditor?.chain().focus().setParagraph().run();
+					}}
+					class:active={myEditor?.isActive('paragraph')}
+				>
+					P
+				</button>
+			</div>
 
-				<div class="vertical-separator"></div>
-				<div class="button-group">
-					<button
-						onclick={() => {
-							editor?.chain().focus().toggleBold().run();
-							rerender = !rerender;
-						}}
-						class:active={editor.isActive('bold')}
-					>
-						B
-					</button>
-					<button
-						onclick={() => {
-							editor?.chain().focus().toggleItalic().run();
-							rerender = !rerender;
-						}}
-						class:active={editor.isActive('italic')}
-					>
-						I
-					</button>
-				</div>
-				<div class="vertical-separator"></div>
-				<div class="button-group">
-					<button
-						onclick={() => {
-							editor?.chain().focus().toggleOrderedList().run();
-							rerender = !rerender;
-						}}
-						class:active={editor.isActive('orderedList')}
-					>
-						Ol
-					</button>
-					<button
-						onclick={() => {
-							editor?.chain().focus().toggleBulletList().run();
-							rerender = !rerender;
-						}}
-						class:active={editor.isActive('bulletList')}
-					>
-						Ul
-					</button>
-				</div>
-				{/key}
-
+			<div class="vertical-separator"></div>
+			<div class="button-group">
+				<button
+					onclick={() => {
+						myEditor?.chain().focus().toggleBold().run();
+					}}
+					class:active={myEditor?.isActive('bold')}
+				>
+					B
+				</button>
+				<button
+					onclick={() => {
+						myEditor?.chain().focus().toggleItalic().run();
+					}}
+					class:active={myEditor?.isActive('italic')}
+				>
+					I
+				</button>
+			</div>
+			<div class="vertical-separator"></div>
+			<div class="button-group">
+				<button
+					onclick={() => {
+						myEditor?.chain().focus().toggleOrderedList().run();
+					}}
+					class:active={myEditor?.isActive('orderedList')}
+				>
+					Ol
+				</button>
+				<button
+					onclick={() => {
+						myEditor?.chain().focus().toggleBulletList().run();
+					}}
+					class:active={myEditor?.isActive('bulletList')}
+				>
+					Ul
+				</button>
 			</div>
 		</div>
-	{/if}
+	</div>
 	<div bind:this={element}></div>
 </div>
 
