@@ -1,14 +1,18 @@
 <script lang="ts">
+	import type { TaskClass } from '$lib/states.svelte';
 	import Tag from './Tag.svelte';
 
-	let { skills = $bindable() }: { skills: string[] } = $props();
+	let {
+		taskClass
+	}: {
+		taskClass: TaskClass;
+	} = $props();
+
 	let skillInput = $state('');
-	function remove(index: number) {
-		skills.splice(index, 1);
-	}
+
 	function onKeydown(event: KeyboardEvent) {
 		if (event.key === 'Enter') {
-			skills.push(skillInput);
+			taskClass.addSkill(skillInput);
 			skillInput = '';
 			event.preventDefault();
 		}
@@ -19,13 +23,13 @@
 </script>
 
 <div class="container">
-	{#each skills as skill, index}
+	{#each taskClass.skills as skill, index}
 		<div>
-			<Tag onClose={() => remove(index)}>
-                <p>
-                    {skill}
-                </p>
-            </Tag>
+			<Tag onClose={() => taskClass.removeSkillIndex(index)}>
+				<p>
+					{skill}
+				</p>
+			</Tag>
 		</div>
 	{/each}
 	<input type="text" placeholder="Add a skill" bind:value={skillInput} onkeydown={onKeydown} />
@@ -33,7 +37,7 @@
 
 <style>
 	.container {
-        width: max-width;
+		width: max-width;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
@@ -52,7 +56,7 @@
 	input:focus {
 		outline: none;
 	}
-    p {
-        line-height: 1.2;
-    }
+	p {
+		line-height: 1.2;
+	}
 </style>
