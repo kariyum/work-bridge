@@ -1,13 +1,19 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { TaskClass, tasksStore } from '$lib/states.svelte';
-	import { onDestroy, onMount } from 'svelte';
+	import { TasksGlobalState } from '$lib/states.svelte';
+	import type { ProjectForm, ProjectGET, ProjectPOST } from '$lib/types/project';
+	import type { TaskPOST } from '$lib/types/task';
 	import RichTextEditor from './RichTextEditor.svelte';
 	import Tasks from './Tasks.svelte';
-	import type { ProjectGET, ProjectForm, ProjectPOST } from '$lib/types/project';
-	import type { TaskPOST } from '$lib/types/task';
 
-	let { projectIn }: { projectIn?: ProjectGET } = $props();
+	let {
+		projectIn,
+		tasksGlobalState
+	}: {
+		projectIn?: ProjectGET;
+		tasksGlobalState: TasksGlobalState;
+	} = $props();
+
 	let projectFormInput: ProjectForm = $state({
 		title: projectIn?.title ?? '',
 		content: projectIn?.content ?? '',
@@ -20,16 +26,6 @@
 		return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
 	}
 
-	onMount(() => {
-		tasksStore.tasks = projectIn?.tasks?.map((task) => TaskClass.fromGET(task)) ?? [];
-		tasksStore.selected = -1;
-	});
-
-	onDestroy(() => {
-		tasksStore.tasks = [];
-		tasksStore.selected = -1;
-	});
-
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 		const projectPost: ProjectPOST = {
@@ -40,7 +36,7 @@
 			deadline: new Date(projectFormInput.deadline).toISOString()
 		};
 
-		const tasks = tasksStore.tasks.map((task) => {
+		const tasks = tasksGlobalState.tasks.map((task) => {
 			const attributes: TaskPOST = {
 				title: task.title,
 				content: task.content,
@@ -138,7 +134,7 @@
 			</div> -->
 
 			<div style="width: 100%;">
-				<Tasks projectId={projectIn?.id}></Tasks>
+				<Tasks projectId={projectIn?.id} {tasksGlobalState}></Tasks>
 			</div>
 			<hr />
 			<div class="action-buttons">

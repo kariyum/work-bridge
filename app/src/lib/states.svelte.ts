@@ -2,9 +2,6 @@
 
 import type { TaskGET } from "./types/task";
 
-// way of communication between /project/task and /project
-export const tasksStore = $state<{ tasks: Array<TaskClass>, selected: number }>({ tasks: [], selected: -1 });
-
 export class TaskClass {
     title: string = $state('');
     assignee_id: string = $state('');
@@ -57,18 +54,11 @@ export class TaskClass {
         this.skills = task.skills;
     }
 
-    // id: number,
-    // project_id: number,
-    // title: string,
-    // content: string,
-    // assignee_id: string,
-    // bdget: number,
-    // deadline: Date,
-    // created_at: Date,
     withId(id: number): TaskClass {
         this.id = id;
         return this;
     }
+
     static fromGET(task: TaskGET): TaskClass {
         return new TaskClass(
             task.title,
@@ -81,4 +71,45 @@ export class TaskClass {
         ).withId(task.id);
     }
 
+    addSkill(skill: string): void {
+        this.skills.push(skill);
+    }
+
+    removeSkillIndex(index: number): void {
+        this.skills.splice(index, 1);
+    }
+}
+
+
+export class TasksGlobalState {
+    tasks: Array<TaskClass> = $state([]);
+    selected: number = $state(-1);
+
+    constructor(tasks: Array<TaskClass> = [], selected: number = -1) {
+        this.tasks = tasks;
+        this.selected = selected;
+    }
+
+    copy(): TasksGlobalState {
+        return new TasksGlobalState(
+            this.tasks.map((task) => task.copy()),
+            this.selected
+        );
+    }
+
+    addTask(task: TaskClass): void {
+        this.tasks.push(task);
+    }
+
+    removeTask(index: number): void {
+        this.tasks.splice(index, 1);
+    }
+
+    selectTask(index: number): void {
+        this.selected = index;
+    }
+
+    getSelectedTask(): TaskClass | undefined {
+        return this.tasks[this.selected];
+    }
 }

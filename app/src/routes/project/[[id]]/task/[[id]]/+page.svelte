@@ -2,9 +2,10 @@
 	import { goto } from '$app/navigation';
 	import RichTextEditor from '$lib/components/RichTextEditor.svelte';
 	import Skills from '$lib/components/Skills.svelte';
-	import { TaskClass, tasksStore } from '$lib/states.svelte';
+	import { TaskClass, TasksGlobalState } from '$lib/states.svelte';
 	import { untrack } from 'svelte';
 	let { data } = $props();
+	const tasksGlobalState = data.tasksGlobalState;
 
 	$effect(() => {
 		// effect needed when the page is refreshed
@@ -13,18 +14,20 @@
 			if (
 				data.selectedIndex != undefined &&
 				data.selectedIndex != null &&
-				tasksStore.selected === -1
+				tasksGlobalState.selected === -1
 			) {
-				tasksStore.selected = data.selectedIndex;
-				taskClass = initTaskClass();
+				if (0 < data.selectedIndex && data.selectedIndex < tasksGlobalState.tasks.length) {
+					tasksGlobalState.selected = data.selectedIndex;
+					taskClass = initTaskClass();
+				}
 			}
 		});
 	});
 
 	function initTaskClass() {
 		let result;
-		if (tasksStore.selected != -1) {
-			result = tasksStore.tasks[tasksStore.selected].copy();
+		if (tasksGlobalState.selected != -1) {
+			result = tasksGlobalState.tasks[tasksGlobalState.selected].copy();
 		} else {
 			result = new TaskClass('', '', 'todo', '');
 		}
@@ -33,10 +36,10 @@
 	}
 
 	function updateTaskClass() {
-		if (tasksStore.selected != -1) {
-			tasksStore.tasks[tasksStore.selected].assignFrom(taskClass);
+		if (tasksGlobalState.selected != -1) {
+			tasksGlobalState.tasks[tasksGlobalState.selected].assignFrom(taskClass);
 		} else {
-			tasksStore.tasks.push(taskClass);
+			tasksGlobalState.tasks.push(taskClass);
 		}
 	}
 
@@ -45,21 +48,23 @@
 	function add(event: Event) {
 		event.preventDefault();
 		updateTaskClass();
-		tasksStore.selected = -1;
+		tasksGlobalState.selected = -1;
 		history.back();
 	}
 
 	async function cancel() {
-		tasksStore.selected = -1;
+		tasksGlobalState.selected = -1;
 		const url = window.location.pathname.split('/').slice(0, -1).join('/');
 		await goto(url);
 	}
+
+	const isEditingMode = $derived(tasksGlobalState.selected != -1);
 </script>
 
 <div class="blur">
 	<div class="popover">
 		<div class="create-task">
-			{#if taskClass}
+			{#if isEditingMode}
 				<h2>Edit task</h2>
 			{:else}
 				<h2>Add task</h2>
@@ -72,7 +77,7 @@
 				<input type="text" placeholder="Assignee" bind:value={taskClass.assignee_id} />
 				<!-- <input type="text" placeholder="Skills" bind:value={taskClass.skills} /> -->
 				<div class="skills-input">
-					<Skills bind:skills={taskClass.skills}></Skills>
+					<Skills {taskClass}></Skills>
 				</div>
 				<!-- <input type="text" placeholder="Status" bind:value={taskClass.status} /> -->
 				<select name="status" id="status" bind:value={taskClass.status}>

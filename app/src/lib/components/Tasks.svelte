@@ -3,14 +3,21 @@
 	import { Plus } from 'lucide-svelte';
 
 	import Task from '$lib/components/Task.svelte';
-	import { tasksStore } from '$lib/states.svelte';
-	let { projectId }: { projectId?: number } = $props();
+	import type { TasksGlobalState } from '$lib/states.svelte';
+	let {
+		projectId,
+		tasksGlobalState
+	}: {
+		projectId?: number;
+		tasksGlobalState: TasksGlobalState;
+	} = $props();
+	
 	const taskUrl = $derived(
-		projectId ? `/project/${projectId}/task?s=${tasksStore.selected}` : '/project/task'
+		projectId ? `/project/${projectId}/task?s=${tasksGlobalState.selected}` : '/project/task'
 	);
 
 	async function openTask(index: number) {
-		tasksStore.selected = index;
+		tasksGlobalState.selected = index;
 		await goto(taskUrl);
 	}
 
@@ -26,10 +33,10 @@
 	<button onclick={addTask} class="add-task"><Plus /></button>
 </div>
 <div class="tasks-container">
-	{#if tasksStore.tasks.length === 0}
+	{#if tasksGlobalState.tasks.length === 0}
 		<p>Add tasks by clicking on the plus (+) button.</p>
 	{:else}
-		{#each tasksStore.tasks as task, i}
+		{#each tasksGlobalState.tasks as task, i}
 			<Task taskObject={task} onclick={() => openTask(i)}></Task>
 		{/each}
 	{/if}

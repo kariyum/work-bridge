@@ -53,24 +53,14 @@
             "id": "5668d5bc6827f415",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "markdown",
               "state": {
-                "file": "Kanban.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": [
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false
-                  ]
-                }
+                "file": "resources/rust x sqlx.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-trello",
-              "title": "Kanban"
+              "icon": "lucide-file",
+              "title": "rust x sqlx"
             }
           },
           {
@@ -243,32 +233,35 @@
   },
   "active": "5668d5bc6827f415",
   "lastOpenFiles": [
-    "Excalidraw/Drawing 2024-11-25 13.03.53.excalidraw.md",
+    "resources/css.md",
+    "resources/rust x sqlx.md",
+    "Design/Web Design Inspirations.md",
+    "resources",
+    "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
+    "Design/Websocket.md",
+    "Problems encountered.md",
     "Kanban.md",
+    "Diagram 1.svg",
+    "Diagram.svg",
+    "User stories/2 - User to project application.md",
+    "User stories/1 - websocket pgpool.md",
+    "Requirements/Project Requirements.md",
+    "Pages/Register.md",
+    "Pages/Login.md",
+    "Excalidraw/Drawing 2024-11-25 13.03.53.excalidraw.md",
     "Excalidraw",
     "Entity Relationship Diagram/ERD.md",
     "Entities/Task.md",
     "Entities/Project.md",
-    "Requirements/Project Requirements.md",
     "Entities",
-    "User stories/2 - User to project application.md",
-    "User stories/1 - websocket pgpool.md",
     "Diagram.svg.xml",
-    "Diagram.svg",
     "Requirements/Entity Design Model.md",
     "Entity Relationship Diagram/ERP.md",
-    "Design/Websocket.md",
-    "Diagram 1.svg",
-    "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
     "Diagram 1.svg.xml",
-    "Pages/Register.md",
     "User stories",
     "Design/Workflow designs.md",
-    "Design/Web Design Inspirations.md",
-    "Problems encountered.md",
     "Entity Relationship Diagram/Untitled Diagram.svg",
     "Entity Relationship Diagram",
-    "Pages/Login.md",
     "Requirements.md",
     "Untitled.canvas",
     "Requirements",
