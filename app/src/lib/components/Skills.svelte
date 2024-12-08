@@ -17,9 +17,6 @@
 			event.preventDefault();
 		}
 	}
-	$effect(() => {
-		console.log(skillInput, skillInput.length);
-	});
 </script>
 
 <div class="container">

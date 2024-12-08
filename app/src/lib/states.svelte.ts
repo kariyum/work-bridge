@@ -14,8 +14,8 @@ export class TaskClass {
 
     constructor(
         title: string = '',
-        assignee_id: string = 'None',
-        status: string = 'TODO',
+        assignee_id: string = '',
+        status: string = 'todo',
         content: string = '',
         deadline: string = '',
         budget: number | undefined = undefined,

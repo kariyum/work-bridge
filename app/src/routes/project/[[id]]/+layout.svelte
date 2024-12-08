@@ -9,8 +9,6 @@
 	});
 </script>
 
-{#key data}
-	<CreateProject projectIn={data.project} {tasksGlobalState}></CreateProject>
-{/key}
+<CreateProject projectIn={data.project} {tasksGlobalState}></CreateProject>
 
 {@render children()}
