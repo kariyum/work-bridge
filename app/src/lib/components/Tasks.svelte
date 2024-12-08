@@ -17,7 +17,7 @@
 	);
 
 	async function openTask(index: number) {
-		tasksGlobalState.selected = index;
+		tasksGlobalState.selectTask(index);
 		await goto(taskUrl);
 	}
 

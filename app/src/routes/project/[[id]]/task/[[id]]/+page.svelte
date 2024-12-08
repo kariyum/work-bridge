@@ -3,11 +3,11 @@
 	import RichTextEditor from '$lib/components/RichTextEditor.svelte';
 	import Skills from '$lib/components/Skills.svelte';
 	import { TaskClass, TasksGlobalState } from '$lib/states.svelte';
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	let { data } = $props();
-	const tasksGlobalState = data.tasksGlobalState;
+	const tasksGlobalState = $derived(data.tasksGlobalState);
 
-	$effect(() => {
+	$effect.pre(() => {
 		// effect needed when the page is refreshed
 		data.selectedIndex;
 		untrack(() => {
@@ -16,9 +16,8 @@
 				data.selectedIndex != null &&
 				tasksGlobalState.selected === -1
 			) {
-				if (0 < data.selectedIndex && data.selectedIndex < tasksGlobalState.tasks.length) {
-					tasksGlobalState.selected = data.selectedIndex;
-					taskClass = initTaskClass();
+				if (0 <= data.selectedIndex && data.selectedIndex < tasksGlobalState.tasks.length) {
+					tasksGlobalState.selectTask(data.selectedIndex);
 				}
 			}
 		});
@@ -29,9 +28,8 @@
 		if (tasksGlobalState.selected != -1) {
 			result = tasksGlobalState.tasks[tasksGlobalState.selected].copy();
 		} else {
-			result = new TaskClass('', '', 'todo', '');
+			result = new TaskClass();
 		}
-		console.log('TaskClass:', result);
 		return result;
 	}
 
@@ -71,9 +69,7 @@
 			{/if}
 			<form class="input-container" onsubmit={(event) => event.preventDefault()}>
 				<input type="text" placeholder="Title" bind:value={taskClass.title} />
-				{#key taskClass}
-					<RichTextEditor bind:x={taskClass.content}></RichTextEditor>
-				{/key}
+				<RichTextEditor bind:x={taskClass.content}></RichTextEditor>
 				<input type="text" placeholder="Assignee" bind:value={taskClass.assignee_id} />
 				<!-- <input type="text" placeholder="Skills" bind:value={taskClass.skills} /> -->
 				<div class="skills-input">
