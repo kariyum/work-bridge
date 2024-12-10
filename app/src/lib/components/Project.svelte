@@ -46,6 +46,7 @@
 <style>
 	.title-container {
 		background-color: #fafafa;
+		border-radius: 2px 2px 0px 0px;
 		padding: 0.5rem 1rem;
 		border-bottom: 1px solid #eee;
 	}

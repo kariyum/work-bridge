@@ -5,7 +5,7 @@
 </script>
 
 <div>
-    <h1>Projects</h1>
+    <h2>Projects Feed</h2>
     {#each projects as project}
         <ProjectFreelancer {project} />
     {/each}
