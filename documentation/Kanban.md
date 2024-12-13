@@ -37,14 +37,13 @@ kanban-plugin: board
 ## p1
 
 - [ ] update websocket messages implementation
-- [ ] deleting a project must delete a task!
 - [ ] remove accessing writeable store in the +layout.ts page /
 - [ ] upon logging in route the user to home page
 
 
 ## doing
 
-- [ ] check CRUD capabilities of each entity
+- [ ] add complete profile setup
 
 
 ## tested
@@ -53,6 +52,8 @@ kanban-plugin: board
 
 ## done
 
+- [ ] deleting a project must delete a task!
+- [ ] check CRUD capabilities of each entity
 - [ ] rename assign to assign_id column
 - [ ] update apis for each entity
 - [ ] add errors.rs and map each error to our own custom error
