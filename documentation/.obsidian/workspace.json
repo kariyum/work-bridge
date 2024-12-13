@@ -53,14 +53,24 @@
             "id": "5668d5bc6827f415",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "kanban",
               "state": {
-                "file": "resources/rust x sqlx.md",
-                "mode": "source",
-                "source": false
+                "file": "Kanban.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                }
               },
-              "icon": "lucide-file",
-              "title": "rust x sqlx"
+              "icon": "lucide-trello",
+              "title": "Kanban"
             }
           },
           {
@@ -233,8 +243,10 @@
   },
   "active": "5668d5bc6827f415",
   "lastOpenFiles": [
-    "resources/css.md",
+    "Design/Recommendation system.md",
     "resources/rust x sqlx.md",
+    "User stories/Untitled.md",
+    "resources/css.md",
     "Design/Web Design Inspirations.md",
     "resources",
     "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
