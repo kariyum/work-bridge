@@ -6,7 +6,6 @@
 
 <div class="container">
     <h1>You are {$userStore?.email}</h1>
-
 </div>
 
 <style>
