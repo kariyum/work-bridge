@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { userStore } from '$lib/storage';
 
 	let { data, children } = $props();
 	if (data.status === 401) {
@@ -10,7 +9,7 @@
 		const result = new Map<number, string>();
 		data.discussions.map((discussion) => {
 			const title = discussion.user_ids
-				.filter((email) => email != $userStore?.email)
+				.filter((email) => email != data.user?.email)
 				.reduce((userA, userB) => userA + userB, '');
 			result.set(discussion.id, title);
 		});

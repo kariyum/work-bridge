@@ -1,13 +1,12 @@
 <script lang="ts">
 	import Navbar from '$lib/components/Navbar.svelte';
 	import './styles.css';
-	import { userStore } from '$lib/storage';
 	let { data, children } = $props();
 </script>
 
-{#if $userStore}
+{#if data.user}
 	<div class="container">
-		<Navbar user={$userStore} />
+		<Navbar user={data.user} />
 	</div>
 	<div class="container">
 		{@render children()}

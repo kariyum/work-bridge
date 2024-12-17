@@ -7,9 +7,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 		pathStartsWithCheck.some((path) => event.url.pathname.startsWith(path))
 	const isCookieDefined = event.cookies.get("Authorization") !== undefined;
 	const redirectionUrl = `/login?redirect=${encodeURIComponent(event.url.pathname)}`;
-	if (isCookieDefined && event.url.pathname === "/login") {
-		redirect(303, "/");
-	}
 	if (!isPathPublic && !isCookieDefined) {
 		redirect(303, redirectionUrl);
 	}

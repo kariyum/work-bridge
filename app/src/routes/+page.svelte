@@ -2,11 +2,7 @@
 	import LandingPage from '$lib/pages/LandingPage.svelte';
 	import LandingPageFreelancer from '$lib/pages/LandingPageFreelancer.svelte';
 	import LandingPageRecruiter from '$lib/pages/LandingPageRecruiter.svelte';
-	import { userStore } from '$lib/storage.js';
 	let { data } = $props();
-	if (data.status === 401) {
-		userStore.set(undefined);
-	}
 </script>
 
 {#await data.result}
@@ -16,9 +12,9 @@
 		<h1>There was an error, please try again...</h1>
 	{:else}
 		{@const projects = value.projects}
-		{#if $userStore?.role === 'recruiter'}
+		{#if data.user?.role === 'recruiter'}
 			<LandingPageRecruiter {projects}></LandingPageRecruiter>
-		{:else if $userStore?.role === 'freelancer'}
+		{:else if data.user?.role === 'freelancer'}
 			<LandingPageFreelancer {projects}></LandingPageFreelancer>
 		{:else}
 			<LandingPage></LandingPage>

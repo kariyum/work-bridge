@@ -1,11 +1,9 @@
 <script lang="ts">
-	import { userStore } from "$lib/storage";
-
-
+    let { data } = $props();
 </script>
 
 <div class="container">
-    <h1>You are {$userStore?.email}</h1>
+    <h1>You are {data.user?.email}</h1>
 </div>
 
 <style>
