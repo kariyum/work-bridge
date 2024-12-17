@@ -1,4 +1,3 @@
-import { userStore } from '$lib/storage.js';
 import { redirect } from '@sveltejs/kit';
 
 
@@ -10,7 +9,6 @@ export async function load({ url, fetch }) {
             email: jsonResponse.sub,
             role: jsonResponse.role
         } as User;
-        userStore.set(user);
         if (url.searchParams.has("redirect")) {
             console.log("Redirecting from layout.ts");
             // todo, update redirect logic once we remove updating writable in this file...
@@ -26,7 +24,6 @@ export async function load({ url, fetch }) {
             status: response.status,
         }
     } else {
-        userStore.set(undefined);
         return {
             status: response.status,
         }

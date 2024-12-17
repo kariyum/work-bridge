@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import AlreadyLoggedIn from '$lib/components/AlreadyLoggedIn.svelte';
-	import { userStore } from '$lib/storage';
 	import { cyrb53, validateEmail } from '$lib/utils';
 	import { onMount } from 'svelte';
+	let { data } = $props();
 
 	function login(email: string, password: string): Promise<Response> {
 		return fetch('/api/auth/login', {
@@ -44,7 +44,7 @@
 		await login(email, cyrb53(password).toString()).then(
 			async (response) => {
 				if (response.ok) {
-					await invalidateAll();
+					await goto("/", { invalidateAll: true});
 				} else {
 					error_message = 'Wrong combination';
 				}
@@ -56,7 +56,7 @@
 	}
 </script>
 
-{#if $userStore}
+{#if data.user}
 	<AlreadyLoggedIn />
 {:else}
 	<div class="container">

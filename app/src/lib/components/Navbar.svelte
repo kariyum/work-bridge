@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { userStore } from '$lib/storage';
 	import { Bell } from 'lucide-svelte';
 	import { LogOut } from 'lucide-svelte';
 
@@ -9,8 +8,7 @@
 		const response = await fetch('/api/auth/logout');
 
 		if (response.ok) {
-			userStore.set(undefined);
-			await goto('/');
+			await goto('/', { invalidateAll: true });
 		}
 	}
 
@@ -35,7 +33,7 @@
 		<h1 style="display:inline-flex; gap:1rem; justify-content:stretch;">
 			<a href="/">Word-bridge</a>
 			<div style="width: 2px; border: 1px solid black;display:inline;background-color:black;"></div>
-			{$userStore?.role.toUpperCase()}
+			{user.role.toUpperCase()}
 		</h1>
 		<nav>
 			<ul>

@@ -30,5 +30,3 @@ interface User {
     email: string,
     role: string
 }
-
-export const userStore: Writable<User | undefined> = writable(undefined);

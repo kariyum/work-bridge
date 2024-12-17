@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { userStore } from '$lib/storage.js';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, untrack } from 'svelte';
 	import { tick } from 'svelte';
 	import { SendHorizontal } from 'lucide-svelte';
 
@@ -20,16 +19,18 @@
 	// meaning when the user clicks on another discussion
 	$effect.pre(() => {
 		data.messages;
-		localMessages = [];
-		smoothScroll = false;
-		if (viewport) {
-			// reset the scroll position
-			viewport.scrollTo({
-				left: 0,
-				top: 0,
-				behavior: 'instant'
-			});
-		}
+		untrack(() => {
+			localMessages = [];
+			smoothScroll = false;
+			if (viewport) {
+				// reset the scroll position
+				viewport.scrollTo({
+					left: 0,
+					top: 0,
+					behavior: 'instant'
+				});
+			}
+		}) 
 	});
 
 	function toClientMessage(content: string) {
@@ -46,13 +47,13 @@
 			return;
 		}
 		webSocket.send(toClientMessage(message));
-		if ($userStore?.email == undefined) {
+		if (data.user?.email == undefined) {
 			console.log('Email is undefined');
 			return;
 		}
 		const msg: MessagesJsonResponse = {
 			id: Math.random(),
-			from_user_id: $userStore?.email,
+			from_user_id: data.user?.email,
 			content: message,
 			created_at: new Date().toISOString()
 		};
@@ -78,19 +79,21 @@
 	});
 	import { onMount } from 'svelte';
 	onMount(() => {
+		console.log("onMount", data.user?.email);
 		viewport.scrollTo({ left: 0, top: viewport.scrollHeight, behavior: 'instant' });
 		smoothScroll = true;
 		webSocket = new WebSocket(url);
 		webSocket.onmessage = function (event) {
 			// console.log('RECEIVED MESSAGE', event.data);
-			const data = JSON.parse(event.data);
+			const wsMessage = JSON.parse(event.data);
 			const msg: MessagesJsonResponse = {
 				id: Math.random(),
-				from_user_id: data.sender_id, // TODO: get the sender from the server
-				content: data.content,
+				from_user_id: wsMessage.sender_id, // TODO: get the sender from the server
+				content: wsMessage.content,
 				created_at: new Date().toISOString()
 			};
-			if (msg.from_user_id != $userStore?.email) {
+			console.log(msg.from_user_id, data.user?.email, msg.from_user_id != data.user?.email);
+			if (msg.from_user_id != data.user?.email) {
 				localMessages.push(msg);
 			}	
 		};
@@ -104,9 +107,9 @@
 	{#each messages as message}
 		<div
 			class="message"
-			data-sender={message.from_user_id == $userStore?.email ? 'me' : message.from_user_id}
+			data-sender={message.from_user_id == data.user?.email ? 'me' : message.from_user_id}
 		>
-			{#if message.from_user_id != $userStore?.email}
+			{#if message.from_user_id != data.user?.email}
 				<p style="background-color: inherit;">
 					{message.from_user_id}:
 				</p>
