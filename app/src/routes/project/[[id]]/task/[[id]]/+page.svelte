@@ -2,8 +2,8 @@
 	import { goto } from '$app/navigation';
 	import RichTextEditor from '$lib/components/RichTextEditor.svelte';
 	import Skills from '$lib/components/Skills.svelte';
-	import { TaskClass, TasksGlobalState } from '$lib/states.svelte';
-	import { onMount, untrack } from 'svelte';
+	import { TaskClass } from '$lib/states.svelte';
+	import { untrack } from 'svelte';
 	let { data } = $props();
 	const tasksGlobalState = $derived(data.tasksGlobalState);
 
@@ -73,7 +73,7 @@
 				<input type="text" placeholder="Assignee" bind:value={taskClass.assignee_id} />
 				<!-- <input type="text" placeholder="Skills" bind:value={taskClass.skills} /> -->
 				<div class="skills-input">
-					<Skills {taskClass}></Skills>
+					<Skills skillsIn={taskClass.skills} addSkill={(skill) => taskClass.addSkill(skill)} removeSkillAtIndex={(index) => taskClass.removeSkillIndex(index)}></Skills>
 				</div>
 				<!-- <input type="text" placeholder="Status" bind:value={taskClass.status} /> -->
 				<select name="status" id="status" bind:value={taskClass.status}>

@@ -3,16 +3,20 @@
 	import Tag from './Tag.svelte';
 
 	let {
-		taskClass
+		skillsIn = $bindable([]),
+		addSkill, 
+		removeSkillAtIndex
 	}: {
-		taskClass: TaskClass;
+		skillsIn: string[],
+		addSkill: (skill: string) => void,
+		removeSkillAtIndex: (index: number) => void
 	} = $props();
 
 	let skillInput = $state('');
 
 	function onKeydown(event: KeyboardEvent) {
 		if (event.key === 'Enter') {
-			taskClass.addSkill(skillInput);
+			addSkill(skillInput);
 			skillInput = '';
 			event.preventDefault();
 		}
@@ -20,9 +24,9 @@
 </script>
 
 <div class="container">
-	{#each taskClass.skills as skill, index}
+	{#each skillsIn as skill, index}
 		<div>
-			<Tag onClose={() => taskClass.removeSkillIndex(index)}>
+			<Tag onClose={() => removeSkillAtIndex(index)}>
 				<p>
 					{skill}
 				</p>
