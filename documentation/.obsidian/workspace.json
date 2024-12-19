@@ -53,24 +53,14 @@
             "id": "5668d5bc6827f415",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "markdown",
               "state": {
-                "file": "Kanban.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": [
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false
-                  ]
-                }
+                "file": "Design/Inspirations.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-trello",
-              "title": "Kanban"
+              "icon": "lucide-file",
+              "title": "Inspirations"
             }
           },
           {
@@ -243,6 +233,9 @@
   },
   "active": "5668d5bc6827f415",
   "lastOpenFiles": [
+    "Pasted image 20241219204748.png",
+    "Kanban.md",
+    "Design/Inspirations.md",
     "Design/Recommendation system.md",
     "resources/rust x sqlx.md",
     "User stories/Untitled.md",
@@ -252,7 +245,6 @@
     "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
     "Design/Websocket.md",
     "Problems encountered.md",
-    "Kanban.md",
     "Diagram 1.svg",
     "Diagram.svg",
     "User stories/2 - User to project application.md",

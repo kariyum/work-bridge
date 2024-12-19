@@ -12,7 +12,7 @@ CREATE TYPE skill AS ENUM ('developer', 'engineer', 'designer', 'manager', 'anal
 
 CREATE TABLE
     IF NOT EXISTS profiles (
-       user_id VARCHAR(255) PRIMARY KEY,
+        user_id VARCHAR(255) PRIMARY KEY,
         skills text[], -- array of skill
         birthdate DATE NOT NULL,
         phone VARCHAR(255) NOT NULL,

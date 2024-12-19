@@ -2,7 +2,6 @@ use crate::repository;
 use crate::repository::project::{delete_project, insert_project, put_project, ProjectInsert, ProjectRaw};
 use crate::repository::tasks::{insert_tasks_sequentially, update_task, CreateTask, RawTask};
 use crate::services::token::Claims;
-use crate::tasks::repo::TaskCreate;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::web::{Json, Path};
 use actix_web::{web, HttpResponse, Responder};

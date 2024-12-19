@@ -1,12 +1,12 @@
 use crate::repository::user::{get_user_by_credentials, insert_user, RegisterRequest};
+use crate::services::token::{generate_cookie, Claims};
 use actix_web::cookie::time::Duration;
 use actix_web::cookie::Cookie;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::web::Form;
-use actix_web::{get, web, HttpRequest, HttpResponse, Responder};
+use actix_web::{web, HttpResponse, Responder};
 use serde::Deserialize;
 use sqlx::{Pool, Postgres};
-use crate::services::token::{generate_cookie, Claims};
 
 #[derive(Deserialize)]
 struct LoginRequest {
