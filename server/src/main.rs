@@ -133,7 +133,7 @@ async fn echo(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Er
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
+    env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug")); // "info"
     let pool = PgPoolOptions::new()
         .max_connections(5)
         .connect("postgres://user:password@localhost:5432/main")
@@ -156,6 +156,7 @@ async fn main() -> std::io::Result<()> {
             .wrap(Logger::default())
             .service(routes::user_handler::routes())
             .service(routes::project_handler::routes())
+            .service(routes::profiles_handler::routes())
             .service(get_discussions)
             .route("/echo", web::get().to(echo))
             .service(start_connection)
