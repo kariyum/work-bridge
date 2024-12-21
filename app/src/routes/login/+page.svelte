@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import AlreadyLoggedIn from '$lib/components/AlreadyLoggedIn.svelte';
-	import { cyrb53, validateEmail } from '$lib/utils';
+	import { cyrb53, validateEmail } from '$lib/utils.js';
 	import { onMount } from 'svelte';
 	let { data } = $props();
 
@@ -119,7 +119,6 @@
 	}
 
 	.fields-container {
-		width: 80%;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
