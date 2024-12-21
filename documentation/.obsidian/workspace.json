@@ -67,12 +67,24 @@
             "id": "257dd72aeb94298f",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "kanban",
               "state": {
-                "file": "Excalidraw/Drawing 2024-11-25 13.03.53.excalidraw.md"
+                "file": "Kanban.md",
+                "kanbanViewState": {
+                  "kanban-plugin": "board",
+                  "list-collapse": [
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false,
+                    false
+                  ]
+                }
               },
-              "icon": "excalidraw-icon",
-              "title": "Drawing 2024-11-25 13.03.53.excalidraw"
+              "icon": "lucide-trello",
+              "title": "Kanban"
             }
           },
           {
@@ -88,7 +100,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -231,11 +243,13 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "5668d5bc6827f415",
+  "active": "257dd72aeb94298f",
   "lastOpenFiles": [
+    "Excalidraw/Drawing 2024-11-25 13.03.53.excalidraw.md",
+    "Entities/Project.md",
+    "Design/Inspirations.md",
     "Pasted image 20241219204748.png",
     "Kanban.md",
-    "Design/Inspirations.md",
     "Design/Recommendation system.md",
     "resources/rust x sqlx.md",
     "User stories/Untitled.md",
@@ -252,11 +266,9 @@
     "Requirements/Project Requirements.md",
     "Pages/Register.md",
     "Pages/Login.md",
-    "Excalidraw/Drawing 2024-11-25 13.03.53.excalidraw.md",
     "Excalidraw",
     "Entity Relationship Diagram/ERD.md",
     "Entities/Task.md",
-    "Entities/Project.md",
     "Entities",
     "Diagram.svg.xml",
     "Requirements/Entity Design Model.md",
