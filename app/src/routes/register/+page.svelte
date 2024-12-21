@@ -2,14 +2,15 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { cyrb53, validateEmail } from '$lib/utils.js';
 
+	let ariaSelected: string | undefined = $state();
 	let formElement: HTMLFormElement;
 	let errorMessages: Map<string, string> = new Map([
 		['email', 'Please enter a valid email'],
 		['password', 'Please enter a valid password'],
 		['confirm_password', 'Passwords do not match']
 	]);
-	let error_message: string = '';
-	
+	let error_message: string = $state('');
+
 	async function register() {
 		error_message = '';
 		let formData = new FormData(formElement);
@@ -52,18 +53,60 @@
 			body: data
 		});
 		if (response.ok) {
-			await invalidate("/api/auth/whoami")
-			await goto('/');
+			await goto('/', { invalidateAll: true });
 		}
 	}
+	function processFormData() {
+		const hashedPassword = cyrb53(allData.password ?? '').toString();
+		const obj = {
+			...allData,
+			password: hashedPassword
+		};
+		return Object.entries(obj).filter(
+			([key, value]) => key !== "confirm_password"
+		);
+	}
+	async function sendRequest() {
+		const entries = processFormData();
+		const payload = new URLSearchParams(
+			Array.from(entries)
+		);
+		const response = await fetch('/api/auth/register', {
+			method: 'POST',
+			body: payload
+		});
+
+		if (response.ok) {
+			await goto('/', { invalidateAll: true });
+		}
+	}
+	let allData: Record<string, string> = $state({});
+	const steps = [rolePicker, form];
+	let currentStep = $state(0);
+
+	function captureFormData() {
+		let formData = new FormData(formElement);
+		let entries = Object.fromEntries(formData.entries().map(([key, value]) => [key, value.toString()]));
+
+		allData = {
+			...allData,
+			...entries
+		};
+		console.log('Entries', entries);
+	}
+
 </script>
 
-<div class="container">
-	<h1>Register</h1>
-	<form on:submit|preventDefault={register} bind:this={formElement}>
+{#snippet form()}
+	<h2>Tell us about you!</h2>
+	<div class="personal-info-container">
 		<p>
 			{error_message}
 		</p>
+		<div class="username">
+			<input type="text" name="first_name" id="first_name" placeholder="Name" required />
+			<input type="text" name="last_name" id="last_name" placeholder="Last Name" required />
+		</div>
 		<input type="email" name="email" id="email" placeholder="Email" required />
 		<input type="password" name="password" id="password" placeholder="Password" required />
 		<input
@@ -72,54 +115,141 @@
 			id="confirm_password"
 			placeholder="Confirm password"
 		/>
-		<input type="text" name="first_name" id="first_name" placeholder="Name" required />
-		<input type="text" name="last_name" id="last_name" placeholder="Last Name" required />
+	</div>
+{/snippet}
+
+{#snippet rolePicker()}
+	<div class="role-picker-container">
+		<h2>I'm a ...</h2>
 		<div class="options" id="role">
-			<span>
-				<input type="radio" id="recruiter" name="role" value="recruiter" required checked />
-				<label for="recruiter">Recruiter</label>
-			</span>
-			<span>
+			<label class="card" for="recruiter" aria-selected={ariaSelected == 'recruiter'}>
+				<input type="radio" id="recruiter" name="role" value="recruiter" required />
+				<div class="card-body">
+					<h1>Client</h1>
+					<p>I have a project, I need freelancers.</p>
+				</div>
+			</label>
+			<label class="card" for="freelancer" aria-selected={ariaSelected == 'freelancer'}>
 				<input type="radio" id="freelancer" name="role" value="freelancer" required />
-				<label for="freelancer">Freelancer</label>
-			</span>
+				<div class="card-body">
+					<h1>Freelancer</h1>
+					<p>I have the skills, looking for work.</p>
+				</div>
+			</label>
 		</div>
-		<div style="display: flex; justify-content: space-between; width: 100%;">
-			<a href="/login">
-				<button style="width: 100%;">
-					Login
-				</button>
-			</a>
-			<button type="submit">Register</button>
+	</div>
+{/snippet}
+
+<div class="container">
+	<div class="sub-container">
+		<h1>Join us!</h1>
+		<form onsubmit={captureFormData} bind:this={formElement}>
+			{@render steps[currentStep]()}
+		</form>
+		<div class="actions">
+			{#if currentStep == 0}
+				<a href="/login">Already have an account? Login</a>
+			{/if}
+			<div style="margin-left:auto;">
+				<button onclick={() => (currentStep -= 1)} disabled={currentStep <= 0}>Previous</button>
+				{#if currentStep < steps.length - 1}
+					<button
+						onclick={() => {
+							captureFormData();
+							currentStep += 1;
+						}}
+						disabled={currentStep >= steps.length - 1}>Continue</button
+					>
+				{:else}
+					<button
+						onclick={async () => {
+							captureFormData();
+							await sendRequest();
+						}}>Submit</button
+					>
+				{/if}
+			</div>
 		</div>
-	</form>
+	</div>
 </div>
 
 <style>
-	.options {
+	.actions {
 		display: flex;
 		justify-content: space-between;
-		width: 100%;
-		flex-wrap: wrap;
+		align-items: center;
 	}
-	.container {
-		display: flex;
-		justify-content: space-between;
-		align-items: safe center;
-		flex-wrap: wrap;
-		width: 60%;
-		padding: 10%;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
+	.username {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.5rem;
 	}
-	form {
+
+	.personal-info-container {
 		display: flex;
 		flex-direction: column;
-		align-items: baseline;
-		width: min-content;
-		gap: 10px;
-		width: 50%;
+		gap: 0.5rem;
+	}
+
+	.role-picker-container {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	input[type='radio'] {
+		display: none;
+	}
+
+	.card-body {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.card {
+		border: 1px solid #ccc;
+		padding: 5rem 2rem;
+		border-radius: 5px;
+		height: 100%;
+		cursor: pointer;
+		transition: all 0.2s ease-out;
+	}
+
+	.card:hover[for='recruiter'],
+	.card[for='recruiter']:has(input:checked) {
+		/* scale: 1.05; */
+		background-color: #ffcb88;
+		box-shadow: 0 0 1rem #ffe4c1;
+		border-color: #ffe4c1;
+	}
+
+	.card:hover[for='freelancer'],
+	.card[for='freelancer']:has(input:checked) {
+		/* scale: 1.05; */
+		background-color: #abd9ff;
+		box-shadow: 0 0 1rem #abd9ff;
+		border-color: #abd9ff;
+	}
+
+	.options {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 1rem;
+	}
+
+	.container {
+		position: absolute;
+		top: 5%;
+		/* transform: translate(-50%, 0); */
+		width: 100%;
+	}
+
+	.sub-container {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 0 1rem;
+		max-width: 45rem;
+		margin: auto;
 	}
 </style>

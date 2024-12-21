@@ -27,7 +27,6 @@ kanban-plugin: board
 
 ## p2
 
-- [ ] add profile setup
 - [ ] add email verification
 - [ ] add phone number verification
 - [ ] keep header / navbar sticky
@@ -37,12 +36,11 @@ kanban-plugin: board
 ## p1
 
 - [ ] update websocket messages implementation
-- [ ] remove accessing writeable store in the +layout.ts page /
-- [ ] upon logging in route the user to home page
 
 
 ## doing
 
+- [ ] add profile setup
 - [ ] add complete profile setup
 
 
@@ -52,6 +50,8 @@ kanban-plugin: board
 
 ## done
 
+- [ ] upon logging in route the user to home page
+- [ ] remove accessing writeable store in the +layout.ts page /
 - [ ] deleting a project must delete a task!
 - [ ] check CRUD capabilities of each entity
 - [ ] rename assign to assign_id column
