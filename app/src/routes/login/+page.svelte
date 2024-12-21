@@ -44,12 +44,12 @@
 		await login(email, cyrb53(password).toString()).then(
 			async (response) => {
 				if (response.ok) {
-					await goto("/", { invalidateAll: true});
+					await goto('/', { invalidateAll: true });
 				} else {
 					error_message = 'Wrong combination';
 				}
 			},
-			(reason) => console.log("Connection issues, retry later")
+			(reason) => console.log('Connection issues, retry later')
 		);
 
 		final_error_message = error_message;
@@ -60,28 +60,33 @@
 	<AlreadyLoggedIn />
 {:else}
 	<div class="container">
-		<h1>Welcome</h1>
-		<form class="fields-container" method="post" on:submit|preventDefault bind:this={form_element}>
-			<input name="email" type="email" placeholder="Email" required bind:this={email_element} />
-			<input
-				name="password"
-				type="password"
-				placeholder="Password"
-				required
-				bind:this={password_element}
-			/>
-			<p>
-				{final_error_message}
-			</p>
-			<div class="buttons">
-				<div class="action-buttons">
-					<button type="submit" on:click|preventDefault={handleSubmit}>Login</button>
-					<a href="/register">
-						<button style="width: 100%;"> Register </button>
-					</a>
+		<div class="sub-container">
+			<h1>Welcome</h1>
+			<form
+				class="fields-container"
+				method="post"
+				onsubmit={(event) => event.preventDefault()}
+				bind:this={form_element}
+			>
+				<input name="email" type="email" placeholder="Email" required bind:this={email_element} />
+				<input
+					name="password"
+					type="password"
+					placeholder="Password"
+					required
+					bind:this={password_element}
+				/>
+				<p>
+					{final_error_message}
+				</p>
+				<div class="buttons">
+					<div class="action-buttons">
+						<button type="submit" onclick={handleSubmit}>Login</button>
+					</div>
 				</div>
-			</div>
-		</form>
+			</form>
+			<a href="/register">Don't have an account? Register!</a>
+		</div>
 	</div>
 {/if}
 
@@ -89,8 +94,8 @@
 	.action-buttons {
 		display: flex;
 		flex-flow: row-reverse;
-		justify-content: space-between;
 		align-items: center;
+		gap: 0.5rem;
 		width: 100%;
 	}
 	.forgot-password {
@@ -105,25 +110,27 @@
 		display: flex;
 		flex-direction: column;
 	}
+
 	.container {
-		display: flex;
-		justify-content: space-between;
-		flex-direction: row;
-		flex-wrap: wrap;
-		/* align-items: center; */
-		width: 50%;
-		padding: 0% 10% 0% 10%;
 		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
+		top: 5%;
+		/* transform: translate(-50%, 0); */
+		width: 100%;
 	}
+
 	.fields-container {
+		width: 80%;
 		display: flex;
 		flex-direction: column;
-		align-items: baseline;
-		width: min-content;
-		gap: 10px;
-		width: 50%;
+		gap: 0.5rem;
+	}
+
+	.sub-container {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 0 1rem;
+		max-width: 45rem;
+		margin: auto;
 	}
 </style>

@@ -148,7 +148,7 @@
 		</form>
 		<div class="actions">
 			{#if currentStep == 0}
-				<a href="/login">Already have an account? Login</a>
+				<a href="/login">Already have an account? Login!</a>
 			{/if}
 			<div style="margin-left:auto;">
 				<button onclick={() => (currentStep -= 1)} disabled={currentStep <= 0}>Previous</button>
