@@ -81,17 +81,16 @@ async fn start_connection(
     let room = path.into_inner();
     let user_id = req
         .cookie("Authorization")
-        .map(|cookie| validate_jwt(cookie.value()).ok())
-        .flatten()
+        .and_then(|cookie| validate_jwt(cookie.value()).ok())
         .map(|claims| claims.sub);
 
     if user_id.is_none() {
-        return Ok(HttpResponse::Unauthorized().finish());
+        Ok(HttpResponse::Unauthorized().finish())
+    } else {
+        let ws = WsConn::new(room, lobby_addr.get_ref().clone(), pgpool, user_id.unwrap());
+        let resp = actix_web_actors::ws::start(ws, &req, stream)?;
+        Ok(resp)
     }
-
-    let ws = WsConn::new(room, lobby_addr.get_ref().clone(), pgpool, user_id.unwrap());
-    let resp = actix_web_actors::ws::start(ws, &req, stream)?;
-    Ok(resp)
 }
 
 async fn echo(req: HttpRequest, stream: web::Payload) -> Result<HttpResponse, Error> {
