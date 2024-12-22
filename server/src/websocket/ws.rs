@@ -52,8 +52,8 @@ impl WsConn {
             room,
             hb: Instant::now(),
             lobby_addr: lobby,
-            pgpool: pgpool,
-            user_id: user_id,
+            pgpool,
+            user_id,
         }
     }
 
