@@ -39,6 +39,9 @@ textarea {
 
 :root {
     /* CSS HEX */
+    --orange: #ffcb88;
+    --blue: #abd9ff;
+
     --dark-purple: #32021fff;
     --ucla-blue: #406e8eff;
     --dark-goldenrod: #b68f40ff;

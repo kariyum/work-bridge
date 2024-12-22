@@ -5,7 +5,7 @@
 </script>
 
 <div class="outer-container">
-	<h2>My Projects</h2>
+	<h3>My Projects</h3>
 	<div class="container">
 		{#if projects.length === 0}
 			<p>No projects found, please create one!</p>

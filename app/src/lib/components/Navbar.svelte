@@ -31,9 +31,11 @@
 <section>
 	<div class="container">
 		<h1 style="display:inline-flex; gap:1rem; justify-content:stretch;">
-			<a href="/">Word-bridge</a>
-			<div style="width: 2px; border: 1px solid black;display:inline;background-color:black;"></div>
-			{user.role.toUpperCase()}
+			<!-- <a href="/">Word-bridge</a> -->
+			<!-- <div style="width: 2px; border: 1px solid black;display:inline;background-color:black;"></div> -->
+			<a class="home" href="/">
+				{user.role.toUpperCase()}
+			</a>
 		</h1>
 		<nav>
 			<ul>
@@ -62,6 +64,15 @@
 </section>
 
 <style>
+	.home {
+		padding: 0 0.5rem;
+		position: relative;
+		background-color: var(--orange);
+		box-shadow: 0 0 1rem var(--orange);
+		border-color: var(--orange);
+		border-radius: 3px;
+	}
+
 	section {
 		padding: 0.3rem 0;
 	}
