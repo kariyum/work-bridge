@@ -218,17 +218,17 @@
 	.card:hover[for='recruiter'],
 	.card[for='recruiter']:has(input:checked) {
 		/* scale: 1.05; */
-		background-color: #ffcb88;
-		box-shadow: 0 0 1rem #ffe4c1;
-		border-color: #ffe4c1;
+		background-color: var(--orange);
+		box-shadow: 0 0 1rem var(--orange);
+		border-color: var(--orange);
 	}
 
 	.card:hover[for='freelancer'],
 	.card[for='freelancer']:has(input:checked) {
 		/* scale: 1.05; */
-		background-color: #abd9ff;
-		box-shadow: 0 0 1rem #abd9ff;
-		border-color: #abd9ff;
+		background-color: var(--blue);
+		box-shadow: 0 0 1rem var(--blue);
+		border-color: var(--blue);
 	}
 
 	.options {
