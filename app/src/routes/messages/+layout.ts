@@ -1,13 +1,5 @@
 export const ssr = false;
 
-interface Discussion {
-    id: number;
-    title: string;
-    created_at: string;
-    created_by: string;
-    user_ids: Array<string>
-}
-
 export const load = async ({ fetch }) => {
     const response = await fetch("/api/discussions");
     if (response.status === 401) {
