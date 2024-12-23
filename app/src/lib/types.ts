@@ -11,6 +11,15 @@ type MessagesJsonResponse = {
 };
 
 type ClientMessage = {
-    disucssion_id: number,
+    discussion_id: number,
     content: string,
+    receivers: string[],
+}
+
+interface Discussion {
+    id: number;
+    title: string;
+    created_at: string;
+    created_by: string;
+    user_ids: Array<string>
 }

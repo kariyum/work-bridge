@@ -11,6 +11,14 @@
 	let message: string = $state('');
 	let smoothScroll: boolean = false;
 	let viewport: HTMLDivElement;
+	let receivers: string[] = $derived.by(() => {
+		data.discussion_id;
+		data.discussions;
+		const maybeDiscussion = data.discussions.find(
+			(discussion) => discussion.id.toString() == data.discussion_id
+		);
+		return maybeDiscussion?.user_ids.filter((user_id) => user_id != data.user?.email) ?? [];
+	});
 
 	let localMessages: Array<MessagesJsonResponse> = $state([]);
 	let messages: Array<MessagesJsonResponse> = $derived(data.messages.concat(localMessages));
@@ -30,13 +38,14 @@
 					behavior: 'instant'
 				});
 			}
-		}) 
+		});
 	});
 
 	function toClientMessage(content: string) {
 		let res: ClientMessage = {
-			disucssion_id: parseInt(data.discussion_id),
-			content: content
+			discussion_id: parseInt(data.discussion_id),
+			content: content,
+			receivers: receivers
 		};
 		return JSON.stringify(res);
 	}
@@ -79,7 +88,7 @@
 	});
 	import { onMount } from 'svelte';
 	onMount(() => {
-		console.log("onMount", data.user?.email);
+		console.log('onMount', data.user?.email);
 		viewport.scrollTo({ left: 0, top: viewport.scrollHeight, behavior: 'instant' });
 		smoothScroll = true;
 		webSocket = new WebSocket(url);
@@ -95,7 +104,7 @@
 			console.log(msg.from_user_id, data.user?.email, msg.from_user_id != data.user?.email);
 			if (msg.from_user_id != data.user?.email) {
 				localMessages.push(msg);
-			}	
+			}
 		};
 	});
 	onDestroy(() => {
@@ -120,11 +129,10 @@
 </div>
 <div class="input">
 	<form onsubmit={onClick} class="input-form">
-		<input type="text" bind:value={message} placeholder="Type a message..."/>
+		<input type="text" bind:value={message} placeholder="Type a message..." />
 		<button type="submit">
-			<SendHorizontal class="icon"/>
+			<SendHorizontal class="icon" />
 		</button>
-
 	</form>
 </div>
 

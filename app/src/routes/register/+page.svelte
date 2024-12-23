@@ -107,6 +107,7 @@
 			<input type="text" name="first_name" id="first_name" placeholder="Name" required />
 			<input type="text" name="last_name" id="last_name" placeholder="Last Name" required />
 		</div>
+		<p class="input-info">We use your name and last name to display them throughout the app, (e.g. on your posts, discussions and profile)</p>
 		<input type="email" name="email" id="email" placeholder="Email" required />
 		<input type="password" name="password" id="password" placeholder="Password" required />
 		<input
@@ -125,7 +126,7 @@
 			<label class="card" for="recruiter" aria-selected={ariaSelected == 'recruiter'}>
 				<input type="radio" id="recruiter" name="role" value="recruiter" required />
 				<div class="card-body">
-					<h1>Client</h1>
+					<h1>Recruiter</h1>
 					<p>I have a project, I need freelancers.</p>
 				</div>
 			</label>
@@ -174,6 +175,10 @@
 </div>
 
 <style>
+	.input-info {
+		font-size: small;
+		color: grey;
+	}
 	.actions {
 		display: flex;
 		justify-content: space-between;

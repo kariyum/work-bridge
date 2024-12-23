@@ -28,8 +28,9 @@ pub struct WsConn {
 
 #[derive(Serialize, Deserialize)]
 struct ClientMessage {
-    disucssion_id: Option<i32>,
+    discussion_id: Option<i32>,
     content: String,
+    receivers: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Message)]
@@ -85,6 +86,7 @@ impl Actor for WsConn {
             addr: addr.recipient(),
             lobby_id: self.room,
             self_id: self.id,
+            user_id: self.user_id.clone(),
         };
         self.lobby_addr
             .send(connect)
@@ -130,12 +132,13 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsConn {
             }
             Ok(ws::Message::Nop) => (),
             Ok(Text(s)) => {
-                println!("Recieved a message from client: {:?}", s);
+                println!("Received a message from client: {:?}", s);
                 let client_message = serde_json::from_str::<ClientMessage>(&s);
                 if let Err(err) = client_message {
                     let response = ClientMessage {
-                        disucssion_id: Option::None,
+                        discussion_id: None,
                         content: err.to_string(),
+                        receivers: vec!(),
                     };
                     ctx.text(serde_json::to_string(&response).unwrap());
                     println!(
@@ -150,15 +153,16 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsConn {
                 let client_actor_message = ClientActorMessage {
                     id: self.id,
                     msg: WsMessage {
-                        disucssion_id: client_message.disucssion_id.unwrap(),
+                        discussion_id: client_message.discussion_id.unwrap(),
                         content: client_message.content.clone(),
                         sender_id: user_id.clone(),
+                        receivers: client_message.receivers.clone(),
                     },
                     room_id: self.room,
                 };
                 async move {
                     let message_create = MessageCreate {
-                        discussion_id: client_message.disucssion_id.unwrap(),
+                        discussion_id: client_message.discussion_id.unwrap(),
                         content: client_message.content.clone(),
                     };
                     let client = pool

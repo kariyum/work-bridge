@@ -6,8 +6,9 @@ use uuid::Uuid;
 type Socket = Recipient<WsMessage>;
 
 pub struct Lobby {
-    sessions: HashMap<Uuid, Socket>,     // actor id to actor address
-    rooms: HashMap<Uuid, HashSet<Uuid>>, //room id to list of actor ids
+    sessions: HashMap<Uuid, Socket>,      // actor id to actor address
+    rooms: HashMap<Uuid, HashSet<Uuid>>,  // room id to list of actor ids
+    connections: HashMap<String, Socket>, // user id -> actor address
 }
 
 impl Default for Lobby {
@@ -15,22 +16,29 @@ impl Default for Lobby {
         Lobby {
             sessions: HashMap::new(),
             rooms: HashMap::new(),
+            connections: HashMap::new(),
         }
     }
 }
 
 impl Lobby {
-    fn send_message(&self, message: &WsMessage, receiver_id: &Uuid) {
-        if let Some(mailbox) = self.sessions.get(receiver_id) {
-            let msg = WsMessage {
-                disucssion_id: message.disucssion_id,
-                content: message.content.clone(),
-                sender_id: message.sender_id.clone(),
-            };
-            let _ = mailbox.do_send(msg);
-        } else {
-            println!("attempting to send message but couldn't find user id.");
-        }
+    /// This function receives a message from a websocket
+    /// and broadcasts it to the websocket end
+    fn send_message(&self, message: &WsMessage) {
+        message.receivers.iter().for_each(|id| {
+            println!("In lobby sending message to {:?}", id);
+            if let Some(mailbox) = self.connections.get(id) {
+                let msg = WsMessage {
+                    discussion_id: message.discussion_id,
+                    content: message.content.clone(),
+                    sender_id: message.sender_id.clone(),
+                    receivers: message.receivers.clone(),
+                };
+                let _ = mailbox.do_send(msg);
+            } else {
+                println!("Attempted to send message but couldn't find user id.");
+            }
+        });
     }
 }
 
@@ -42,6 +50,8 @@ impl Handler<Disconnect> for Lobby {
     type Result = ();
 
     fn handle(&mut self, msg: Disconnect, _: &mut Context<Self>) {
+        // println!("Disconnect message {:}", &msg);
+        // self.connections.remove() TODO remove connections
         if self.sessions.remove(&msg.id).is_some() {
             self.rooms
                 .get(&msg.room_id)
@@ -67,6 +77,10 @@ impl Handler<Connect> for Lobby {
     type Result = ();
 
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
+        // println!("Connect message handle {:}", &msg);
+        self.connections
+            .insert(msg.user_id, msg.addr);
+
         self.rooms
             .entry(msg.lobby_id)
             .or_insert_with(HashSet::new)
@@ -86,7 +100,7 @@ impl Handler<Connect> for Lobby {
                 // self.send_message(&wsMessage, conn_id)
             });
 
-        self.sessions.insert(msg.self_id, msg.addr);
+        // self.sessions.insert(msg.self_id, msg.addr);
 
         // self.send_message(&format!("your id is {}", msg.self_id), &msg.self_id);
     }
@@ -96,10 +110,10 @@ impl Handler<ClientActorMessage> for Lobby {
     type Result = ();
 
     fn handle(&mut self, msg: ClientActorMessage, _ctx: &mut Context<Self>) -> Self::Result {
-        self.rooms
-            .get(&msg.room_id)
-            .unwrap()
+        // println!("Client ActorMessage handle {:}", &msg);
+        msg.msg
+            .receivers
             .iter()
-            .for_each(|client| self.send_message(&msg.msg, client));
+            .for_each(|client| self.send_message(&msg.msg))
     }
 }
