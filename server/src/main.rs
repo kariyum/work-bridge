@@ -70,15 +70,13 @@ use actix::{Actor, Addr};
 use actix_web::{web::Data, web::Path, web::Payload};
 use uuid::Uuid;
 
-#[get("/chat/{group_id}")]
+#[get("/chat")]
 async fn start_connection(
     req: HttpRequest,
     stream: Payload,
-    path: Path<Uuid>,
     lobby_addr: Data<Addr<Lobby>>,
     pgpool: web::Data<PgPool>,
 ) -> Result<HttpResponse, Error> {
-    let room = path.into_inner();
     let user_id = req
         .cookie("Authorization")
         .and_then(|cookie| validate_jwt(cookie.value()).ok())
@@ -87,7 +85,7 @@ async fn start_connection(
     if user_id.is_none() {
         Ok(HttpResponse::Unauthorized().finish())
     } else {
-        let ws = WsConn::new(room, lobby_addr.get_ref().clone(), pgpool, user_id.unwrap());
+        let ws = WsConn::new(lobby_addr.get_ref().clone(), pgpool, user_id.unwrap());
         let resp = actix_web_actors::ws::start(ws, &req, stream)?;
         Ok(resp)
     }
