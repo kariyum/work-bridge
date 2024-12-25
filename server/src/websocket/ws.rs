@@ -43,14 +43,13 @@ struct ClientMessageResponse {
 
 impl WsConn {
     pub fn new(
-        room: Uuid,
         lobby: Addr<Lobby>,
         pgpool: web::Data<PgPool>,
         user_id: String,
     ) -> WsConn {
         WsConn {
             id: Uuid::new_v4(),
-            room,
+            room: Uuid::new_v4(),
             hb: Instant::now(),
             lobby_addr: lobby,
             pgpool,

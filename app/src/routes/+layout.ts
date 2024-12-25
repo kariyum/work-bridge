@@ -1,6 +1,7 @@
+import { WebSocketService } from '$lib/realtime';
 import { redirect } from '@sveltejs/kit';
 
-
+export const ssr = false;
 export async function load({ url, fetch }) {
     const response = await fetch("/api/auth/whoami");
     if (response.ok) {
@@ -10,21 +11,16 @@ export async function load({ url, fetch }) {
             role: jsonResponse.role
         } as User;
         if (url.searchParams.has("redirect")) {
-            console.log("Redirecting from layout.ts");
-            // todo, update redirect logic once we remove updating writable in this file...
             return redirect(303, decodeURIComponent(url.searchParams.get("redirect") ?? "/"));
-            // return {
-            //     user: user,
-            //     status: response.status,
-            //     redirect: decodeURIComponent(url.searchParams.get("redirect") ?? "/")
-            // }
         }
         return {
+            socket: new WebSocketService("/api/chat"),
             user: user,
             status: response.status,
         }
     } else {
         return {
+            socket: new WebSocketService("/api/chat"),
             status: response.status,
         }
     }

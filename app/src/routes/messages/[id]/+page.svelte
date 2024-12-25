@@ -5,9 +5,7 @@
 
 	const { data } = $props();
 
-	let groupId = $state('a9f734b8-090d-4765-8fb0-13e6accf15bd');
-	let url = $derived(`/api/chat/${groupId}`);
-	let webSocket: WebSocket;
+	let unsubscribe: () => void;
 	let message: string = $state('');
 	let smoothScroll: boolean = false;
 	let viewport: HTMLDivElement;
@@ -55,7 +53,7 @@
 		if (message.length == 0 || message.trim().length == 0) {
 			return;
 		}
-		webSocket.send(toClientMessage(message));
+		data.socket.send(toClientMessage(message));
 		if (data.user?.email == undefined) {
 			console.log('Email is undefined');
 			return;
@@ -91,24 +89,15 @@
 		console.log('onMount', data.user?.email);
 		viewport.scrollTo({ left: 0, top: viewport.scrollHeight, behavior: 'instant' });
 		smoothScroll = true;
-		webSocket = new WebSocket(url);
-		webSocket.onmessage = function (event) {
-			// console.log('RECEIVED MESSAGE', event.data);
-			const wsMessage = JSON.parse(event.data);
-			const msg: MessagesJsonResponse = {
-				id: Math.random(),
-				from_user_id: wsMessage.sender_id, // TODO: get the sender from the server
-				content: wsMessage.content,
-				created_at: new Date().toISOString()
-			};
+		unsubscribe = data.socket.subscribe((msg) => {
 			console.log(msg.from_user_id, data.user?.email, msg.from_user_id != data.user?.email);
 			if (msg.from_user_id != data.user?.email) {
 				localMessages.push(msg);
 			}
-		};
+		});
 	});
 	onDestroy(() => {
-		webSocket.close();
+		unsubscribe();
 	});
 </script>
 

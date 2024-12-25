@@ -1,10 +1,50 @@
-// const url = "/api/a9f734b8-090d-4765-8fb0-13e6accf15bd";
-// export const plainWebsocketService = new WebSocket(url);
 
+export class WebSocketService {
+    private socket: WebSocket;
+    private subscribers: ((data: MessagesJsonResponse) => void)[] = [];
+    
+    constructor(url: string) {
+        this.socket = new WebSocket(url);
+        this.socket.onmessage = (event) => {
+			const wsMessage = JSON.parse(event.data);
+			const message: MessagesJsonResponse = {
+				id: Math.random(),
+				from_user_id: wsMessage.sender_id,
+				content: wsMessage.content,
+				created_at: new Date().toISOString()
+			};
+            this.subscribers.forEach(handler => handler(message))
+		};
+        console.log("Socket?", this.socket.readyState);
+        this.socket.onopen = (event: Event) => {
+            console.log("Socket is open", event);
+        };
 
-// import { webSocket } from 'rxjs/webSocket';
+        this.socket.onerror = (event: Event) => {
+            console.error("Socket encountered an error");
+        }
+    }
 
-// export const websocketService = webSocket({
-//     url: url,
-//     deserializer: msg => msg.data
-// });
+    public subscribe(handler: (data: MessagesJsonResponse) => void) {
+        this.subscribers.push(handler);
+        return () => {
+            console.log("Socket unsubscribed.");
+            this.subscribers = this.subscribers.filter((h) => h != handler);
+        };
+    }
+
+    public send(data: string): void {
+        if (this.socket.readyState == WebSocket.OPEN) {
+            this.socket.send(data);
+        } else {
+            console.error("Websocket is closed. Unable to send a message.");
+            // maybe add better error handling, propagation??
+        }
+    }
+
+    public close(): void {
+        if (this.socket) {
+            this.socket.close();
+        }
+    }
+}
