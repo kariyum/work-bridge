@@ -1,9 +1,10 @@
 
 export class WebSocketService {
+    private static instance: WebSocketService;
     private socket: WebSocket;
     private subscribers: ((data: MessagesJsonResponse) => void)[] = [];
     
-    constructor(url: string) {
+    private constructor(url: string) {
         this.socket = new WebSocket(url);
         this.socket.onmessage = (event) => {
 			const wsMessage = JSON.parse(event.data);
@@ -23,6 +24,13 @@ export class WebSocketService {
         this.socket.onerror = (event: Event) => {
             console.error("Socket encountered an error");
         }
+    }
+
+    public static getInstance(): WebSocketService {
+        if (!WebSocketService.instance) {
+            WebSocketService.instance = new WebSocketService("/api/chat");
+        }
+        return WebSocketService.instance;
     }
 
     public subscribe(handler: (data: MessagesJsonResponse) => void) {

@@ -2,8 +2,19 @@
 	import { goto } from '$app/navigation';
 	import { Bell } from 'lucide-svelte';
 	import { LogOut } from 'lucide-svelte';
+	import { WebSocketService } from '$lib/realtime';
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 
 	let { user }: { user: User } = $props();
+	let webSocketService: WebSocketService;
+	
+	onMount(() => {
+		if (browser) {
+			webSocketService = WebSocketService.getInstance();
+		}
+	})
+
 	async function logout() {
 		const response = await fetch('/api/auth/logout');
 
