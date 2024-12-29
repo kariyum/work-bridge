@@ -154,6 +154,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::user_handler::routes())
             .service(routes::project_handler::routes())
             .service(routes::profiles_handler::routes())
+            .service(routes::feature_requests_handler::routes())
             .service(get_discussions)
             .route("/echo", web::get().to(echo))
             .service(start_connection)
