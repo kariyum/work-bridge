@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
-use futures_util::{stream, StreamExt};
+use futures_util::StreamExt;
 use serde::Serialize;
-use sqlx::{Executor, PgPool, Postgres};
+use sqlx::{Executor, Postgres};
 
 #[derive(sqlx::FromRow, Serialize)]
 pub struct RawProfile {
