@@ -116,10 +116,14 @@ CREATE TABLE
 CREATE TABLE
     IF NOT EXISTS comments (
         id SERIAL PRIMARY KEY,
-        user_id VARCHAR(255) NOT NULL,
-        post_id SERIAL,
-        comment VARCHAR(255),
+        created_by VARCHAR(255) NOT NULL,
+        post_id SERIAL NOT NULL,
+        parent_comment_id INT,
+        comment VARCHAR(255) NOT NULL,
         ups VARCHAR(255)[] NOT NULL DEFAULT '{}',
         downs VARCHAR(255)[] NOT NULL DEFAULT '{}',
-        FOREIGN KEY (post_id) REFERENCES feature_requests (id)
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (post_id) REFERENCES feature_requests (id),
+        FOREIGN KEY (created_by) REFERENCES users (email),
+        FOREIGN KEY (parent_comment_id) REFERENCES comments (id)
 );
