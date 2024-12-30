@@ -20,7 +20,7 @@
 		<div class="date">Created at {formatDate(project.created_at)}</div>
         <div class="price">Offering {project.budget} {project.currency_code}</div>
 		<div class="content">
-			{@html project.content}
+            <pre>{@html project.content}</pre>
 		</div>
 	</div>
     <div class="actions">
@@ -31,6 +31,10 @@
 </div>
 
 <style>
+	:global(p) {
+		display: block;
+		min-height: 1rem;
+	}
     .outer-container {
         padding: 1rem;
         /* cursor: pointer; */
