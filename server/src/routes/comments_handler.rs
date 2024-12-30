@@ -73,9 +73,7 @@ async fn get_comments_handler(
     let feature_requests: Result<Vec<CommentGet>, Error> =
         read_comments_by_post_id(post_id.into_inner(), pg_pool.as_ref())
             .await
-            .into_iter()
-            .map(From::from)
-            .collect();
+            .map(|comments| comments.into_iter().map(CommentGet::from).collect());
 
     match feature_requests {
         Ok(data) => HttpResponse::Ok().json(data),
