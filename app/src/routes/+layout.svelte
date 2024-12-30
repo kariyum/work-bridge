@@ -18,7 +18,7 @@
 <style>
 	.container {
 		margin: auto;
-		max-width: 1600px;
+		max-width: 1300px;
 		padding: 0 1rem;
 	}
 </style>

@@ -65,6 +65,7 @@
 					</div>
 				</li>
 				<li><a href="/settings">Settings</a></li>
+				<li><a href="/feature-request">Feature Requests</a></li>
 				<li>
 					<button onclick={logout}> Logout </button>
 				</li>
