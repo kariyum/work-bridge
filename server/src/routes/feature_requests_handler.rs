@@ -66,9 +66,12 @@ async fn get_all_feature_requests_handler(
     let feature_requests: Result<Vec<FeatureRequestGet>, Error> =
         read_all_feature_request(pg_pool.as_ref())
             .await
-            .into_iter()
-            .map(From::from)
-            .collect();
+            .map(|feature_requests| {
+                feature_requests
+                    .into_iter()
+                    .map(FeatureRequestGet::from)
+                    .collect()
+            });
 
     match feature_requests {
         Ok(data) => HttpResponse::Ok().json(data),
@@ -77,7 +80,7 @@ async fn get_all_feature_requests_handler(
 }
 
 pub fn routes() -> impl HttpServiceFactory {
-    web::scope("feature_request")
+    web::scope("feature-request")
         .route("", web::post().to(create_feature_request_handler))
         .route("", web::get().to(get_all_feature_requests_handler))
 }
