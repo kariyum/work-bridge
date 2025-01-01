@@ -44,7 +44,7 @@
 		await login(email, cyrb53(password).toString()).then(
 			async (response) => {
 				if (response.ok) {
-					await goto('/', { invalidateAll: true });
+					await goto(data.redirectionUrl, { invalidateAll: true });
 				} else {
 					error_message = 'Wrong combination';
 				}
