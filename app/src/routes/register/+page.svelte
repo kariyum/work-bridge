@@ -177,7 +177,7 @@
 <style>
 	.input-info {
 		font-size: small;
-		color: grey;
+		color: var(--grey);
 	}
 	.actions {
 		display: flex;
@@ -247,6 +247,11 @@
 		top: 5%;
 		/* transform: translate(-50%, 0); */
 		width: 100%;
+		color: var(--dark-text);
+	}
+	
+	a {
+		color: var(--ucla-blue);
 	}
 
 	.sub-container {

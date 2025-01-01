@@ -43,6 +43,7 @@
 		width: 100%;
 		display: flex;
 		height: calc(100vh - 4rem);
+		color: var(--dark-text);
 	}
 
 	.container {
@@ -56,7 +57,7 @@
 	.discussions {
 		flex: 1;
 		overflow-y: auto;
-		border: 1px solid rgb(204, 204, 204);
+		border: 1px solid var(--border);
 		/* border-radius: 5px; */
 	}
 
@@ -64,12 +65,12 @@
 		flex: 5;
 		display: flex;
 		flex-direction: column;
-		background-color: #fff;
+		background-color: var(--bg);
 	}
 
 	.header {
 		font-size: 1.5rem;
-		color: #333;
+		color: var(--dark-text);
 		border-bottom: 1px solid #ccc;
 	}
 
@@ -82,12 +83,12 @@
 		display: block;
 		padding: 1rem;
 		text-decoration: none;
-		color: #333;
+		color: var(--dark-text);
 		background-color: transparent;
 	}
 
 	.discussion-container:hover {
-		background-color: #f7f7f7;
+		background-color: var(--blue);
 	}
 
 

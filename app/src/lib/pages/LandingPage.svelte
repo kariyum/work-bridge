@@ -1,15 +1,15 @@
 <div class="container">
-	<div style="margin:auto; text-align:center; font-size:48px;">
+	<div style="margin:auto; text-align:center; font-size:48px; color:var(--dark-text);">
 		<h1>Recruit freelancers</h1>
 		<h1>& form teams</h1>
 	</div>
 	<p class="subtitle">Connect with thousands of Tunisian freelancers.</p>
 	<div class="buttons">
 		<a href="/login">
-			<button style="width: 7em;">Login</button>
+			<button style="width: 7em;background-color: var(--btn-bg); color:var(--dark-text)">Login</button>
 		</a>
 		<a href="/register">
-			<button style="width: 7em; background-color: var(--dark-purple); color:white;"
+			<button style="width: 7em; background-color: var(--dark-purple); color:var(--bright-text);"
 				>Register</button
 			>
 		</a>
@@ -27,7 +27,7 @@
 		margin-left: 0.5em;
 	}
 	.subtitle {
-		color: gray;
+		color: var(--dark-text);
 		font-size: 36px;
 	}
 	.container {

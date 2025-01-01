@@ -55,8 +55,11 @@
 </div>
 
 <style>
+    .container {
+        color: var(--dark-text);
+    }
     .skills {
-        border: 1px solid #ccc;
+        border: 1px solid var(--border);
         padding: 0.5rem;
         border-radius: 5px;
     }

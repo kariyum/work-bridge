@@ -116,12 +116,17 @@
 		top: 5%;
 		/* transform: translate(-50%, 0); */
 		width: 100%;
+		color: var(--dark-text);
 	}
 
 	.fields-container {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+	}
+
+	a {
+		color: var(--ucla-blue);
 	}
 
 	.sub-container {

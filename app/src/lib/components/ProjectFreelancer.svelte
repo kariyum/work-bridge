@@ -72,7 +72,7 @@
 
 	.outer-container {
 		margin-top: 1rem;
-		border: 1px solid rgb(204, 204, 204);
+		border: 1px solid var(--border);
 		border-radius: 5px;
 	}
 
@@ -80,31 +80,31 @@
 		display: inline-block;
 		width: 2.5rem;
 		height: 2.5rem;
-		background-color: rgb(233, 233, 233);
-		border: 1px solid rgb(197, 197, 197);
+		background-color: var(--bg);
+		border: 1px solid var(--border);
 		border-radius: 50%;
 		background-image: linear-gradient(red, rgb(0, 110, 255));
 	}
 
 	.user {
 		padding: 0.5rem;
-		border-bottom: 1px solid #eee;
+		border-bottom: 1px solid var(--border);
 		display: flex;
 		gap: 1rem;
 		border-radius: 4px 4px 0px 0px;
-		background-color: #fbfbfb;
+		background-color: var(--bg);
 	}
 
 	.actions {
 		display: flex;
 		justify-content: flex-end;
-		background-color: #fbfbfb;
+		background-color: var(--bg);
 		display: flex;
 		gap: 1rem;
 		/* margin-left: auto; */
 		/* width: fit-content; */
 		padding: 0.5rem;
-		border-top: 1px solid #eee;
+		border-top: 1px solid var(--border);
 		border-radius: 0px 0px 4px 4px;
 	}
 </style>

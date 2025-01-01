@@ -27,8 +27,8 @@
         align-items: center;
     }
 	.status {
-		background-color: #eee;
-        border: 1px solid #ddd;
+		background-color: var(--btn-bg);
+        border: 1px solid var(--border);
 		border-radius: 5px;
 		padding: 0.5rem;    
         min-width: 10ch;
@@ -48,7 +48,7 @@
 	}
 	.container:hover {
 		cursor: pointer;
-		border: 1px solid #aaa;
-		background-color: #f0f0fa;
+		border: 1px solid var(--border);
+		background-color: var(--bg);
 	}
 </style>

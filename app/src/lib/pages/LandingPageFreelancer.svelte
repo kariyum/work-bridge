@@ -4,9 +4,16 @@
     let { projects }: {projects: ProjectGET[]} = $props();
 </script>
 
-<div>
+<div class="outer-container">
     <h2>Projects Feed</h2>
     {#each projects as project}
         <ProjectFreelancer {project} />
     {/each}
 </div>
+
+
+<style>
+    .outer-container {
+        color: var(--dark-text);
+    }
+</style>

@@ -37,31 +37,27 @@
 	$inspect(featureRequests);
 </script>
 
-<h2>Welcome to the community!</h2>
-<h3>Feature requests</h3>
-<form onsubmit={postFeatureRequest} bind:this={formHtmlElement}>
-	<label for="title"> Title:</label>
-	<input type="text" name="title" id="title" />
-
-	<label for="description"> Description: </label>
-	<input type="text" name="description" id="description" />
-
-	<label for="new">
-		<input type="checkbox" name="new" id="new" />
-		I have searched and this haven't been requested before.</label
-	>
-	<label for="type">Request Type: </label>
-	<input type="text" name="request_type" id="request_type" />
-
-	<input type="submit" value="Submit" />
-</form>
-
-<div class="table-container">
+<div class="container">
+	<h2>Welcome to the community!</h2>
+	<h3>Feature requests</h3>
+	<form onsubmit={postFeatureRequest} bind:this={formHtmlElement}>
+		<label for="title"> Title:</label>
+		<input type="text" name="title" id="title" />
+	
+		<label for="description"> Description: </label>
+		<input type="text" name="description" id="description" />
+	
+		<!-- <label for="new">
+			<input type="checkbox" name="new" id="new" />
+			I have searched and this haven't been requested before.</label
+		> -->
+	
+		<input type="submit" value="Submit" />
+	</form>
 	<table>
 		<thead>
 			<tr>
 				<th>ID</th>
-				<th>Type</th>
 				<th>Title</th>
 				<th>Description</th>
 				<th>Status</th>
@@ -72,7 +68,6 @@
 			{#each featureRequests as data}
 				<tr>
 					<td>#{data.id}</td>
-					<td>Feature</td>
 					<td>{data.title}</td>
 					<td>{data.description}</td>
 					<td>todo</td>
@@ -83,6 +78,7 @@
 	</table>
 </div>
 
+
 <style>
 	td,
 	th {
@@ -90,6 +86,10 @@
 		border-bottom: 1px solid #ccc;
 	}
 
+	.container {
+		color: var(--dark-text);
+	}
+	
 	form {
 		margin-top: 1rem;
 		width: fit-content;
