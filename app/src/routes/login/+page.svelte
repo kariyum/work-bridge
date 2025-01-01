@@ -22,7 +22,7 @@
 	let email_element: HTMLInputElement;
 	let password_element: HTMLInputElement;
 	let error_message = '';
-	let final_error_message = '';
+	let final_error_message = $state('');
 
 	async function handleSubmit() {
 		error_message = '';
