@@ -1,4 +1,3 @@
-import { WebSocketService } from '$lib/realtime';
 import { redirect } from '@sveltejs/kit';
 
 export async function load({ url, fetch }) {
