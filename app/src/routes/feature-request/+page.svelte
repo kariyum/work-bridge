@@ -22,7 +22,7 @@
 		});
 
 		if (response.ok) {
-			await invalidate("/api/feature-request");
+			await invalidate('/api/feature-request');
 			console.log('Saved!');
 		} else {
 			console.error(response);
@@ -46,55 +46,81 @@
 	<label for="description"> Description: </label>
 	<input type="text" name="description" id="description" />
 
-	<!-- <label for="new">
+	<label for="new">
 		<input type="checkbox" name="new" id="new" />
 		I have searched and this haven't been requested before.</label
-	> -->
+	>
+	<label for="type">Request Type: </label>
+	<input type="text" name="request_type" id="request_type" />
 
 	<input type="submit" value="Submit" />
 </form>
-<table>
-	<thead>
-		<tr>
-			<th>ID</th>
-			<th>Title</th>
-			<th>Description</th>
-			<th>Status</th>
-			<th>Created At</th>
-		</tr>
-	</thead>
-	<tbody>
-		{#each featureRequests as data}
+
+<div class="table-container">
+	<table>
+		<thead>
 			<tr>
-				<td>#{data.id}</td>
-				<td>{data.title}</td>
-				<td>{data.description}</td>
-				<td>todo</td>
-				<td>{formatDate(data.created_at)}</td>
+				<th>ID</th>
+				<th>Type</th>
+				<th>Title</th>
+				<th>Description</th>
+				<th>Status</th>
+				<th>Created At</th>
 			</tr>
-		{/each}
-	</tbody>
-</table>
-
-
+		</thead>
+		<tbody>
+			{#each featureRequests as data}
+				<tr>
+					<td>#{data.id}</td>
+					<td>Feature</td>
+					<td>{data.title}</td>
+					<td>{data.description}</td>
+					<td>todo</td>
+					<td>{formatDate(data.created_at)}</td>
+				</tr>
+			{/each}
+		</tbody>
+	</table>
+</div>
 
 <style>
+	td,
+	th {
+		padding: 0.5rem;
+		border-bottom: 1px solid #ccc;
+	}
+
 	form {
 		margin-top: 1rem;
 		width: fit-content;
 		gap: 0.5rem;
 	}
+
 	label {
 		display: block;
 	}
+
 	input[type='submit'] {
 		display: block;
 	}
+
 	table {
 		width: 100%;
 		margin: auto;
+		padding: 0 0.5rem 0rem 0.5rem;
+		border-collapse: collapse;
 	}
+
 	th {
 		text-align: left;
+	}
+
+	tr:last-child td {
+		border: none;
+	}
+
+	.table-container {
+		border: 1px solid #ccc;
+		border-radius: 5px;
 	}
 </style>

@@ -27,7 +27,7 @@ kanban-plugin: board
 
 ## p2
 
-- [ ] add email verification
+- [ ] add email verification - SMTP server (look for a free provider)
 - [ ] add phone number verification
 - [ ] keep header / navbar sticky
 - [ ] deleting a project makes the screen refresh because of the asynchronous behavior. Fix that.
@@ -35,7 +35,6 @@ kanban-plugin: board
 
 ## p1
 
-- [ ] update websocket messages implementation
 
 
 ## doing
@@ -50,6 +49,7 @@ kanban-plugin: board
 
 ## done
 
+- [ ] update websocket messages implementation
 - [ ] upon logging in route the user to home page
 - [ ] remove accessing writeable store in the +layout.ts page /
 - [ ] deleting a project must delete a task!
