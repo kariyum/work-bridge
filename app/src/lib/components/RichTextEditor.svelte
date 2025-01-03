@@ -126,17 +126,17 @@ Displayed:
 
 <style>
 	button.active {
-		background: #ddd;
+		background: var(--bg);
 	}
 
 	button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 1px solid #fff;
+		border: 1px solid var(--border);
 		border-radius: 5px;
 		padding: 0.2rem 0.5rem;
-		background-color: #fff;
+		background-color: var(--bg);
 		cursor: pointer;
 		width: 2rem;
 	}
@@ -144,10 +144,10 @@ Displayed:
 	.vertical-separator {
 		width: 1px;
 		align-self: stretch;
-		background-color: #ccc;
+		background-color: var(--border);
 	}
 	.outer-button-container {
-		border: 1px solid #ccc;
+		border: 1px solid var(--border);
 		border-radius: 5px 5px 0 0;
 		border-bottom: 0;
 	}
@@ -181,7 +181,7 @@ Displayed:
 
 	:global(.editor) {
 		padding: 0.5rem;
-		border: 1px solid #ccc;
+		border: 1px solid var(--border);
 		border-radius: 0 0 5px 5px;
 		min-height: 30vh;
 	}

@@ -104,8 +104,9 @@
 	.notification-container {
 		display: none;
 		position: absolute;
-		background-color: white;
-		border: 1px solid rgb(211, 211, 211);
+		background-color: var(--bg);
+		color: var(--dark-text);
+		border: 1px solid var(--border);
 		border-radius: 5px;
 		padding: 1rem;
 		z-index: 1;
@@ -125,7 +126,7 @@
 
 	a {
 		text-decoration: none;
-		color: black;
+		color: var(--dark-text);
 	}
 
 	nav > ul {

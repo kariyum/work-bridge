@@ -10,20 +10,22 @@
 body {
     -webkit-font-smoothing: antialiased;
     margin: 0;
+    background: var(--bg);
 }
 
 input {
     align-self: stretch;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     border-radius: 5px;
 }
 
 button {
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border);
     border-radius: 5px;
-    background-color: #f0f0f0;
+    background-color: var(--btn-bg);
+    color: var(--dark-text);
     cursor: pointer;
     align-self: flex-end;
 }
@@ -37,10 +39,18 @@ textarea {
     box-sizing: border-box;
 }
 
-:root {
+[data-theme="light"] {
     /* CSS HEX */
+    --primary: #4f46e5;
+    --bg: #ffffff;
+    --bright-text: #f9fafb;
+    --dark-text:#111827;
+    --border: #d1d5db;
+    --btn-bg: #fafafa;
+    
     --orange: #ffcb88;
     --blue: #abd9ff;
+    --grey: #3d3d3d;
 
     --dark-purple: #32021fff;
     --ucla-blue: #406e8eff;
@@ -57,4 +67,33 @@ textarea {
     --gradient-top-left: linear-gradient(225deg, #32021fff, #406e8eff, #b68f40ff, #66a182ff, #d6eeffff);
     --gradient-bottom-left: linear-gradient(315deg, #32021fff, #406e8eff, #b68f40ff, #66a182ff, #d6eeffff);
     --gradient-radial: radial-gradient(#32021fff, #406e8eff, #b68f40ff, #66a182ff, #d6eeffff);
+}
+
+[data-theme="dark"] {
+    --primary: #6366f1;
+    --bg: #111827;
+    --dark-text: #f9fafb;
+    --bright-text:#111827;
+    --border: #374151;
+    --btn-bg: #22242a;
+
+    --orange: #003477;
+    --blue: #542600;
+    --grey: #c2c2c2;
+    
+    --dark-purple: #cfdbe0;
+    --ucla-blue: #bf9171;
+    --dark-goldenrod: #4970bf;
+    --zomp: #995e7d;
+    --columbia-blue: #291100;
+
+    --gradient-top: linear-gradient(0deg, #cfdbe0, #bf9171, #4970bf, #995e7d, #291100);
+    --gradient-right: linear-gradient(90deg, #cfdbe0, #bf9171, #4970bf, #995e7d, #291100);
+    --gradient-bottom: linear-gradient(180deg, #cfdbe0, #bf9171, #4970bf, #995e7d, #291100);
+    --gradient-left: linear-gradient(270deg, #cfdbe0, #bf9171, #4970bf, #995e7d, #291100);
+    --gradient-top-right: linear-gradient(45deg, #cfdbe0, #bf9171, #4970bf, #995e7d, #291100);
+    --gradient-bottom-right: linear-gradient(135deg, #cfdbe0, #bf9171, #4970bf, #995e7d, #291100);
+    --gradient-top-left: linear-gradient(225deg, #cfdbe0, #bf9171, #4970bf, #995e7d, #291100);
+    --gradient-bottom-left: linear-gradient(315deg, #cfdbe0, #bf9171, #4970bf, #995e7d, #291100);
+    --gradient-radial: radial-gradient(#cfdbe0, #bf9171, #4970bf, #995e7d, #291100);
 }

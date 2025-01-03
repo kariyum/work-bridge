@@ -141,16 +141,16 @@
 		flex-grow: 1;
 		overflow-y: auto;
 		padding: 1rem;
-		border: 1px solid #ddd;
+		border: 1px solid var(--border);
 		border-left: 0px;
 		/* border-radius: 5px; */
-		background-color: #f7f7f7;
+		background-color: var(--bg);
 	}
 
 	.message {
 		padding: 0.75rem;
 		border-radius: 9px;
-		background-color: #e0e0e0;
+		background-color: var(--border);
 		width: fit-content;
 		max-width: 70ch;
 		word-wrap: break-word;
@@ -159,7 +159,7 @@
 	.message[data-sender='me'] {
 		margin-left: auto;
 		background-color: #007bff;
-		color: #fff;
+		color: var(--light-text);
 	}
 
 	.message {
@@ -179,22 +179,22 @@
 	.input-form input[type='text'] {
 		flex: 1;
 		padding: 0.75rem;
-		border: 1px solid #ccc;
+		border: 1px solid var(--border);
 		border-radius: 0;
 		border: 0;
-		border-bottom: 1px solid #ccc;
-		border-right: 1px solid #ccc;
+		border-bottom: 1px solid var(--border);
+		border-right: 1px solid var(--border);
 		outline: none;
 	}
 
 	.input-form button[type='submit'] {
 		padding: 0.75rem 1rem;
 		cursor: pointer;
-		background-color: #fff;
+		background-color: var(--bg);
 		border-left: 0;
 		border-top: 0;
-		border-bottom: 1px solid #ccc;
-		border-right: 1px solid #ccc;
+		border-bottom: 1px solid var(--border);
+		border-right: 1px solid var(--border);
 		border-radius: 0;
 	}
 </style>

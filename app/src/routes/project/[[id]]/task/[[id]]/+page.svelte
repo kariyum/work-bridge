@@ -114,7 +114,7 @@
 	}
 
 	.popover {
-		background-color: white;
+		background-color: var(--bg);
 		position: absolute;
 		top: 50%;
 		left: 50%;
@@ -122,9 +122,10 @@
 		max-width: 1000px;
 		transform: translate(-50%, -50%);
 		padding: 1rem;
-		border: 1px solid #eee;
+		border: 1px solid var(--border);
 		border-radius: 5px;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 0 10px var(--dark-text);
+		
 		/* blur */
 	}
 
@@ -136,6 +137,7 @@
 		height: 100%;
 		backdrop-filter: blur(2px);
 		background-color: rgba(0, 0, 0, 0.1);
+		color:var(--dark-text);
 	}
 
 	.skills-input {

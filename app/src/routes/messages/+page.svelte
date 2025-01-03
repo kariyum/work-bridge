@@ -7,8 +7,7 @@
 <style>
 	h1 {
 		font-size: 1.5rem;
-		color: #333;
-		background-color: #f7f7f7;
+		background-color: var(--bg);
 		position: relative;
 		top: 50%;
 		left: 50%;
@@ -20,7 +19,7 @@
 		flex: 3;
 		display: flex;
 		flex-direction: column;
-		background-color: #fff;
+		background-color: var(--bg);
 	}
 
 	.messages {
@@ -29,7 +28,8 @@
 		padding: 1rem;
 		border: 1px solid #ddd;
 		border-left: none;
+		color: var(--dark-text);
 		/* border-radius: 5px; */
-		background-color: #f7f7f7;
+		background-color: var(--bg);
 	}
 </style>

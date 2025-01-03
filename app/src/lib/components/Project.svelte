@@ -45,24 +45,24 @@
 
 <style>
 	.title-container {
-		background-color: #fafafa;
+		background-color: var(--bg);
 		border-radius: 2px 2px 0px 0px;
 		padding: 0.5rem 1rem;
-		border-bottom: 1px solid #eee;
+		border-bottom: 1px solid var(--border);
 	}
 	h2 {
 		background-color: inherit;
 	}
 	.top-container {
-		border: 1px solid rgb(204, 204, 204);
+		border: 1px solid var(--border);
 		border-radius: 3px;
 		margin: 1rem auto 1rem auto;
 	}
 	.actions-container {
-		border-top: 1px solid #eee;
+		border-top: 1px solid var(--border);
 		padding: 0.5rem 0.5rem;
 		border-radius: 0px 0px 5px 5px;
-		background-color: #fbfbfb;
+		background-color: var(--bg);
 	}
 	.container {
 		padding: 1rem;
@@ -92,7 +92,7 @@
 
 	.project-content {
 		padding: 0.5rem;
-		border: 1px solid #eee;
+		border: 1px solid var(--border);
 		border-radius: 5px;
 	}
 </style>

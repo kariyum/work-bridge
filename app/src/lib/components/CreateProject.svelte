@@ -169,7 +169,7 @@
 	}
 
 	select {
-		border-color: rgb(197, 197, 197);
+		border-color: var(--border);
 		border-radius: 5px;
 		height: 2rem;
 		padding: 0 0.3rem;
@@ -192,6 +192,7 @@
 		padding: 0% 5% 0% 5%;
 		margin: auto;
 		width: 100%;
+		color: var(--dark-text);
 	}
 	form {
 		display: flex;
