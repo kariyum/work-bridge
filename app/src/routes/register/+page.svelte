@@ -2,7 +2,6 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { cyrb53, validateEmail } from '$lib/utils.js';
 
-	let ariaSelected: string | undefined = $state();
 	let formElement: HTMLFormElement;
 	let errorMessages: Map<string, string> = new Map([
 		['email', 'Please enter a valid email'],
@@ -123,15 +122,15 @@
 	<div class="role-picker-container">
 		<h2>I'm a ...</h2>
 		<div class="options" id="role">
-			<label class="card" for="recruiter" aria-selected={ariaSelected == 'recruiter'}>
-				<input type="radio" id="recruiter" name="role" value="recruiter" required />
+			<label class="card" for="recruiter">
+				<input type="radio" id="recruiter" name="role" value="recruiter" required checked={allData.role === "recruiter"}/>
 				<div class="card-body">
 					<h1>Recruiter</h1>
 					<p>I have a project, I need freelancers.</p>
 				</div>
 			</label>
-			<label class="card" for="freelancer" aria-selected={ariaSelected == 'freelancer'}>
-				<input type="radio" id="freelancer" name="role" value="freelancer" required />
+			<label class="card" for="freelancer">
+				<input type="radio" id="freelancer" name="role" value="freelancer" required checked={allData.role === "freelancer"} />
 				<div class="card-body">
 					<h1>Freelancer</h1>
 					<p>I have the skills, looking for work.</p>
