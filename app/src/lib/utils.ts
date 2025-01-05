@@ -21,5 +21,7 @@ export function validateEmail(email: string) {
 }
 
 export function formatDate(created_at: Date) {
-    return `${created_at.getDate()}/${created_at.getMonth()}/${created_at.getFullYear()}`
+    const month = (created_at.getMonth() + 1).toString().padStart(2, "0");
+    const day = created_at.getDate().toString().padStart(2, "0");
+    return `${day}/${month}/${created_at.getFullYear()}`
 }
