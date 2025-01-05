@@ -31,10 +31,16 @@ kanban-plugin: board
 - [ ] add phone number verification
 - [ ] keep header / navbar sticky
 - [ ] deleting a project makes the screen refresh because of the asynchronous behavior. Fix that.
+- [ ] data loading
 
 
 ## p1
 
+- [ ] take care of the feature requests page - Karim
+- [ ] UI unit test
+- [ ] dark mode
+- [ ] UI styling
+- [ ] profile page
 
 
 ## doing
