@@ -6,11 +6,12 @@
 		title: string;
 		description: string;
 	};
-
+	let dialogElement: HTMLDialogElement;
 	let formHtmlElement: HTMLFormElement;
 	async function postFeatureRequest(event: Event) {
 		event.preventDefault();
 		const formData = new FormData(formHtmlElement);
+		formHtmlElement.reset();
 		const payload = Object.fromEntries(formData.entries()) as FeatureRequestPOST;
 
 		const response = await fetch('/api/feature-request', {
@@ -22,11 +23,15 @@
 		});
 
 		if (response.ok) {
+			dialogElement.close();
 			await invalidate('/api/feature-request');
-			console.log('Saved!');
 		} else {
 			console.error(response);
 		}
+	}
+
+	function addNewFeature() {
+		dialogElement.showModal();
 	}
 
 	let { data } = $props();
@@ -39,21 +44,33 @@
 
 <div class="container">
 	<h2>Welcome to the community!</h2>
-	<h3>Feature requests</h3>
-	<form onsubmit={postFeatureRequest} bind:this={formHtmlElement}>
-		<label for="title"> Title:</label>
-		<input type="text" name="title" id="title" />
-	
-		<label for="description"> Description: </label>
-		<input type="text" name="description" id="description" />
-	
-		<!-- <label for="new">
-			<input type="checkbox" name="new" id="new" />
-			I have searched and this haven't been requested before.</label
-		> -->
-	
-		<input type="submit" value="Submit" />
-	</form>
+
+	<h1>My feature requests</h1>
+	<div class="request-feature-action">
+		<button onclick={addNewFeature}>Request a new feature</button>
+		<dialog bind:this={dialogElement}>
+			<form
+				class="post-form"
+				bind:this={formHtmlElement}
+			>
+				<h2>Feature Request</h2>
+				<label for="title"> Title:</label>
+				<input type="text" name="title" id="title" />
+
+				<label for="description"> Description: </label>
+				<textarea maxlength="255" name="description" id="description"></textarea>
+				<label for="new">
+					<input type="checkbox" name="new" id="new" />
+					I have searched and this haven't been requested before.</label
+				>
+
+				<div class="actions">
+					<button type="submit" formmethod="dialog">Cancel</button>
+					<input type="submit" onclick={postFeatureRequest} value="Submit" />
+				</div>
+			</form>
+		</dialog>
+	</div>
 	<table>
 		<thead>
 			<tr>
@@ -61,6 +78,8 @@
 				<th>Title</th>
 				<th>Description</th>
 				<th>Status</th>
+				<th>Up votes</th>
+				<th>Down votes</th>
 				<th>Created At</th>
 			</tr>
 		</thead>
@@ -71,6 +90,8 @@
 					<td>{data.title}</td>
 					<td>{data.description}</td>
 					<td>todo</td>
+					<td>0</td>
+					<td>0</td>
 					<td>{formatDate(data.created_at)}</td>
 				</tr>
 			{/each}
@@ -78,8 +99,32 @@
 	</table>
 </div>
 
-
 <style>
+	.post-form .actions {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	.actions > * {
+		background-color: #eee;
+	}
+
+	dialog {
+		margin: auto;
+		padding: 1rem;
+		border: none;
+		border-radius: 7px;
+	}
+	
+	.request-feature-action {
+		display: flex;
+	}
+
+	.request-feature-action button {
+		margin-left: auto;
+		width: fit-content;
+	}
+
 	td,
 	th {
 		padding: 0.5rem;
@@ -89,15 +134,32 @@
 	.container {
 		color: var(--dark-text);
 	}
-	
+
 	form {
-		margin-top: 1rem;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 		width: fit-content;
 		gap: 0.5rem;
+		min-width: 50ch;
 	}
 
-	label {
+	form label {
 		display: block;
+		font-weight: 500;
+		font-size: large;
+	}
+
+	form input[type='submit'] {
+		cursor: pointer;
+	}
+
+	form textarea {
+		resize: none;
+	}
+
+	textarea:invalid {
+		border: 2px solid red;
 	}
 
 	input[type='submit'] {
@@ -119,8 +181,4 @@
 		border: none;
 	}
 
-	.table-container {
-		border: 1px solid #ccc;
-		border-radius: 5px;
-	}
 </style>
