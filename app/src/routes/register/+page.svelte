@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
 	import { cyrb53, validateEmail } from '$lib/utils.js';
+	import { Home } from 'lucide-svelte';
 
 	let formElement: HTMLFormElement;
 	let errorMessages: Map<string, string> = new Map([
@@ -61,15 +62,11 @@
 			...allData,
 			password: hashedPassword
 		};
-		return Object.entries(obj).filter(
-			([key, value]) => key !== "confirm_password"
-		);
+		return Object.entries(obj).filter(([key, value]) => key !== 'confirm_password');
 	}
 	async function sendRequest() {
 		const entries = processFormData();
-		const payload = new URLSearchParams(
-			Array.from(entries)
-		);
+		const payload = new URLSearchParams(Array.from(entries));
 		const response = await fetch('/api/auth/register', {
 			method: 'POST',
 			body: payload
@@ -85,7 +82,9 @@
 
 	function captureFormData() {
 		let formData = new FormData(formElement);
-		let entries = Object.fromEntries(formData.entries().map(([key, value]) => [key, value.toString()]));
+		let entries = Object.fromEntries(
+			formData.entries().map(([key, value]) => [key, value.toString()])
+		);
 
 		allData = {
 			...allData,
@@ -93,7 +92,6 @@
 		};
 		console.log('Entries', entries);
 	}
-
 </script>
 
 {#snippet form()}
@@ -106,7 +104,10 @@
 			<input type="text" name="first_name" id="first_name" placeholder="Name" required />
 			<input type="text" name="last_name" id="last_name" placeholder="Last Name" required />
 		</div>
-		<p class="input-info">We use your name and last name to display them throughout the app, (e.g. on your posts, discussions and profile)</p>
+		<p class="input-info">
+			We use your name and last name to display them throughout the app, (e.g. on your posts,
+			discussions and profile)
+		</p>
 		<input type="email" name="email" id="email" placeholder="Email" required />
 		<input type="password" name="password" id="password" placeholder="Password" required />
 		<input
@@ -123,14 +124,28 @@
 		<h2>I'm a ...</h2>
 		<div class="options" id="role">
 			<label class="card" for="recruiter">
-				<input type="radio" id="recruiter" name="role" value="recruiter" required checked={allData.role === "recruiter"}/>
+				<input
+					type="radio"
+					id="recruiter"
+					name="role"
+					value="recruiter"
+					required
+					checked={allData.role === 'recruiter'}
+				/>
 				<div class="card-body">
 					<h1>Recruiter</h1>
 					<p>I have a project, I need freelancers.</p>
 				</div>
 			</label>
 			<label class="card" for="freelancer">
-				<input type="radio" id="freelancer" name="role" value="freelancer" required checked={allData.role === "freelancer"} />
+				<input
+					type="radio"
+					id="freelancer"
+					name="role"
+					value="freelancer"
+					required
+					checked={allData.role === 'freelancer'}
+				/>
 				<div class="card-body">
 					<h1>Freelancer</h1>
 					<p>I have the skills, looking for work.</p>
@@ -173,7 +188,22 @@
 	</div>
 </div>
 
+<div class="home">
+	<a href="/">
+		<Home />
+	</a>
+</div>
+
 <style>
+	.home {
+		position: absolute;
+		bottom: 1rem;
+		left: 1rem;
+	}
+
+	.home a {
+		line-height: 0;
+	}
 	.input-info {
 		font-size: small;
 		color: var(--grey);
@@ -248,7 +278,7 @@
 		width: 100%;
 		color: var(--dark-text);
 	}
-	
+
 	a {
 		color: var(--ucla-blue);
 	}
