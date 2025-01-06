@@ -14,17 +14,16 @@
 		tasksGlobalState: TasksGlobalState;
 	} = $props();
 
-	let projectFormInput: ProjectForm = $state({
-		title: projectIn?.title ?? '',
-		content: projectIn?.content ?? '',
-		budget: projectIn?.budget.toString() ?? '',
-		currency_code: projectIn?.currency_code ?? '',
-		deadline: projectIn?.deadline.toLocaleDateString('en-CA') ?? ''
+	let projectFormInput: ProjectForm = $derived.by(() => {
+		let projectState = $state({
+			title: projectIn?.title ?? '',
+			content: projectIn?.content ?? '',
+			budget: projectIn?.budget.toString() ?? '',
+			currency_code: projectIn?.currency_code ?? '',
+			deadline: projectIn?.deadline.toLocaleDateString() ?? ''
+		});
+		return projectState;
 	});
-
-	function toSimpleString(date: Date) {
-		return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-	}
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
