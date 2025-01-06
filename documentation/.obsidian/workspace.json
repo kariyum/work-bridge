@@ -11,14 +11,12 @@
             "id": "fcbda8d8ba6aa466",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "excalidraw",
               "state": {
-                "file": "resources/css.md",
-                "mode": "source",
-                "source": false
+                "file": "Design/websocket_2024-10-17 22.26.09.excalidraw.md"
               },
-              "icon": "lucide-file",
-              "title": "css"
+              "icon": "excalidraw-icon",
+              "title": "websocket_2024-10-17 22.26.09.excalidraw"
             }
           }
         ]
@@ -166,31 +164,31 @@
   },
   "active": "fcbda8d8ba6aa466",
   "lastOpenFiles": [
+    "Design/Dark Mode.md",
+    "Design/Inspirations.md",
     "Design/Recommendation system.md",
-    "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
     "Design/Web Design Inspirations.md",
     "Design/Websocket.md",
-    "resources/css.md",
+    "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
     "Pages/Register.md",
     "Pages/Login.md",
+    "User stories/1 - websocket pgpool.md",
+    "User stories/2 - User to project application.md",
+    "Diagram.svg",
+    "Diagram 1.svg",
+    "Kanban.md",
+    "Pasted image 20241219204748.png",
+    "Pasted image 20241230215105.png",
+    "Problems encountered.md",
+    "resources/css.md",
     "Excalidraw/Drawing 2025-01-02 21.05.03.excalidraw.md",
     "Entity Relationship Diagram/ERD.md",
     "Entities/Task.md",
     "Entities/Project.md",
-    "Design/Dark Mode.md",
-    "Design/Inspirations.md",
-    "Kanban.md",
-    "Pasted image 20241230215105.png",
     "Excalidraw/Drawing 2024-11-25 13.03.53.excalidraw.md",
-    "Pasted image 20241219204748.png",
     "resources/rust x sqlx.md",
     "User stories/Untitled.md",
     "resources",
-    "Problems encountered.md",
-    "Diagram 1.svg",
-    "Diagram.svg",
-    "User stories/2 - User to project application.md",
-    "User stories/1 - websocket pgpool.md",
     "Requirements/Project Requirements.md",
     "Excalidraw",
     "Entities",
@@ -206,7 +204,6 @@
     "Untitled.canvas",
     "Requirements",
     "Design",
-    "Pages",
-    "Handle cookies.md"
+    "Pages"
   ]
 }
