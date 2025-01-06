@@ -69,7 +69,7 @@
 			{/if}
 			<form class="input-container" onsubmit={(event) => event.preventDefault()}>
 				<input type="text" placeholder="Title" bind:value={taskClass.title} />
-				<RichTextEditor bind:x={taskClass.content}></RichTextEditor>
+				<RichTextEditor contentIn={(() => taskClass.content)()} bind:x={taskClass.content}></RichTextEditor>
 				<input type="text" placeholder="Assignee" bind:value={taskClass.assignee_id} />
 				<!-- <input type="text" placeholder="Skills" bind:value={taskClass.skills} /> -->
 				<div class="skills-input">

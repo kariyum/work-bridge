@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount, onDestroy, untrack } from 'svelte';
 	import { Editor } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 	import Link from '@tiptap/extension-link';
@@ -7,7 +7,13 @@
 	let element: HTMLDivElement;
 	let myEditor: Editor | undefined = $state();
 
-	let { x = $bindable() }: { x: string } = $props();
+	let { contentIn, x = $bindable()}: { x: string, contentIn: string } = $props();
+	$effect.pre(() => {
+		contentIn;
+		untrack(() => {
+			myEditor?.commands.setContent(contentIn);
+		});
+	})
 	onMount(() => {
 		myEditor = new Editor({
 			editorProps: {
