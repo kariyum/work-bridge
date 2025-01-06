@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
 	import { formatDate } from '$lib/utils.js';
+	import { untrack } from 'svelte';
 
 	type FeatureRequestPOST = {
 		title: string;
@@ -35,11 +36,23 @@
 	}
 
 	let { data } = $props();
+	const pageSize = 15;
+	let startIndex = $state(0);
+	let endIndex = $derived(startIndex + pageSize);
+
 	let featureRequests = $derived.by(() => {
-		data;
-		return data.featureRequests;
+		return data.featureRequests.slice(startIndex, endIndex);
 	});
-	$inspect(featureRequests);
+
+	function handlePrevious() {
+		startIndex = Math.max(0, startIndex - pageSize);
+	}
+	
+	function handleNext() {
+		if (startIndex < data.featureRequests.length - pageSize) {
+			startIndex = Math.min(data.featureRequests.length, startIndex + pageSize);
+		}
+	}
 </script>
 
 <div class="container">
@@ -49,10 +62,7 @@
 	<div class="request-feature-action">
 		<button onclick={addNewFeature}>Request a new feature</button>
 		<dialog bind:this={dialogElement}>
-			<form
-				class="post-form"
-				bind:this={formHtmlElement}
-			>
+			<form class="post-form" bind:this={formHtmlElement}>
 				<h2>Feature Request</h2>
 				<label for="title"> Title:</label>
 				<input type="text" name="title" id="title" />
@@ -71,6 +81,7 @@
 			</form>
 		</dialog>
 	</div>
+
 	<table>
 		<thead>
 			<tr>
@@ -87,8 +98,8 @@
 			{#each featureRequests as data}
 				<tr>
 					<td>#{data.id}</td>
-					<td>{data.title}</td>
-					<td>{data.description}</td>
+					<td style="width: 20%;" >{data.title}</td>
+					<td style="width: 30%;">{data.description}</td>
 					<td>todo</td>
 					<td>0</td>
 					<td>0</td>
@@ -97,6 +108,10 @@
 			{/each}
 		</tbody>
 	</table>
+	<div class="tfoot">
+		<button onclick={handlePrevious}>Previous</button>
+		<button onclick={handleNext}>Next</button>
+	</div>
 </div>
 
 <style>
@@ -115,7 +130,7 @@
 		border: none;
 		border-radius: 7px;
 	}
-	
+
 	.request-feature-action {
 		display: flex;
 	}
@@ -173,12 +188,19 @@
 		border-collapse: collapse;
 	}
 
+	.tfoot {
+		margin-top: 0.5rem;
+		display: flex;
+		width: 100%;
+		justify-content: end;
+		gap: 0.5rem;
+	}
+
 	th {
 		text-align: left;
 	}
 
-	tr:last-child td {
+	/* tr:last-child td {
 		border: none;
-	}
-
+	} */
 </style>
