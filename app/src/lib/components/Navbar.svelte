@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Bell } from 'lucide-svelte';
+	import { Bell, Moon, Sun } from 'lucide-svelte';
 	import { LogOut } from 'lucide-svelte';
 	import { WebSocketService } from '$lib/realtime';
 	import { onMount } from 'svelte';
@@ -8,12 +8,12 @@
 
 	let { user }: { user: User } = $props();
 	let webSocketService: WebSocketService;
-	
+
 	onMount(() => {
 		if (browser) {
 			webSocketService = WebSocketService.getInstance();
 		}
-	})
+	});
 
 	async function logout() {
 		const response = await fetch('/api/auth/logout');
@@ -36,6 +36,19 @@
 			showNotifications = false;
 		}
 	}
+	let theme = $state('light');
+
+	const toggleTheme = () => {
+		theme = theme === 'light' ? 'dark' : 'light';
+		document.documentElement.setAttribute('data-theme', theme);
+		localStorage.setItem('theme', theme);
+	};
+
+	onMount(() => {
+		const savedTheme = localStorage.getItem('theme') || 'light';
+		theme = savedTheme;
+		document.documentElement.setAttribute('data-theme', theme);
+	});
 </script>
 
 <svelte:body onclick={notificationClickHandler} />
@@ -69,20 +82,39 @@
 				<li>
 					<button onclick={logout}> Logout </button>
 				</li>
-				<!-- <li><a href="/"><span class="material-symbols-outlined"> person </span></a></li> -->
+				<li class="lh-0">
+					<button onclick={toggleTheme} class="lh-0 outline-none">
+						{#if theme === 'light'}
+							<Sun class="theme-icons" />
+						{:else}
+							<Moon class="theme-icons" />
+						{/if}
+					</button>
+				</li>
 			</ul>
 		</nav>
 	</div>
 </section>
 
 <style>
+	:global(.theme-icons) {
+		width: 1.2rem;
+	}
+
+	.lh-0 {
+		line-height: 0;
+	}
+
+	.outline-none {
+		outline: none;
+	}
 	.home {
-		padding: 0 0.5rem;
+		/* padding: 0 0.5rem; */
 		position: relative;
-		background-color: var(--orange);
-		box-shadow: 0 0 1rem var(--orange);
-		border-color: var(--orange);
-		border-radius: 3px;
+		/* background-color: var(--orange);
+		box-shadow: 0 0 1rem var(--orange); */
+		/* border-color: var(--orange); */
+		/* border-radius: 3px; */
 	}
 
 	section {
@@ -113,13 +145,7 @@
 		width: 15rem;
 		transform: translateX(-35%);
 	}
-	.material-symbols-outlined {
-		font-variation-settings:
-			'FILL' 1,
-			'wght' 400,
-			'GRAD' 0,
-			'opsz' 24;
-	}
+
 	nav {
 		margin-left: auto;
 	}
