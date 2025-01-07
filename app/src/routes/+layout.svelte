@@ -1,13 +1,7 @@
 <script lang="ts">
 	import Navbar from '$lib/components/Navbar.svelte';
 	import './styles.css';
-	import { onMount } from "svelte";
 	let { data, children } = $props();	
-
-	let theme = $state("light");
-
-
-
 </script>
 
 {#if data.user}
