@@ -11,12 +11,14 @@
             "id": "fcbda8d8ba6aa466",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Design/websocket_2024-10-17 22.26.09.excalidraw.md"
+                "file": "Design/Dark Mode.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "excalidraw-icon",
-              "title": "websocket_2024-10-17 22.26.09.excalidraw"
+              "icon": "lucide-file",
+              "title": "Dark Mode"
             }
           }
         ]
@@ -164,12 +166,12 @@
   },
   "active": "fcbda8d8ba6aa466",
   "lastOpenFiles": [
+    "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
     "Design/Dark Mode.md",
     "Design/Inspirations.md",
     "Design/Recommendation system.md",
     "Design/Web Design Inspirations.md",
     "Design/Websocket.md",
-    "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
     "Pages/Register.md",
     "Pages/Login.md",
     "User stories/1 - websocket pgpool.md",
