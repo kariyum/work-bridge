@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
 	import { formatDate } from '$lib/utils.js';
-	import { untrack } from 'svelte';
 
 	type FeatureRequestPOST = {
 		title: string;
@@ -47,23 +46,23 @@
 	function handlePrevious() {
 		startIndex = Math.max(0, startIndex - pageSize);
 	}
-	
+
+	const canGoNext = () => startIndex < data.featureRequests.length - pageSize;
+
 	function handleNext() {
-		if (startIndex < data.featureRequests.length - pageSize) {
+		if (canGoNext()) {
 			startIndex = Math.min(data.featureRequests.length, startIndex + pageSize);
 		}
 	}
 </script>
 
 <div class="container">
-	<h2>Welcome to the community!</h2>
-
-	<h1>My feature requests</h1>
 	<div class="request-feature-action">
+		<h2>Feature Requests</h2>
 		<button onclick={addNewFeature}>Request a new feature</button>
 		<dialog bind:this={dialogElement}>
 			<form class="post-form" bind:this={formHtmlElement}>
-				<h2>Feature Request</h2>
+				<h2>New Feature Request</h2>
 				<label for="title"> Title:</label>
 				<input type="text" name="title" id="title" />
 
@@ -98,7 +97,7 @@
 			{#each featureRequests as data}
 				<tr>
 					<td>#{data.id}</td>
-					<td style="width: 20%;" >{data.title}</td>
+					<td style="width: 20%;">{data.title}</td>
 					<td style="width: 30%;">{data.description}</td>
 					<td>todo</td>
 					<td>0</td>
@@ -109,12 +108,19 @@
 		</tbody>
 	</table>
 	<div class="tfoot">
-		<button onclick={handlePrevious}>Previous</button>
-		<button onclick={handleNext}>Next</button>
+		<div>
+			<span>{startIndex + 1} - {endIndex + 1} - Total {data.featureRequests.length}</span>
+		</div>
+		<button onclick={handlePrevious} disabled={startIndex <= 0}>{'<'}</button>
+		<button onclick={handleNext} disabled={!canGoNext()}>{'>'}</button>
 	</div>
 </div>
 
 <style>
+	h2 {
+		font-weight: 500;
+		font-size: larger;
+	}
 	.post-form .actions {
 		display: flex;
 		gap: 0.5rem;
@@ -161,7 +167,7 @@
 
 	form label {
 		display: block;
-		font-weight: 500;
+		font-weight: 400;
 		font-size: large;
 	}
 
@@ -192,8 +198,19 @@
 		margin-top: 0.5rem;
 		display: flex;
 		width: 100%;
+		align-items: center;
 		justify-content: end;
 		gap: 0.5rem;
+	}
+
+	.tfoot button {
+		aspect-ratio: 1 / 1;
+		line-height: 0;
+	}
+
+	.tfoot button:disabled {
+		background-color: #ddd;
+		border: 1px solid transparent;
 	}
 
 	th {
