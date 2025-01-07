@@ -94,7 +94,13 @@
 					<button onclick={logout}> Logout </button>
 				</li>
 				<li class="lh-0">
-					<button onclick={toggleTheme} class="lh-0 outline-none" aria-label="Toggle dark mode" aria-pressed={theme === 'dark'}> </button>
+					<button
+						onclick={toggleTheme}
+						class="lh-0 outline-none"
+						aria-label="Toggle dark mode"
+						aria-pressed={theme === 'dark'}
+					>
+					</button>
 				</li>
 			</ul>
 		</nav>
