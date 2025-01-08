@@ -132,7 +132,6 @@ Displayed:
 
 <style>
 	button.active {
-		background: var(--bg);
 	}
 
 	button {
@@ -142,7 +141,6 @@ Displayed:
 		border: 1px solid var(--border);
 		border-radius: 5px;
 		padding: 0.2rem 0.5rem;
-		background-color: var(--bg);
 		cursor: pointer;
 		width: 2rem;
 	}

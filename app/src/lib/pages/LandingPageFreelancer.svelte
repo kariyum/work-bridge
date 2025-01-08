@@ -13,7 +13,5 @@
 
 
 <style>
-    .outer-container {
-        color: var(--dark-text);
-    }
+
 </style>

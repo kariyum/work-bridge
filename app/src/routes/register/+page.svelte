@@ -276,7 +276,6 @@
 		top: 5%;
 		/* transform: translate(-50%, 0); */
 		width: 100%;
-		color: var(--dark-text);
 	}
 
 	a {

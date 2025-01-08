@@ -16,14 +16,13 @@
     .container {
         display: flex;
         gap: 0.5rem;
-        background-color: #eee;
+        background-color: canvas;
         padding: 0.2rem 0.5rem;
         align-items: center;
         font-size: small;
         border-radius: 50px;
     }
     button {
-        background-color: #ddd;
         border: none;
         border-radius: 50%;
         margin: 0;

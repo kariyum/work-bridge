@@ -20,7 +20,6 @@
 <style>
 	.outer-container {
 		margin: auto;
-		color: var(--dark-text);
 	}
 	.container {
 		margin-top: 1rem;
