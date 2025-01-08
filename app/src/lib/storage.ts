@@ -1,32 +1,28 @@
-import { writable, get, type Writable } from 'svelte/store'
+import { writable, get } from 'svelte/store';
 
 export const storage = (key: string, initValue: any) => {
     const store = writable(initValue);
-
-    const storedValueStr = localStorage.getItem(key);
-    if (storedValueStr != null) store.set(JSON.parse(storedValueStr));
-
-    store.subscribe((val) => {
-        if ([null, undefined].includes(val)) {
-            localStorage.removeItem(key)
-        } else {
-            localStorage.setItem(key, JSON.stringify(val))
-        }
-    })
-
-    window.addEventListener('storage', () => {
+ ///tobe continued
+    if (typeof localStorage !== 'undefined') {
         const storedValueStr = localStorage.getItem(key);
-        if (storedValueStr == null) return;
+        if (storedValueStr != null) store.set(JSON.parse(storedValueStr));
 
-        const localValue = JSON.parse(storedValueStr)
-        if (localValue !== get(store)) store.set(localValue);
-    });
+        store.subscribe((val) => {
+            if ([null, undefined].includes(val)) {
+                localStorage.removeItem(key);
+            } else {
+                localStorage.setItem(key, JSON.stringify(val));
+            }
+        });
+
+        window.addEventListener('storage', () => {
+            const storedValueStr = localStorage.getItem(key);
+            if (storedValueStr == null) return;
+
+            const localValue = JSON.parse(storedValueStr);
+            if (localValue !== get(store)) store.set(localValue);
+        });
+    }
 
     return store;
-}
-
-// export const authStore = storage('auth', false);
-interface User {
-    email: string,
-    role: string
-}
+};

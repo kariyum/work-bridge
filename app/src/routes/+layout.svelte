@@ -1,9 +1,10 @@
 <script lang="ts">
 	import Navbar from '$lib/components/Navbar.svelte';
+	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
 	import './styles.css';
 	let { data, children } = $props();	
 </script>
-
+<ThemeToggle />
 {#if data.user}
 	<div class="container">
 		<Navbar user={data.user} />
