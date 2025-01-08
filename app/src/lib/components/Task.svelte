@@ -49,6 +49,5 @@
 	.container:hover {
 		cursor: pointer;
 		border: 1px solid var(--border);
-		background-color: var(--bg);
 	}
 </style>

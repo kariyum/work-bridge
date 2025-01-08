@@ -127,24 +127,24 @@
 <div class="input">
 	<form onsubmit={onClick} class="input-form">
 		<input type="text" bind:value={message} placeholder="Type a message..." />
-		<button type="submit">
-			<SendHorizontal class="icon" />
+		<button type="submit" class="icon">
+			<SendHorizontal />
 		</button>
 	</form>
 </div>
 
 <style>
-	:global(.icon) {
+	.icon {
 		background-color: transparent;
+		border: none;
+		line-height: 0;
 	}
 	.messages {
 		flex-grow: 1;
 		overflow-y: auto;
 		padding: 1rem;
-		border: 1px solid var(--border);
 		border-left: 0px;
 		/* border-radius: 5px; */
-		background-color: var(--bg);
 	}
 
 	.message {
@@ -158,8 +158,6 @@
 
 	.message[data-sender='me'] {
 		margin-left: auto;
-		background-color: #007bff;
-		color: var(--light-text);
 	}
 
 	.message {
@@ -182,19 +180,14 @@
 		border: 1px solid var(--border);
 		border-radius: 0;
 		border: 0;
-		border-bottom: 1px solid var(--border);
-		border-right: 1px solid var(--border);
 		outline: none;
 	}
 
 	.input-form button[type='submit'] {
 		padding: 0.75rem 1rem;
 		cursor: pointer;
-		background-color: var(--bg);
 		border-left: 0;
 		border-top: 0;
-		border-bottom: 1px solid var(--border);
-		border-right: 1px solid var(--border);
 		border-radius: 0;
 	}
 </style>

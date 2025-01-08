@@ -80,7 +80,6 @@
 		display: inline-block;
 		width: 2.5rem;
 		height: 2.5rem;
-		background-color: var(--bg);
 		border: 1px solid var(--border);
 		border-radius: 50%;
 		background-image: linear-gradient(red, rgb(0, 110, 255));
@@ -92,13 +91,11 @@
 		display: flex;
 		gap: 1rem;
 		border-radius: 4px 4px 0px 0px;
-		background-color: var(--bg);
 	}
 
 	.actions {
 		display: flex;
 		justify-content: flex-end;
-		background-color: var(--bg);
 		display: flex;
 		gap: 1rem;
 		/* margin-left: auto; */

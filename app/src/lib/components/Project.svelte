@@ -45,7 +45,6 @@
 
 <style>
 	.title-container {
-		background-color: var(--bg);
 		border-radius: 2px 2px 0px 0px;
 		padding: 0.5rem 1rem;
 		border-bottom: 1px solid var(--border);
@@ -62,7 +61,6 @@
 		border-top: 1px solid var(--border);
 		padding: 0.5rem 0.5rem;
 		border-radius: 0px 0px 5px 5px;
-		background-color: var(--bg);
 	}
 	.container {
 		padding: 1rem;

@@ -126,10 +126,6 @@
 		gap: 0.5rem;
 	}
 
-	.actions > * {
-		background-color: #eee;
-	}
-
 	dialog {
 		margin: auto;
 		padding: 1rem;
@@ -150,10 +146,6 @@
 	th {
 		padding: 0.5rem;
 		border-bottom: 1px solid #ccc;
-	}
-
-	.container {
-		color: var(--dark-text);
 	}
 
 	form {
@@ -206,11 +198,6 @@
 	.tfoot button {
 		aspect-ratio: 1 / 1;
 		line-height: 0;
-	}
-
-	.tfoot button:disabled {
-		background-color: #ddd;
-		border: 1px solid transparent;
 	}
 
 	th {
