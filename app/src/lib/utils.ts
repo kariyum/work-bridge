@@ -1,3 +1,5 @@
+import type { FetchErrors } from "./types";
+
 export const cyrb53 = (str: string, seed = 0) => {
     let h1 = 0xdeadbeef ^ seed,
         h2 = 0x41c6ce57 ^ seed;
@@ -15,13 +17,152 @@ export const cyrb53 = (str: string, seed = 0) => {
 };
 
 
-export function validateEmail(email: string) {
+export function validateEmail(email: string): boolean {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
 }
 
-export function formatDate(created_at: Date) {
+export function formatDate(created_at: Date): string {
     const month = (created_at.getMonth() + 1).toString().padStart(2, "0");
     const day = created_at.getDate().toString().padStart(2, "0");
     return `${day}/${month}/${created_at.getFullYear()}`
 }
+
+export function isPathPublic(pathname: string): boolean {
+    const pathInclusionEqualityCheck = ["/"]
+    const pathStartsWithCheck = ["/register", "/login"]
+    const isPathPublic = pathInclusionEqualityCheck.includes(pathname) ||
+        pathStartsWithCheck.some((path) => pathname.startsWith(path))
+    return isPathPublic;
+}
+
+export function getRedirectionUrl(pathname: string): string {
+    const redirectionUrl = `/login?redirect=${encodeURIComponent(pathname)}`;
+    return redirectionUrl;
+}
+export class UnauthorizedError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'UnauthorizedError';
+    }
+}
+
+export class NetworkError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'NetworkError';
+    }
+}
+
+export class TimeoutError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'TimeoutError';
+    }
+}
+
+export class ClientError extends Error {
+    constructor(public readonly status: number, message: string) {
+        super(message);
+        this.name = 'ClientError';
+        this.status = status;
+    }
+}
+
+export class ServerError extends Error {
+    constructor(public readonly status: number, message: string) {
+        super(message);
+        this.name = 'ServerError';
+        this.status = status;
+    }
+}
+
+export class ParsingError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'ParsingError';
+    }
+}
+
+// Result type implementation with generics and custom errors
+export class Result<T, E> {
+    constructor(public readonly value?: T, public readonly error?: E) { }
+
+    static ok<T, E>(value: T): Result<T, E> {
+        return new Result<T, E>(value);
+    }
+
+    static err<T, E>(error: E): Result<T, E> {
+        return new Result<T, E>(undefined, error);
+    }
+
+    isOk(): this is Ok<T, E> {
+        return this.error === undefined;
+    }
+
+    isErr(): this is Err<T, E> {
+        return this.error !== undefined;
+    }
+
+    map<U>(f: (value: T) => U): Result<U, E> {
+        const t = this;
+        if (t.isOk()) {
+            return Result.ok<U, E>(f(this.value!));
+        } else {
+            return Result.err<U, E>(this.error!);
+        }
+    }
+
+    flatMap<U>(f: (value: T) => Result<U, E>): Result<U, E> {
+        if (this.isOk()) {
+            return f(this.value!);
+        } else {
+            return this;
+        }
+    }
+
+    getOrElse(defaultValue: T): T {
+        return this.isOk() ? this.value! : defaultValue;
+    }
+
+    getOrThrow(): T {
+        const t = this;
+        if (this.isOk()) {
+            return this.value!;
+        } else {
+            throw t.error;
+        }
+    }
+}
+
+export class Ok<T, E> extends Result<T, E> {
+    constructor(value: T) {
+        super(value, undefined);
+    }
+}
+
+export class Err<T, E> extends Result<T, E> {
+    constructor(error: E) {
+        super(undefined, error);
+    }
+}
+
+export const fetchWrapper = <T>(fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>, url: string, options?: RequestInit): Promise<Result<T, FetchErrors>> =>
+    fetch(url, options)
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 401) {
+                    return Result.err<T, FetchErrors>({ unauthorizedError: new UnauthorizedError('Unauthorized') });
+                }
+                else if (400 <= response.status && response.status < 500) {
+                    return Result.err<T, FetchErrors>({ clientError: new ClientError(response.status, 'Client error') });
+                } else if (500 <= response.status) {
+                    return Result.err<T, FetchErrors>({ serverError: new ServerError(response.status, 'Server error') });
+                }
+                return Result.err<T, FetchErrors>({ networkError: new NetworkError(`Fetch error ${response.status}`) });
+            }
+            return response.json().then(data => Result.ok<T, FetchErrors>(data)).catch(() => Result.err<T, FetchErrors>({ parsingError: new ParsingError('Parsing error') }));
+        })
+        .catch(error => {
+            return Result.err<T, FetchErrors>({ networkError: new NetworkError(error.message) });
+        });
