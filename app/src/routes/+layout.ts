@@ -1,23 +1,16 @@
-import { redirect } from '@sveltejs/kit';
+import type { User } from '$lib/types.ts';
+import { fetchWrapper } from '$lib/utils.js';
 
 export async function load({ url, fetch }) {
-    const response = await fetch("/api/auth/whoami");
-    if (response.ok) {
-        const jsonResponse = await response.json();
+    const response = await fetchWrapper<any>(fetch, "/api/auth/whoami");
+    if (response.isOk()) {
+        const jsonResponse = response.getOrThrow();
         const user = {
             email: jsonResponse.sub,
             role: jsonResponse.role
         } as User;
-        if (url.searchParams.has("redirect")) {
-            return redirect(303, decodeURIComponent(url.searchParams.get("redirect") ?? "/"));
-        }
         return {
             user: user,
-            status: response.status,
-        }
-    } else {
-        return {
-            status: response.status,
         }
     }
 }

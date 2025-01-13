@@ -1,6 +1,7 @@
-import { redirect, type Handle } from '@sveltejs/kit';
+import { redirect, type Handle, type HandleFetch } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
+	console.log("IN HOOKS WTF MAN");
 	const pathInclusionEqualityCheck = ["/"]
 	const pathStartsWithCheck = ["/register", "/login"]
 	const isPathPublic = pathInclusionEqualityCheck.includes(event.url.pathname) ||
