@@ -40,6 +40,7 @@ export function getRedirectionUrl(pathname: string): string {
     const redirectionUrl = `/login?redirect=${encodeURIComponent(pathname)}`;
     return redirectionUrl;
 }
+
 export class UnauthorizedError extends Error {
     constructor(message: string) {
         super(message);
@@ -96,11 +97,11 @@ export class Result<T, E> {
         return new Result<T, E>(undefined, error);
     }
 
-    isOk(): this is Ok<T, E> {
+    isOk() {
         return this.error === undefined;
     }
 
-    isErr(): this is Err<T, E> {
+    isErr() { //  this is Err<T, E>
         return this.error !== undefined;
     }
 
@@ -117,7 +118,7 @@ export class Result<T, E> {
         if (this.isOk()) {
             return f(this.value!);
         } else {
-            return this;
+            return Result.err<U, E>(this.error!);
         }
     }
 
@@ -147,8 +148,8 @@ export class Err<T, E> extends Result<T, E> {
     }
 }
 
-export const fetchWrapper = <T>(fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>, url: string, options?: RequestInit): Promise<Result<T, FetchErrors>> =>
-    fetch(url, options)
+export async function fetchIntoResult<T>(fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>, url: string, options?: RequestInit): Promise<Result<T, FetchErrors>> {
+    return fetch(url, options)
         .then(response => {
             if (!response.ok) {
                 if (response.status === 401) {
@@ -166,3 +167,11 @@ export const fetchWrapper = <T>(fetch: (input: RequestInfo | URL, init?: Request
         .catch(error => {
             return Result.err<T, FetchErrors>({ networkError: new NetworkError(error.message) });
         });
+}
+
+export function shouldRedirect(result: Result<any, FetchErrors>, pathname: string): boolean {
+    if (result.error?.unauthorizedError !== undefined && !isPathPublic(pathname)) {
+        return true;
+    }
+    return false;
+}

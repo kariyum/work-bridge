@@ -1,8 +1,9 @@
-import type { User } from '$lib/types.ts';
-import { fetchWrapper } from '$lib/utils.js';
+import type { FetchErrors, User } from '$lib/types.ts';
+import { fetchIntoResult, getRedirectionUrl, Result, shouldRedirect } from '$lib/utils.js';
+import { redirect } from '@sveltejs/kit';
 
 export async function load({ url, fetch }) {
-    const response = await fetchWrapper<any>(fetch, "/api/auth/whoami");
+    const response: Result<any, FetchErrors> = await fetchIntoResult<any>(fetch, "/api/auth/whoami");
     if (response.isOk()) {
         const jsonResponse = response.getOrThrow();
         const user = {
@@ -12,5 +13,11 @@ export async function load({ url, fetch }) {
         return {
             user: user,
         }
+    }
+    if (shouldRedirect(response, url.pathname)) {
+        return redirect(302, getRedirectionUrl(url.pathname));
+    }
+    return {
+        error: response.error
     }
 }

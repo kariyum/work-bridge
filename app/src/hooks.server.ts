@@ -1,19 +1,19 @@
-import { redirect, type Handle, type HandleFetch } from '@sveltejs/kit';
+import { redirect, type Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	console.log("IN HOOKS WTF MAN");
 	const pathInclusionEqualityCheck = ["/"]
-	const pathStartsWithCheck = ["/register", "/login"]
+	const pathStartsWithCheck = ["/register", "/login", "/api"]
 	const isPathPublic = pathInclusionEqualityCheck.includes(event.url.pathname) ||
-		pathStartsWithCheck.some((path) => event.url.pathname.startsWith(path))
+	pathStartsWithCheck.some((path) => event.url.pathname.startsWith(path))
 	const isCookieDefined = event.cookies.get("Authorization") !== undefined;
 	const redirectionUrl = `/login?redirect=${encodeURIComponent(event.url.pathname)}`;
 	if (!isPathPublic && !isCookieDefined) {
-		redirect(303, redirectionUrl);
+		redirect(302, redirectionUrl);
 	}
 	const response = await resolve(event);
-	if (response.status === 401) {
-		redirect(303, redirectionUrl);
+	console.log("In hooks", event.url.pathname, isPathPublic, isCookieDefined);
+	if (response.status === 401 && !isPathPublic) {
+		redirect(302, redirectionUrl);
 	}
 	return response;
 };
