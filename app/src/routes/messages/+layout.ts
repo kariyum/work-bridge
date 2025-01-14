@@ -1,4 +1,4 @@
-export const ssr = false;
+import type { Discussion } from "$lib/types";
 
 export const load = async ({ fetch }) => {
     const response = await fetch("/api/discussions");

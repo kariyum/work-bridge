@@ -5,20 +5,20 @@ export interface User {
     role: string
 }
 
-type MessagesJsonResponse = {
+export type MessagesJsonResponse = {
     id: number,
     from_user_id: string,
     content: string,
     created_at: string
 };
 
-type ClientMessage = {
+export type ClientMessage = {
     discussion_id: number,
     content: string,
     receivers: string[],
 }
 
-interface Discussion {
+export interface Discussion {
     id: number;
     title: string;
     created_at: string;

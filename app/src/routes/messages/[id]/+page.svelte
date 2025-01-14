@@ -3,6 +3,9 @@
 	import { tick } from 'svelte';
 	import { SendHorizontal } from 'lucide-svelte';
 	import { WebSocketService } from '$lib/realtime';
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+	import type { ClientMessage, MessagesJsonResponse } from '$lib/types.js';
 
 	const { data } = $props();
 
@@ -26,8 +29,23 @@
 	onMount(() => {
 		if (browser) {
 			webSocketService = WebSocketService.getInstance();
+			unsubscribe = webSocketService.subscribe((msg) => {
+				console.log(msg.from_user_id, data.user?.email, msg.from_user_id != data.user?.email);
+				if (msg.from_user_id != data.user?.email) {
+					localMessages.push(msg);
+				}
+			});
 		}
-	})
+		console.log('onMount', data.user?.email);
+		viewport.scrollTo({ left: 0, top: viewport.scrollHeight, behavior: 'instant' });
+		smoothScroll = true;
+	});
+
+	onDestroy(() => {
+		if (browser) {
+			unsubscribe();
+		}
+	});
 	// $effect is used here to clear localMessages when data.messages changes;
 	// meaning when the user clicks on another discussion
 	$effect.pre(() => {
@@ -90,22 +108,6 @@
 				smoothScroll = true;
 			});
 		}
-	});
-	import { onMount } from 'svelte';
-	import { browser } from '$app/environment';
-	onMount(() => {
-		console.log('onMount', data.user?.email);
-		viewport.scrollTo({ left: 0, top: viewport.scrollHeight, behavior: 'instant' });
-		smoothScroll = true;
-		unsubscribe = webSocketService.subscribe((msg) => {
-			console.log(msg.from_user_id, data.user?.email, msg.from_user_id != data.user?.email);
-			if (msg.from_user_id != data.user?.email) {
-				localMessages.push(msg);
-			}
-		});
-	});
-	onDestroy(() => {
-		unsubscribe();
 	});
 </script>
 
