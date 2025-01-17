@@ -22,10 +22,19 @@ export function validateEmail(email: string): boolean {
     return re.test(email);
 }
 
-export function formatDate(created_at: Date): string {
-    const month = (created_at.getMonth() + 1).toString().padStart(2, "0");
-    const day = created_at.getDate().toString().padStart(2, "0");
-    return `${day}/${month}/${created_at.getFullYear()}`
+export function formatDate(createdAt: Date): string {
+    const month = (createdAt.getMonth() + 1).toString().padStart(2, "0");
+    const day = createdAt.getDate().toString().padStart(2, "0");
+    return `${day}/${month}/${createdAt.getFullYear()}`
+}
+
+export function formDateSentence(createdAt: Date): string {
+    const options: Intl.DateTimeFormatOptions = {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+    };
+    return createdAt.toLocaleDateString('en-GB', options);
 }
 
 export function isPathPublic(pathname: string): boolean {

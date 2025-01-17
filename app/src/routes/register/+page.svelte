@@ -246,7 +246,10 @@
 		border-radius: 5px;
 		height: 100%;
 		cursor: pointer;
-		transition: all 0.2s ease-out;
+		transition:
+			background-color 0.2s ease-out,
+			border-color 0.2s ease-out,
+			box-shadow 0.2s ease-out;
 	}
 
 	.card:hover[for='recruiter'],

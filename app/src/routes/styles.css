@@ -10,6 +10,8 @@
 body {
     -webkit-font-smoothing: antialiased;
     margin: 0;
+    color: CanvasText;
+    background-color: Canvas;
 }
 
 input {
@@ -37,28 +39,53 @@ textarea {
 }
 
 .light {
-    /* CSS HEX */
+    color-scheme: light;
     --primary: #4f46e5;
     --bright-text: #f9fafb;
-    --dark-text:#111827;
+    --dark-text: #111827;
     --border: #d1d5db;
     --btn-bg: #fafafa;
-    
+
     --orange: #ffcb88;
     --blue: #abd9ff;
     --grey: #3d3d3d;
+
+    --blue-bg: #e2eafb;
+    --pink-bg: #fbe2f4;
+    --violet-bg: #e3dbfa;
+    --green-bg: #f6e2d4;
 }
 
 .dark {
     color-scheme: dark;
     --primary: #6366f1;
     --dark-text: #f9fafb;
-    --bright-text:#111827;
+    --bright-text: #111827;
     --border: #374151;
     --btn-bg: #22242a;
 
     --orange: #003477;
     --blue: #542600;
     --grey: #c2c2c2;
-    
+
+    --blue-bg: #596380;
+    --pink-bg: #704e66;
+    --violet-bg: #645c80;
+    --green-bg: #806959;
+}
+
+.blue-bg {
+    background-color: var(--blue-bg);
+}
+
+.pink-bg {
+    background-color: var(--pink-bg);
+}
+
+.violet-bg {
+    background-color: var(--violet-bg);
+}
+
+.green-bg {
+    background-color: var(--green-bg);
 }
