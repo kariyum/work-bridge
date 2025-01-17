@@ -6,13 +6,15 @@
 
 <div class="outer-container">
 	<h3>My Projects</h3>
-	<div class="container">
+	<div>
 		{#if projects.length === 0}
 			<p>No projects found, please create one!</p>
 		{:else}
-			{#each projects as project}
-				<Project {project} />
-			{/each}
+			<div class="container">
+				{#each projects as project}
+					<Project {project} />
+				{/each}
+			</div>
 		{/if}
 	</div>
 </div>
@@ -23,8 +25,8 @@
 	}
 	.container {
 		margin-top: 1rem;
-		display: flex;
-		flex-direction: column;
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
 		gap: 1rem;
 	}
 </style>
