@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
 	import { cyrb53, validateEmail } from '$lib/utils.js';
-	import { Home } from 'lucide-svelte';
+	import { Home, MoveLeft } from 'lucide-svelte';
 
 	let formElement: HTMLFormElement;
 	let errorMessages: Map<string, string> = new Map([
@@ -157,6 +157,9 @@
 
 <div class="container">
 	<div class="sub-container">
+		<a href="/" title="Go back home">
+			<MoveLeft size="3rem" />
+		</a>
 		<h1>Join us!</h1>
 		<form onsubmit={captureFormData} bind:this={formElement}>
 			{@render steps[currentStep]()}
@@ -188,22 +191,8 @@
 	</div>
 </div>
 
-<div class="home">
-	<a href="/">
-		<Home />
-	</a>
-</div>
 
 <style>
-	.home {
-		position: absolute;
-		bottom: 1rem;
-		left: 1rem;
-	}
-
-	.home a {
-		line-height: 0;
-	}
 	.input-info {
 		font-size: small;
 		color: var(--grey);

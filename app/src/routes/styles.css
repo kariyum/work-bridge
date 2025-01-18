@@ -7,11 +7,15 @@
     box-sizing: border-box !important;
 }
 
+:root {
+    --max-width: 1920px;
+    --page-padding: 0.5rem;
+}
+
 body {
     -webkit-font-smoothing: antialiased;
     margin: 0;
-    color: CanvasText;
-    background-color: Canvas;
+    background-color: var(--background-color);
 }
 
 input {
@@ -40,10 +44,13 @@ textarea {
 
 .light {
     color-scheme: light;
+    --background-color: #fff;
+    --navbar-color: #dadada;
+
     --primary: #4f46e5;
     --bright-text: #f9fafb;
     --dark-text: #111827;
-    --border: #d1d5db;
+    --border: #ddd;
     --btn-bg: #fafafa;
 
     --orange: #ffcb88;
@@ -58,14 +65,19 @@ textarea {
 
 .dark {
     color-scheme: dark;
+    color: #bfbfbf;
+
+    --background-color: #272727;
+    --navbar-color: #0a0a0a;
+
     --primary: #6366f1;
     --dark-text: #f9fafb;
     --bright-text: #111827;
-    --border: #374151;
+    --border: #727272;
     --btn-bg: #22242a;
 
-    --orange: #003477;
-    --blue: #542600;
+    --orange: #8d714b;
+    --blue: #7294af;
     --grey: #c2c2c2;
 
     --blue-bg: #596380;

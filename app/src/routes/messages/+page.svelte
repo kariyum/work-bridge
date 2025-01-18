@@ -24,7 +24,6 @@
 		flex-grow: 1;
 		overflow-y: auto;
 		padding: 1rem;
-		border: 1px solid #ddd;
 		border-left: none;
 		/* border-radius: 5px; */
 	}

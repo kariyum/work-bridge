@@ -1,3 +1,4 @@
+import type { MessagesJsonResponse } from "./types";
 
 export class WebSocketService {
     private static instance: WebSocketService;

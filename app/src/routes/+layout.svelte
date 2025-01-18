@@ -12,9 +12,7 @@
 	</script>
 </svelte:head>
 {#if data.user}
-	<div class="container">
-		<Navbar user={data.user} />
-	</div>
+	<Navbar user={data.user} />
 	<div class="container">
 		{@render children()}
 	</div>
@@ -25,7 +23,7 @@
 <style>
 	.container {
 		margin: auto;
-		max-width: 1300px;
-		padding: 0 1rem;
+		max-width: var(--max-width);
+		padding: 0rem var(--page-padding);
 	}
 </style>

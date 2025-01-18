@@ -204,6 +204,6 @@
 	textarea {
 		padding: 0;
 		padding: 1%;
-		/* border: none; */
+		border: 2px solid var(--border);
 	}
 </style>

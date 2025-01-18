@@ -138,9 +138,6 @@
 	}
 
 	.skills-input {
-		border: 1px solid #aaa;
-		padding: 0.5rem 0.5rem;
-		border-radius: 5px;
 		width: max-width;
 	}
 </style>

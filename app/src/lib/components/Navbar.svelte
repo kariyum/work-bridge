@@ -5,6 +5,7 @@
 	import { WebSocketService } from '$lib/realtime';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import type { User } from '$lib/types';
 
 	let { user }: { user: User } = $props();
 	let webSocketService: WebSocketService;
@@ -63,7 +64,7 @@
 </script>
 
 <svelte:body onclick={notificationClickHandler} />
-<section>
+<section id="navbar">
 	<div class="container">
 		<h1 style="display:inline-flex; gap:1rem; justify-content:stretch;">
 			<!-- <a href="/">Word-bridge</a> -->
@@ -128,22 +129,22 @@
 		outline: none;
 	}
 	.home {
-		/* padding: 0 0.5rem; */
 		position: relative;
-		/* background-color: var(--orange);
-		box-shadow: 0 0 1rem var(--orange); */
-		/* border-color: var(--orange); */
-		/* border-radius: 3px; */
+		color: inherit;
 	}
 
 	section {
-		padding: 0.3rem 0;
+		padding: 0.3rem;
+		background-color: var(--navbar-color);
+	}
+
+	li, li > * {
+		color: inherit;
 	}
 
 	button {
 		background-color: transparent;
 		border: none;
-		cursor: pointer;
 		margin: 0;
 		padding: 0;
 	}
@@ -155,12 +156,13 @@
 	.notification-container {
 		display: none;
 		position: absolute;
-		border: 1px solid var(--border);
+		border: 2px solid var(--border);
 		border-radius: 5px;
 		padding: 1rem;
 		z-index: 1;
 		width: 15rem;
 		transform: translateX(-35%);
+		background-color: var(--background-color);
 	}
 
 	nav {
@@ -178,18 +180,18 @@
 		gap: 1rem;
 		list-style: none;
 	}
+
 	.container {
-		/* border: 2px solid black; */
 		display: flex;
 		flex-direction: row nowrap;
 		align-items: safe center;
-		/* max-width: 1500px; */
+		max-width: var(--max-width);
 		height: max-content;
 		margin: auto;
-		padding: 0.5rem 0rem;
-		/* border: 2px solid #eee; */
+		padding: 0.5rem var(--page-padding);
 		border-radius: 7px;
 	}
+	
 	ul {
 		display: flex;
 		justify-content: space-around;
@@ -202,6 +204,6 @@
 	li,
 	button {
 		height: fit-content;
-		font-size: medium;
+		font-size: large;
 	}
 </style>
