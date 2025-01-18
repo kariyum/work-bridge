@@ -3,17 +3,18 @@
 	import { Editor } from '@tiptap/core';
 	import StarterKit from '@tiptap/starter-kit';
 	import Link from '@tiptap/extension-link';
+	import { Bold, Heading1, Heading2, Italic, List, ListOrdered, Pilcrow } from 'lucide-svelte';
 
 	let element: HTMLDivElement;
 	let myEditor: Editor | undefined = $state();
 
-	let { contentIn, x = $bindable()}: { x: string, contentIn: string } = $props();
+	let { contentIn, x = $bindable() }: { x: string; contentIn: string } = $props();
 	$effect.pre(() => {
 		contentIn;
 		untrack(() => {
 			myEditor?.commands.setContent(contentIn);
 		});
-	})
+	});
 	onMount(() => {
 		myEditor = new Editor({
 			editorProps: {
@@ -59,7 +60,7 @@
 					}}
 					class:active={myEditor?.isActive('heading', { level: 1 })}
 				>
-					H1
+					<Heading1 />
 				</button>
 				<button
 					onclick={() => {
@@ -67,7 +68,7 @@
 					}}
 					class:active={myEditor?.isActive('heading', { level: 2 })}
 				>
-					H2
+					<Heading2 />
 				</button>
 				<button
 					onclick={() => {
@@ -75,7 +76,7 @@
 					}}
 					class:active={myEditor?.isActive('paragraph')}
 				>
-					P
+					<Pilcrow />
 				</button>
 			</div>
 
@@ -87,7 +88,7 @@
 					}}
 					class:active={myEditor?.isActive('bold')}
 				>
-					B
+					<Bold />
 				</button>
 				<button
 					onclick={() => {
@@ -95,7 +96,7 @@
 					}}
 					class:active={myEditor?.isActive('italic')}
 				>
-					I
+					<Italic />
 				</button>
 			</div>
 			<div class="vertical-separator"></div>
@@ -106,7 +107,7 @@
 					}}
 					class:active={myEditor?.isActive('orderedList')}
 				>
-					Ol
+					<ListOrdered />
 				</button>
 				<button
 					onclick={() => {
@@ -114,7 +115,7 @@
 					}}
 					class:active={myEditor?.isActive('bulletList')}
 				>
-					Ul
+					<List />
 				</button>
 			</div>
 		</div>
@@ -131,27 +132,33 @@ Displayed:
 </pre> -->
 
 <style>
-	button.active {
+	div {
+		background-color: Canvas;
+	}
+
+	.active {
+		background-color: var(--border);
 	}
 
 	button {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		border: 1px solid var(--border);
+		border: none;
 		border-radius: 5px;
 		padding: 0.2rem 0.5rem;
 		cursor: pointer;
-		width: 2rem;
+		aspect-ratio: 1;
+		background-color: canvas;
 	}
 
 	.vertical-separator {
-		width: 1px;
+		width: 2px;
 		align-self: stretch;
 		background-color: var(--border);
 	}
 	.outer-button-container {
-		border: 1px solid var(--border);
+		border: 2px solid var(--border);
 		border-radius: 5px 5px 0 0;
 		border-bottom: 0;
 	}
@@ -171,6 +178,7 @@ Displayed:
 		justify-content: space-between;
 		margin-left: 0.5rem;
 		margin-right: 0.5rem;
+		gap: 0.5rem;
 	}
 
 	.button-group:first-child {
@@ -185,7 +193,7 @@ Displayed:
 
 	:global(.editor) {
 		padding: 0.5rem;
-		border: 1px solid var(--border);
+		border: 2px solid var(--border);
 		border-radius: 0 0 5px 5px;
 		min-height: 30vh;
 	}

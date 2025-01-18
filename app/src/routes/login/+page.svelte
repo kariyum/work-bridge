@@ -2,6 +2,7 @@
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import AlreadyLoggedIn from '$lib/components/AlreadyLoggedIn.svelte';
 	import { cyrb53, validateEmail } from '$lib/utils.js';
+	import { MoveLeft } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	let { data } = $props();
 
@@ -61,6 +62,9 @@
 {:else}
 	<div class="container">
 		<div class="sub-container">
+			<a href="/">
+				<MoveLeft size="3rem"/>
+			</a>
 			<h1>Welcome</h1>
 			<form
 				class="fields-container"

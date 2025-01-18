@@ -54,8 +54,9 @@
 		flex-direction: column;
 		justify-content: space-between;
 		/* cursor: pointer; */
-		border: 1px solid #ddd;
+		border: 2px solid var(--border);
 		border-radius: 10px;
+		min-height: 20rem;
 	}
 
 	.content {
@@ -81,8 +82,8 @@
 	}
 
 	.date {
-		border: 1px solid #ddd;
-		background-color: Canvas;
+		border: 2px solid var(--border);
+		background-color: var(--background-color);
 		width: fit-content;
 		padding: 0.3rem 0.7rem;
 		border-radius: 20px;
