@@ -157,8 +157,8 @@ export class Err<T, E> extends Result<T, E> {
     }
 }
 
-export async function fetchIntoResult<T>(fetch: (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>, url: string, options?: RequestInit): Promise<Result<T, FetchErrors>> {
-    return fetch(url, options)
+export async function fetchIntoResult<T>(fetch: () => Promise<Response>): Promise<Result<T, FetchErrors>> {
+    return fetch()
         .then(response => {
             if (!response.ok) {
                 if (response.status === 401) {

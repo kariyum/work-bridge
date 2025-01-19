@@ -1,6 +1,7 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
+	return resolve(event);
 	const pathInclusionEqualityCheck = ["/"]
 	const pathStartsWithCheck = ["/register", "/login", "/api"]
 	const isPathPublic = pathInclusionEqualityCheck.includes(event.url.pathname) ||
@@ -8,11 +9,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 	const isCookieDefined = event.cookies.get("Authorization") !== undefined;
 	const redirectionUrl = `/login?redirect=${encodeURIComponent(event.url.pathname)}`;
 	if (!isPathPublic && !isCookieDefined) {
+		console.log("Redirecting... hooks");
 		redirect(302, redirectionUrl);
 	}
 	const response = await resolve(event);
 	console.log("In hooks", event.url.pathname, isPathPublic, isCookieDefined);
 	if (response.status === 401 && !isPathPublic) {
+		console.log("Redirecting2... hooks");
 		redirect(302, redirectionUrl);
 	}
 	return response;

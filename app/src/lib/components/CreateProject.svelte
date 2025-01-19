@@ -92,6 +92,7 @@
 		{:else}
 			<h1>Create a project</h1>
 		{/if}
+		
 		<form action="" onsubmit={(event) => event.preventDefault()}>
 			<div class="input">
 				<label for="title">Project Title</label>
@@ -137,7 +138,7 @@
 			</div>
 			<hr />
 			<div class="action-buttons">
-				<button onclick={() => goto('/')}>Cancel</button>
+				<button onclick={async () => goto('/')}>Cancel</button>
 				<button onclick={handleSubmit}>{projectIn ? 'Update Project' : 'Save Project'}</button>
 			</div>
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->
@@ -154,16 +155,18 @@
 	hr {
 		width: 100%;
 		margin: 1rem 0 0.3rem 0;
+		border: none;
+		border-top: 2px solid var(--border);
 	}
 	.input {
 		width: 100%;
 		margin: 0 0 0.5rem 0;
 		display: flex;
 		flex-direction: column;
+		gap: 0.5rem;
 	}
 
 	.input > input {
-		margin-top: 0.5rem;
 		width: 100%;
 	}
 

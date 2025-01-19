@@ -44,8 +44,10 @@ textarea {
 
 .light {
     color-scheme: light;
+    --font-color: #000;
     --background-color: #fff;
-    --navbar-color: #dadada;
+    --navbar-color: #e7ebf0;
+    --navbar-border: #b8cde7;
 
     --primary: #4f46e5;
     --bright-text: #f9fafb;
@@ -67,8 +69,11 @@ textarea {
     color-scheme: dark;
     color: #bfbfbf;
 
+    --font-color: #bfbfbf;
+
     --background-color: #272727;
     --navbar-color: #0a0a0a;
+    --navbar-border: #727272;
 
     --primary: #6366f1;
     --dark-text: #f9fafb;
