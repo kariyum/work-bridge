@@ -5,6 +5,7 @@
 	import { MoveLeft } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	let { data } = $props();
+	let pageTitle = "Login";
 
 	function login(email: string, password: string): Promise<Response> {
 		return fetch('/api/auth/login', {
@@ -56,6 +57,10 @@
 		final_error_message = error_message;
 	}
 </script>
+
+<svelte:head>
+  <title>{pageTitle}</title>
+</svelte:head>
 
 {#if data.user}
 	<AlreadyLoggedIn />

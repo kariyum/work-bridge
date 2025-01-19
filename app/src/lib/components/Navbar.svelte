@@ -92,7 +92,7 @@
 				<li><a href="/settings">Settings</a></li>
 				<li><a href="/feature-request">Feature Requests</a></li>
 				<li>
-					<button onclick={logout}> Logout </button>
+					<button data-testid="logout-button" onclick={logout}> Logout </button>
 				</li>
 				<li class="lh-0">
 					<button

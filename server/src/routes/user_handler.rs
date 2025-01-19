@@ -1,9 +1,9 @@
-use crate::repository::user::{get_user_by_credentials, insert_user, RegisterRequest};
+use crate::repository::user::{get_user_by_credentials, insert_user, delete_user, RegisterRequest, UserId};
 use crate::services::token::{generate_cookie, Claims};
 use actix_web::cookie::time::Duration;
 use actix_web::cookie::Cookie;
 use actix_web::dev::HttpServiceFactory;
-use actix_web::web::Form;
+use actix_web::web::{Form, Path};
 use actix_web::{web, HttpResponse, Responder};
 use serde::Deserialize;
 use sqlx::{Pool, Postgres};
@@ -45,6 +45,17 @@ pub async fn register(
     HttpResponse::Ok().cookie(cookie).finish()
 }
 
+pub async fn unregister(
+    path: Path<UserId>,
+    data: web::Data<Pool<Postgres>>,
+) -> impl Responder {
+    println!("Received request to delete user: {}", path.email);
+    let _ = delete_user(&path.email, data.as_ref())
+        .await
+        .expect("Failed to delete user");
+
+    HttpResponse::Ok().finish()
+}
 
 async fn logout() -> impl Responder {
     let cookie = Cookie::build("Authorization", "")
@@ -66,4 +77,6 @@ pub fn routes() -> impl HttpServiceFactory {
         .route("register", web::post().to(register))
         .route("logout", web::get().to(logout))
         .route("whoami", web::get().to(whoami))
+        .route("accounts", web::post().to(register))
+        .route("accounts/{email}", web::delete().to(unregister))
 }
