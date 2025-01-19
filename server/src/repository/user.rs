@@ -52,6 +52,24 @@ pub async fn insert_user(register_request: &RegisterRequest, conn: impl Executor
     Ok(())
 }
 
+#[derive(serde::Deserialize)]
+pub struct UserId {
+    pub email: String,
+}
+
+pub async fn delete_user(user_id: &str, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
+    sqlx::query("
+            DELETE FROM users
+            where email = $1
+        "
+    )
+        .bind(user_id)
+        .execute(conn)
+        .await
+        .expect("Failed to delete user from database");
+    Ok(())
+}
+
 fn hash_password(password: &String) -> String {
     let mut hasher = DefaultHasher::new();
     password.hash(&mut hasher);
