@@ -2,7 +2,12 @@
 	import Project from '$lib/client/components/Project.svelte';
 	import type { ProjectGET } from '$lib/types/project';
 	let { projects }: { projects: ProjectGET[] } = $props();
+    let pageTitle = "Landing Page Recruiter";
 </script>
+
+<svelte:head>
+    <title>{pageTitle}</title>
+</svelte:head>
 
 <div class="outer-container">
 	<h3>My Projects</h3>

@@ -1,3 +1,11 @@
+<script>
+    let pageTitle = "Landing Page";
+</script>
+
+<svelte:head>
+    <title>{pageTitle}</title>
+</svelte:head>
+
 <div class="container">
 	<div style="margin:auto; text-align:center; font-size:48px;">
 		<h1>Recruit freelancers</h1>
@@ -6,10 +14,10 @@
 	<p class="subtitle">Connect with thousands of Tunisian freelancers.</p>
 	<div class="buttons">
 		<a href="/login">
-			<button>Login</button>
+			<button data-testid="landing-page-login-button">Login</button>
 		</a>
 		<a href="/register">
-			<button>Register</button>
+			<button data-testid="landing-page-registration-button">Register</button>
 		</a>
 	</div>
 	<!-- <p>
