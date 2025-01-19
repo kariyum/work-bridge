@@ -1,10 +1,8 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { CircleUserRound } from 'lucide-svelte';
+	import { onMount } from 'svelte';
 
 	let { data, children } = $props();
-	if (data.status === 401) {
-		goto('/');
-	}
 	let titles = $derived.by(() => {
 		const result = new Map<number, string>();
 		data.discussions.map((discussion) => {
@@ -15,7 +13,11 @@
 		});
 		return result;
 	});
-	const navbarHeight = document.getElementById("navbar")?.offsetHeight;
+	let navbarHeight: number | undefined = $state(undefined);
+	
+	onMount(() => {
+		navbarHeight = document.getElementById("navbar")?.offsetHeight;
+	})
 </script>
 
 <div class="component" style="height: calc(100vh - {navbarHeight}px);">
@@ -28,6 +30,7 @@
 				{@const title = discussion.title ?? titles.get(discussion.id)}
 				<div class="discussion-container">
 					<a href="/messages/{discussion.id}">
+						<CircleUserRound />
 						{title}
 					</a>
 				</div>
@@ -57,7 +60,7 @@
 	.discussions {
 		flex: 1;
 		overflow-y: auto;
-		/* border-radius: 5px; */
+		border-right: 2px solid var(--blue);
 	}
 
 	.messages-col {
@@ -71,15 +74,23 @@
 	}
 
 	.header > div {
-		padding: 1rem;
 		font-weight: 500;
 	}
 
 	.discussion-container > a {
-		display: block;
+		gap: 1rem;
+		display: flex;
 		padding: 1rem;
 		text-decoration: none;
 		background-color: transparent;
+		border: 2px solid transparent;
+		font-size: large;
+		color: var(--font-color);
+	}
+
+	.discussion-container > a:hover {
+		border: 2px solid var(--blue);
+		background-color: var(--blue);
 	}
 
 </style>

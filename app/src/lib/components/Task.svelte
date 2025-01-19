@@ -1,38 +1,42 @@
 <script lang="ts">
-	import type { TaskClass } from "$lib/states.svelte";
-	import RichTextEditor from "./RichTextEditor.svelte";
-
-	let props = $props();
-	let taskObject = props.taskObject;
-    let content = $state('');
-    let modal: HTMLDialogElement;
+	import type { TaskClass } from '$lib/states.svelte';
+	let { onclick, taskObject }: { onclick: (event: MouseEvent) => void, taskObject: TaskClass } = $props();
 </script>
 
 {#if taskObject}
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div class="container" onclick={props.onclick}>
-		<div>{taskObject.title}</div>
-        <div class="right-container">
-            <div>{taskObject.assignee_id}</div>
-            <div class="status">{taskObject.status}</div>
-        </div>
+	<div class="container" onclick={onclick}>
+		<div class="task-id">#{taskObject.id}</div>
+		<div class="sub-container">
+			<div>
+				<div class="task-title">{taskObject.title}</div>
+			</div>
+			<div class="right-container">
+				<div>{taskObject.assignee_id}</div>
+				<div class="status">{taskObject.status}</div>
+			</div>
+		</div>
 	</div>
 {/if}
-  
+
 <style>
-    .right-container {
-        display: flex;
-        gap: 0.5rem;
-        align-items: center;
-    }
+	.task-title {
+		font-size: larger;
+		font-weight: 500;
+	}
+	.right-container {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+	}
 	.status {
 		background-color: var(--btn-bg);
-        border: 1px solid var(--border);
+		border: 2px solid var(--border);
 		border-radius: 5px;
-		padding: 0.5rem;    
-        min-width: 10ch;
-        text-align: center;
+		padding: 0.5rem;
+		min-width: 10ch;
+		text-align: center;
 	}
 	div {
 		border-radius: 5px;
@@ -40,14 +44,20 @@
 	}
 	.container {
 		display: flex;
+		flex-direction: column;
 		justify-content: space-between;
-        align-items: center;
-		border: 1px solid #eee;
+		border: 2px solid var(--border);
 		border-radius: 5px;
 		padding: 0.5rem 0.5rem 0.5rem 0.5rem;
 	}
+	.sub-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
 	.container:hover {
 		cursor: pointer;
-		border: 1px solid var(--border);
+		border: 2px solid var(--blue);
+		background-color: var(--blue);
 	}
 </style>

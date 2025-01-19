@@ -136,6 +136,7 @@
 	section {
 		padding: 0.3rem;
 		background-color: var(--navbar-color);
+		border-bottom: 1px solid var(--navbar-border);
 	}
 
 	li, li > * {

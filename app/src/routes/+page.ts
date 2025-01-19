@@ -5,7 +5,7 @@ import { processProjectJson, type ProjectGET, type ProjectJSON } from "$lib/type
 import { fetchIntoResult } from "$lib/utils.js";
 
 export async function load({ url, fetch }) {
-    const response = await fetchIntoResult<ProjectJSON[]>(fetch, "/api/projects", { method: "GET" });
+    const response = await fetchIntoResult<ProjectJSON[]>(() => fetch("/api/projects", { method: "GET" }));
     const parseProjectJSON = (jsonData: ProjectJSON[]) => jsonData.map((json) => processProjectJson(json));
     const projects = response.map((value: ProjectJSON[]) => parseProjectJSON(value))
 
