@@ -35,11 +35,17 @@
 					localMessages.push(msg);
 				}
 			});
+			console.log(`viewport.scrollTop = ${viewport.scrollTop}, viewport.scrollHeight = ${viewport.scrollHeight}`);
+			console.log(`viewport.scrollTop = ${viewport.scrollTop}, viewport.scrollHeight = ${viewport.scrollHeight}`);
 		}
-		console.log('onMount', data.user?.email);
-		viewport.scrollTo({ left: 0, top: viewport.scrollHeight, behavior: 'instant' });
-		smoothScroll = true;
 	});
+	
+	setInterval(() => {
+		if (viewport) {
+			console.log(`viewport.scrollTop = ${viewport.scrollTop}, viewport.scrollHeight = ${viewport.scrollHeight}`);
+			// viewport.scrollTo({ left: 0, top: viewport.scrollHeight, behavior: 'instant' });
+		}
+	}, 1000);
 
 	onDestroy(() => {
 		if (browser) {
@@ -96,14 +102,21 @@
 
 	$effect.pre(() => {
 		messages;
-		// const autoscroll =
-		// 	viewport && viewport.offsetHeight + viewport.scrollTop > viewport.scrollHeight - 100;
-		if (viewport) {
-			tick().then(() => {
+		const autoscroll = viewport && Math.abs(viewport.scrollTop) < 100;
+		if (viewport && autoscroll) {
+			if (viewport.scrollTop == 0) {
 				viewport.scrollTo({
 					left: 0,
-					top: viewport.scrollHeight,
-					behavior: smoothScroll ? 'smooth' : 'instant'
+					top: -1,
+					behavior: 'instant'
+				});
+			}
+			tick().then(() => {
+				console.log('Scrolling to 0');
+				viewport.scrollTo({
+					left: 0,
+					top: 0,
+					behavior: 'smooth'
 				});
 				smoothScroll = true;
 			});
@@ -111,21 +124,24 @@
 	});
 </script>
 
-<div class="messages" bind:this={viewport}>
-	{#each messages as message}
-		<div
-			class="message"
-			data-sender={message.from_user_id == data.user?.email ? 'me' : message.from_user_id}
-		>
-			{#if message.from_user_id != data.user?.email}
-				<p style="background-color: inherit;">
-					{message.from_user_id}:
-				</p>
-			{/if}
-			{message.content}
-		</div>
-	{/each}
+<div class="outer-container" bind:this={viewport}>
+	<div class="messages">
+		{#each messages as message}
+			<div
+				class="message"
+				data-sender={message.from_user_id == data.user?.email ? 'me' : message.from_user_id}
+			>
+				{#if message.from_user_id != data.user?.email}
+					<p style="background-color: inherit;">
+						{message.from_user_id}:
+					</p>
+				{/if}
+				{message.content}
+			</div>
+		{/each}
+	</div>
 </div>
+
 <div class="input">
 	<form onsubmit={onClick} class="input-form">
 		<input type="text" bind:value={message} placeholder="Type a message..." />
@@ -141,12 +157,20 @@
 		border: none;
 		line-height: 0;
 	}
-	.messages {
-		flex-grow: 1;
+
+	.outer-container {
+		display: flex;
 		overflow-y: auto;
+		flex-direction: column-reverse;
+		scroll-behavior: smooth;
+		flex: 1;
+	}
+
+	.messages {
 		padding: 1rem;
-		border-left: 0px;
-		/* border-radius: 5px; */
+		width: 100%;
+		flex-grow: 1;
+		flex: 1;
 	}
 
 	.message {

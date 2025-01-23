@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { CircleUserRound } from 'lucide-svelte';
-	import { onMount } from 'svelte';
 
 	let { data, children } = $props();
 	let titles = $derived.by(() => {
@@ -13,14 +12,10 @@
 		});
 		return result;
 	});
-	let navbarHeight: number | undefined = $state(undefined);
 	
-	onMount(() => {
-		navbarHeight = document.getElementById("navbar")?.offsetHeight;
-	})
 </script>
 
-<div class="component" style="height: calc(100vh - {navbarHeight}px);">
+<div class="component">
 	<div class="container">
 		<div class="discussions">
 			<div class="header">
@@ -44,9 +39,7 @@
 
 <style>
 	.component {
-		width: 100%;
-		display: flex;
-		/* height: calc(100vh - 4rem); */
+		height: calc(100vh - 4rem);
 	}
 
 	.container {
@@ -54,7 +47,6 @@
 		width: 100%;
 		margin: auto;
 		height: 100%;
-		/* gap: 0.5rem; */
 	}
 
 	.discussions {
