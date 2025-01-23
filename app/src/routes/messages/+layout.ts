@@ -1,6 +1,7 @@
 import type { Discussion } from "$lib/types";
 
-export const load = async ({ fetch }) => {
+export const load = async ({ fetch, url }) => {
+    console.log(url);
     const response = await fetch("/api/discussions");
     if (response.status === 401) {
         return {
