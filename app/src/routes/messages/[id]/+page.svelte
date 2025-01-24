@@ -13,6 +13,7 @@
 	let unsubscribe: () => void;
 	let message: string = $state('');
 	let smoothScroll: boolean = false;
+	let justSwitched: boolean = true;
 	let viewport: HTMLDivElement;
 	let receivers: string[] = $derived.by(() => {
 		data.discussion_id;
@@ -25,7 +26,7 @@
 
 	let localMessages: Array<MessagesJsonResponse> = $state([]);
 	let messages: Array<MessagesJsonResponse> = $derived(data.messages.concat(localMessages));
-
+	
 	onMount(() => {
 		if (browser) {
 			webSocketService = WebSocketService.getInstance();
@@ -79,12 +80,14 @@
 	$effect.pre(() => {
 		data.messages;
 		smoothScroll = false;
+		justSwitched = true;
 	});
 
 	$effect.pre(() => {
 		messages;
 		const autoscroll = viewport && Math.abs(viewport.scrollTop) < 100;
-		if (viewport && autoscroll) {
+		if (viewport && (autoscroll ||  justSwitched)) {
+			console.log("SCROLLING TO BOTTOM");
 			if (viewport.scrollTop == 0) {
 				viewport.scrollTo({
 					left: 0,
@@ -93,13 +96,13 @@
 				});
 			}
 			tick().then(() => {
-				console.log("SCROLLING");
 				viewport.scrollTo({
 					left: 0,
 					top: 0,
 					behavior: smoothScroll ? 'smooth' : 'instant'
 				});
 				smoothScroll = true;
+				justSwitched = false;
 			});
 		}
 	});
