@@ -51,6 +51,7 @@
 
 	.discussions {
 		flex: 1;
+		min-width: 33ch;
 		overflow-y: auto;
 		border-right: 2px solid var(--blue);
 	}
