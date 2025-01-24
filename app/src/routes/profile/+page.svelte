@@ -80,7 +80,7 @@
         width: 30rem;
         border: 2px solid var(--border);
     }
-    input:focus, textarea:focus, .skills:focus {
+    .skills:focus {
         outline: 2px solid var(--blue);
         outline-offset: -2px;
     }

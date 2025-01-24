@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
 	import { formatDate } from '$lib/utils.js';
+	import { ChevronLeft, ChevronRight, Plus } from 'lucide-svelte';
 
 	type FeatureRequestPOST = {
 		title: string;
@@ -59,7 +60,6 @@
 <div class="container">
 	<div class="request-feature-action">
 		<h2>Feature Requests</h2>
-		<button onclick={addNewFeature}>Request a new feature</button>
 		<dialog bind:this={dialogElement}>
 			<form class="post-form" bind:this={formHtmlElement}>
 				<h2>New Feature Request</h2>
@@ -75,12 +75,34 @@
 
 				<div class="actions">
 					<button type="submit" formmethod="dialog">Cancel</button>
-					<input type="submit" onclick={postFeatureRequest} value="Submit" />
+					<input type="submit" onclick={postFeatureRequest} class="submit-btn" value="Submit" />
 				</div>
 			</form>
 		</dialog>
 	</div>
 
+	<div class="table-actions">
+		<div class="tfoot">
+			<div>
+				<span>{startIndex + 1} - {endIndex + 1} - Total {data.featureRequests.length}</span>
+			</div>
+			<button
+				class="no-line-height paging-btn"
+				title="Previous"
+				onclick={handlePrevious}
+				disabled={startIndex <= 0}><ChevronLeft size="24" /></button
+			>
+			<button
+				class="no-line-height paging-btn"
+				title="Next"
+				onclick={handleNext}
+				disabled={!canGoNext()}><ChevronRight size="24" /></button
+			>
+		</div>
+		<button type="button" class="no-line-height add-btn" onclick={addNewFeature} title="Request new feature"
+			><Plus size="24" /></button
+		>
+	</div>
 	<table>
 		<thead>
 			<tr>
@@ -107,16 +129,35 @@
 			{/each}
 		</tbody>
 	</table>
-	<div class="tfoot">
-		<div>
-			<span>{startIndex + 1} - {endIndex + 1} - Total {data.featureRequests.length}</span>
-		</div>
-		<button onclick={handlePrevious} disabled={startIndex <= 0}>{'<'}</button>
-		<button onclick={handleNext} disabled={!canGoNext()}>{'>'}</button>
-	</div>
 </div>
 
 <style>
+	.submit-btn {
+		background-color: var(--blue);
+	}
+
+	.table-actions {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 0.5rem;
+	}
+	
+	.paging-btn {
+		padding: 0.2rem;
+	}
+
+	.add-btn {
+		margin: 0;
+		padding: 0.2rem;
+		width: 3rem;
+		height: 2rem;
+		background-color: var(--blue);
+	}
+
+	.container {
+		margin-top: 1rem;
+	}
+
 	h2 {
 		font-weight: 500;
 		font-size: larger;
@@ -128,9 +169,10 @@
 
 	dialog {
 		margin: auto;
-		padding: 1rem;
-		border: none;
+		padding: 1.3rem;
+		border: 1px solid var(--border);
 		border-radius: 7px;
+		color: var(--text-color);
 	}
 
 	.request-feature-action {
@@ -187,12 +229,10 @@
 	}
 
 	.tfoot {
-		margin-top: 0.5rem;
 		display: flex;
-		width: 100%;
 		align-items: center;
-		justify-content: end;
 		gap: 0.5rem;
+		width: fit-content;
 	}
 
 	.tfoot button {
@@ -204,7 +244,7 @@
 		text-align: left;
 	}
 
-	/* tr:last-child td {
+	tr:last-child td {
 		border: none;
-	} */
+	}
 </style>
