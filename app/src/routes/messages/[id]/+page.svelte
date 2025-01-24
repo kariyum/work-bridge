@@ -93,6 +93,7 @@
 				});
 			}
 			tick().then(() => {
+				console.log("SCROLLING");
 				viewport.scrollTo({
 					left: 0,
 					top: 0,
