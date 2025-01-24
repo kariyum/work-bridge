@@ -35,39 +35,13 @@
 					localMessages.push(msg);
 				}
 			});
-			console.log(`viewport.scrollTop = ${viewport.scrollTop}, viewport.scrollHeight = ${viewport.scrollHeight}`);
-			console.log(`viewport.scrollTop = ${viewport.scrollTop}, viewport.scrollHeight = ${viewport.scrollHeight}`);
 		}
 	});
-	
-	setInterval(() => {
-		if (viewport) {
-			console.log(`viewport.scrollTop = ${viewport.scrollTop}, viewport.scrollHeight = ${viewport.scrollHeight}`);
-			// viewport.scrollTo({ left: 0, top: viewport.scrollHeight, behavior: 'instant' });
-		}
-	}, 1000);
 
 	onDestroy(() => {
 		if (browser) {
 			unsubscribe();
 		}
-	});
-	// $effect is used here to clear localMessages when data.messages changes;
-	// meaning when the user clicks on another discussion
-	$effect.pre(() => {
-		data.messages;
-		untrack(() => {
-			localMessages = [];
-			smoothScroll = false;
-			if (viewport) {
-				// reset the scroll position
-				viewport.scrollTo({
-					left: 0,
-					top: 0,
-					behavior: 'instant'
-				});
-			}
-		});
 	});
 
 	function toClientMessage(content: string) {
@@ -100,6 +74,13 @@
 		message = '';
 	}
 
+	// $effect is used here to clear localMessages when data.messages changes;
+	// meaning when the user clicks on another discussion
+	$effect.pre(() => {
+		data.messages;
+		smoothScroll = false;
+	});
+
 	$effect.pre(() => {
 		messages;
 		const autoscroll = viewport && Math.abs(viewport.scrollTop) < 100;
@@ -112,11 +93,10 @@
 				});
 			}
 			tick().then(() => {
-				console.log('Scrolling to 0');
 				viewport.scrollTo({
 					left: 0,
 					top: 0,
-					behavior: 'smooth'
+					behavior: smoothScroll ? 'smooth' : 'instant'
 				});
 				smoothScroll = true;
 			});
