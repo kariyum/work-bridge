@@ -99,8 +99,11 @@
 				disabled={!canGoNext()}><ChevronRight size="24" /></button
 			>
 		</div>
-		<button type="button" class="no-line-height add-btn" onclick={addNewFeature} title="Request new feature"
-			><Plus size="24" /></button
+		<button
+			type="button"
+			class="no-line-height add-btn"
+			onclick={addNewFeature}
+			title="Request new feature"><Plus size="24" /></button
 		>
 	</div>
 	<table>
@@ -141,7 +144,7 @@
 		justify-content: space-between;
 		margin-top: 0.5rem;
 	}
-	
+
 	.paging-btn {
 		padding: 0.2rem;
 	}
@@ -187,7 +190,7 @@
 	td,
 	th {
 		padding: 0.5rem;
-		border-bottom: 1px solid #ccc;
+		border-bottom: 1px solid var(--border);
 	}
 
 	form {
