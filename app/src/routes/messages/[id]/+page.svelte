@@ -182,12 +182,12 @@
 	.input-form {
 		display: flex;
 		width: 100%;
+		border-top: 2px solid var(--border);
 	}
 
 	.input-form input[type='text'] {
 		flex: 1;
 		padding: 0.75rem;
-		border: 1px solid var(--border);
 		border-radius: 0;
 		border: 0;
 		outline: none;
@@ -199,5 +199,6 @@
 		border-left: 0;
 		border-top: 0;
 		border-radius: 0;
+		background-color: canvas;
 	}
 </style>
