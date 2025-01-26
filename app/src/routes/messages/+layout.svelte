@@ -12,24 +12,25 @@
 		});
 		return result;
 	});
-	
 </script>
 
 <div class="component">
 	<div class="container">
-		<div class="discussions">
+		<div class="menu">
 			<div class="header">
 				<div>Discussions</div>
 			</div>
-			{#each data.discussions as discussion}
-				{@const title = discussion.title ?? titles.get(discussion.id)}
-				<div class="discussion-container">
-					<a href="/messages/{discussion.id}">
-						<CircleUserRound />
-						{title}
-					</a>
-				</div>
-			{/each}
+			<div class="discussions">
+				{#each data.discussions as discussion}
+					{@const title = discussion.title ?? titles.get(discussion.id)}
+					<div class="discussion-container">
+						<a href="/messages/{discussion.id}" data-selected={data.selectedDiscussion === discussion.id.toString()}>
+							<CircleUserRound />
+							{title}
+						</a>
+					</div>
+				{/each}
+			</div>
 		</div>
 		<div class="messages-col">
 			{@render children()}
@@ -42,6 +43,10 @@
 		height: calc(100vh - 4rem);
 	}
 
+	.discussion-container {
+		margin-left: 0.5rem;
+	}
+
 	.container {
 		display: flex;
 		width: 100%;
@@ -49,11 +54,15 @@
 		height: 100%;
 	}
 
-	.discussions {
+	.menu {
 		flex: 1;
 		min-width: 33ch;
 		overflow-y: auto;
-		border-right: 2px solid var(--blue);
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		margin-top: 1rem;
+		/* border-right: 2px solid var(--blue); */
 	}
 
 	.messages-col {
@@ -69,21 +78,41 @@
 	.header > div {
 		font-weight: 500;
 	}
-
-	.discussion-container > a {
+	
+	a {
+        position: relative;
 		gap: 1rem;
 		display: flex;
-		padding: 1rem;
 		text-decoration: none;
 		background-color: transparent;
 		border: 2px solid transparent;
-		font-size: large;
 		color: var(--font-color);
+        padding: 0.5rem;
+        border-radius: 3px;
 	}
 
-	.discussion-container > a:hover {
-		border: 2px solid var(--blue);
-		background-color: var(--blue);
-	}
+    a[data-selected = "true"] {
+        background-color: var(--selected-color);
+    }
 
+    a[data-selected = "true"]::before {
+        content: "";
+        position: absolute;
+        width: 5px;
+        height: 2.2rem;
+        border-radius: 10px;
+        background-color: var(--blue);
+        left: -0.6rem;
+        top: 0.15rem;
+    }
+
+    a:hover {
+        background-color: var(--hover-color);
+    }
+
+	.discussions {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
 </style>
