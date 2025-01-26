@@ -1,7 +1,6 @@
 import type { Discussion } from "$lib/types";
 
-export const load = async ({ fetch, url }) => {
-    console.log(url);
+export const load = async ({ fetch, url, params }) => {
     const response = await fetch("/api/discussions");
     if (response.status === 401) {
         return {
@@ -16,6 +15,7 @@ export const load = async ({ fetch, url }) => {
             return {
                 discussions: discussions as Array<Discussion>,
                 status: response.status,
+                selectedDiscussion: params.id
             }
         } else {
             return {
