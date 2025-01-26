@@ -46,9 +46,9 @@ textarea {
     color-scheme: light;
     --font-color: #000;
     --background-color: #fff;
-    --navbar-color: #e7ebf0;
-    --navbar-border: #b8cde7;
-    --selected-color: #d4d4d4;
+    --navbar-color: #f8fbfd;
+    --navbar-border: #e3e5e7;
+    --selected-color: #ececec;
     --hover-color: #d1deeb;
 
     --primary: #4f46e5;

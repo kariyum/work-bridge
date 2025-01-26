@@ -55,7 +55,6 @@
 	}
 
 	.menu {
-		flex: 1;
 		min-width: 33ch;
 		overflow-y: auto;
 		display: flex;

@@ -90,6 +90,11 @@
 	textarea {
 		border: 2px solid var(--border);
 	}
+
+	input[type="submit"] {
+		cursor: pointer;
+	}
+	
 	.skills:focus {
 		outline: 2px solid var(--blue);
 		outline-offset: -2px;
