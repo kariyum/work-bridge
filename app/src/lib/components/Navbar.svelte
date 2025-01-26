@@ -1,7 +1,5 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { Bell, Moon, Sun } from 'lucide-svelte';
-	import { LogOut } from 'lucide-svelte';
 	import { WebSocketService } from '$lib/realtime';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -75,10 +73,6 @@
 		</h1>
 		<nav>
 			<ul>
-				<!-- <li><a href="/"><span class="material-symbols-outlined">home</span></a></li> -->
-				<li>
-					<a href="/profile"> {user.email}</a>
-				</li>
 				<li><a href="/project">Create a project</a></li>
 				<li><a href="/messages">Discussions</a></li>
 				<li class="notifications">
