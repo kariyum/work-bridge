@@ -22,7 +22,6 @@ kanban-plugin: board
 - [ ] add integration tests
 - [ ] make richtexteditor buttons unfocused with TAB
 - [ ] Assign tasks to applicants after accepting the proposal
-- [ ] ritchtexteditor buttons do not react when the cursor is on H1 H2 text while before the cursor was writing in P
 
 
 ## p2
@@ -36,17 +35,11 @@ kanban-plugin: board
 
 ## p1
 
-- [ ] take care of the feature requests page - Karim
 - [ ] UI unit test
-- [ ] dark mode
-- [ ] UI styling
-- [ ] profile page
 
 
 ## doing
 
-- [ ] add profile setup
-- [ ] add complete profile setup
 
 
 ## tested
@@ -55,6 +48,13 @@ kanban-plugin: board
 
 ## done
 
+- [ ] ritchtexteditor buttons do not react when the cursor is on H1 H2 text while before the cursor was writing in P
+- [ ] profile page
+- [ ] UI styling
+- [ ] dark mode
+- [ ] add complete profile setup
+- [ ] add profile setup
+- [ ] take care of the feature requests page - Karim
 - [ ] update websocket messages implementation
 - [ ] upon logging in route the user to home page
 - [ ] remove accessing writeable store in the +layout.ts page /

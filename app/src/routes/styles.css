@@ -48,6 +48,8 @@ textarea {
     --background-color: #fff;
     --navbar-color: #e7ebf0;
     --navbar-border: #b8cde7;
+    --selected-color: #d4d4d4;
+    --hover-color: #d1deeb;
 
     --primary: #4f46e5;
     --bright-text: #f9fafb;
@@ -74,6 +76,8 @@ textarea {
     --background-color: #272727;
     --navbar-color: #1d1d1d;
     --navbar-border: #727272;
+    --selected-color: #535455;
+    --hover-color: #727d88;
 
     --primary: #6366f1;
     --dark-text: #f9fafb;
