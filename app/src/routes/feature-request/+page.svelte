@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { formatDate } from '$lib/utils.js';
-	import { ChevronLeft, ChevronRight, Plus } from 'lucide-svelte';
+	import { ChevronLeft, ChevronRight, ExternalLink, Plus } from 'lucide-svelte';
 
 	type FeatureRequestPOST = {
 		title: string;
@@ -116,18 +116,27 @@
 				<th>Up votes</th>
 				<th>Down votes</th>
 				<th>Created At</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
 			{#each featureRequests as data}
+				{@const expansionUrl = `/feature-request/${data.id}`}
 				<tr>
 					<td>#{data.id}</td>
 					<td style="width: 20%;">{data.title}</td>
 					<td style="width: 30%;">{data.description}</td>
-					<td>todo</td>
+					<td>
+						<div class="bloc" data-type="todo">todo</div>
+					</td>
 					<td>0</td>
 					<td>0</td>
 					<td>{formatDate(data.created_at)}</td>
+					<td>
+						<a href={expansionUrl}>
+							<ExternalLink size="18" />
+						</a>
+					</td>
 				</tr>
 			{/each}
 		</tbody>
@@ -135,6 +144,32 @@
 </div>
 
 <style>
+	a {
+		color: canvasText;
+	}
+	.bloc {
+		width: fit-content;
+		padding: 0.3rem 0.7rem;
+		line-height: 1;
+		border-radius: 30px;
+	}
+
+	.bloc[data-type='todo'] {
+		background-color: var(--green-bg);
+	}
+
+	.bloc[data-type='in_progress'] {
+		background-color: var(--violet-bg);
+	}
+
+	.bloc[data-type='done'] {
+		background-color: var(--grey);
+	}
+
+	.bloc[data-type='declined'] {
+		background-color: var(--red);
+	}
+
 	.submit-btn {
 		background-color: var(--blue);
 	}

@@ -14,7 +14,7 @@
 	}
 
 	function getRandomBgClass(id: number) {
-		const classes = ['blue-bg', 'pink-bg', 'violet-bg', 'green-bg'];
+		const classes = ['blue-bg', 'pink-bg', 'violet-bg', 'beige-bg'];
 		return classes[id % classes.length];
 	}
 </script>
