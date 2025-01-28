@@ -60,11 +60,13 @@ textarea {
     --orange: #ffcb88;
     --blue: #abd9ff;
     --grey: #3d3d3d;
+    --red: rgb(212, 166, 166);
 
     --blue-bg: #e2eafb;
     --pink-bg: #fbe2f4;
     --violet-bg: #e3dbfa;
-    --green-bg: #f6e2d4;
+    --beige-bg: #f6e2d4;
+    --green-bg: rgb(166, 212, 166);
 }
 
 .dark {
@@ -88,11 +90,13 @@ textarea {
     --orange: #8d714b;
     --blue: #7294af;
     --grey: #c2c2c2;
+    --red: rgb(121, 84, 84);
 
     --blue-bg: #596380;
     --pink-bg: #704e66;
     --violet-bg: #645c80;
-    --green-bg: #806959;
+    --beige-bg: #806959;
+    --green-bg: rgb(84, 121, 84);
 }
 
 .blue-bg {
@@ -107,8 +111,8 @@ textarea {
     background-color: var(--violet-bg);
 }
 
-.green-bg {
-    background-color: var(--green-bg);
+.beige-bg {
+    background-color: var(--beige-bg);
 }
 
 .no-line-height {
