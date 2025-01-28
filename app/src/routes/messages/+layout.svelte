@@ -87,7 +87,7 @@
 		border: 2px solid transparent;
 		color: var(--font-color);
         padding: 0.5rem;
-        border-radius: 3px;
+        border-radius: 3px 0 0 3px;
 	}
 
     a[data-selected = "true"] {

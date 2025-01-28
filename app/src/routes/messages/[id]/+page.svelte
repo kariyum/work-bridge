@@ -115,11 +115,6 @@
 				class="message"
 				data-sender={message.from_user_id == data.user?.email ? 'me' : message.from_user_id}
 			>
-				{#if message.from_user_id != data.user?.email}
-					<p style="background-color: inherit;">
-						{message.from_user_id}:
-					</p>
-				{/if}
 				{message.content}
 			</div>
 		{/each}
@@ -155,6 +150,7 @@
 		width: 100%;
 		flex-grow: 1;
 		flex: 1;
+		background-color: canvas;
 	}
 
 	.message {
