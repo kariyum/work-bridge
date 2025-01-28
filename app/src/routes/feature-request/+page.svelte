@@ -158,7 +158,8 @@
 	}
 
 	.container {
-		margin-top: 1rem;
+		max-width: 1100px;
+		margin: 1rem auto auto auto;
 	}
 
 	h2 {

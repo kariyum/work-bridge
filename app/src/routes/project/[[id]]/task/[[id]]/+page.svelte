@@ -97,7 +97,6 @@
 	select {
 		padding: 0.5rem;
 		border-radius: 5px;
-		border-color: #bbb;
 	}
 	.act-task {
 		margin-left: auto;
@@ -121,9 +120,8 @@
 		max-width: 1000px;
 		transform: translate(-50%, -50%);
 		padding: 1rem;
-		border: 1px solid var(--border);
+		border: 2px solid var(--border);
 		border-radius: 5px;
-		box-shadow: 0 0 10px #333;
 		background-color: canvas;
 	}
 
