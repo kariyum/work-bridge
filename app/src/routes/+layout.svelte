@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Navbar from '$lib/components/Navbar.svelte';
 	import './styles.css';
-	let { data, children } = $props();	
+	let { data, children } = $props();
 </script>
 <svelte:head>
 	<script>

@@ -1,8 +1,13 @@
 <script lang="ts">
+	import { invalidateAll } from '$app/navigation';
 	import LandingPage from '$lib/pages/LandingPage.svelte';
 	import LandingPageFreelancer from '$lib/pages/LandingPageFreelancer.svelte';
 	import LandingPageRecruiter from '$lib/pages/LandingPageRecruiter.svelte';
+	import { onMount } from 'svelte';
 	let { data } = $props();
+	onMount(async () => {
+		return invalidateAll();
+	})
 </script>
 
 {#if data.error && data.error?.unauthorizedError}
