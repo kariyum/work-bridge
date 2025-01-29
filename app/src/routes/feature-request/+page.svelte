@@ -127,7 +127,7 @@
 					<td style="width: 20%;">{data.title}</td>
 					<td style="width: 30%;">{data.description}</td>
 					<td>
-						<div class="bloc" data-type="todo">todo</div>
+						<div class="status" data-type="todo">todo</div>
 					</td>
 					<td>0</td>
 					<td>0</td>
@@ -146,28 +146,6 @@
 <style>
 	a {
 		color: canvasText;
-	}
-	.bloc {
-		width: fit-content;
-		padding: 0.3rem 0.7rem;
-		line-height: 1;
-		border-radius: 30px;
-	}
-
-	.bloc[data-type='todo'] {
-		background-color: var(--green-bg);
-	}
-
-	.bloc[data-type='in_progress'] {
-		background-color: var(--violet-bg);
-	}
-
-	.bloc[data-type='done'] {
-		background-color: var(--grey);
-	}
-
-	.bloc[data-type='declined'] {
-		background-color: var(--red);
 	}
 
 	.submit-btn {

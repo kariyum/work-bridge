@@ -55,7 +55,7 @@ textarea {
     --bright-text: #f9fafb;
     --dark-text: #111827;
     --border: #ddd;
-    --btn-bg: #fafafa;
+    --btn-bg: #eeeeee;
 
     --orange: #ffcb88;
     --blue: #abd9ff;
@@ -85,7 +85,7 @@ textarea {
     --dark-text: #f9fafb;
     --bright-text: #111827;
     --border: #727272;
-    --btn-bg: #22242a;
+    --btn-bg: #31333a;
 
     --orange: #8d714b;
     --blue: #7294af;
@@ -122,4 +122,27 @@ textarea {
 input:focus, textarea:focus {
     outline: 2px solid var(--blue);
     outline-offset: -2px;
+}
+
+.status {
+    width: fit-content;
+    padding: 0.3rem 0.7rem;
+    line-height: 1;
+    border-radius: 30px;
+}
+
+.status[data-type='todo'] {
+    background-color: var(--green-bg);
+}
+
+.status[data-type='in_progress'] {
+    background-color: var(--violet-bg);
+}
+
+.status[data-type='done'] {
+    background-color: var(--grey);
+}
+
+.status[data-type='declined'] {
+    background-color: var(--red);
 }
