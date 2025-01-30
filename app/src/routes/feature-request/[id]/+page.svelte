@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { ThumbsUp, ThumbsDown, SendHorizontal } from 'lucide-svelte';
+	import { ArrowUp, ArrowDown, SendHorizontal } from 'lucide-svelte';
 
 	let { data } = $props();
 </script>
@@ -12,21 +12,19 @@
 			{data.featureRequest?.description}
 		</p>
 		<div class="actions">
-            <div class="vote">
-                <button class="emoji no-line-height"><ThumbsUp size="18" /></button>
-                <div>10</div>
-            </div>
-            <div class="vertical-line"></div>
-            <div class="vote">
-                <button class="emoji no-line-height"><ThumbsDown size="18" /></button>
-                <div>10</div>
-            </div>
+			<button class="vote left-chip">
+				<div class="emoji no-line-height"><ArrowUp size="18" /></div>
+				<div>10</div>
+			</button>
+			<div class="vertical-line"></div>
+			<button class="vote right-chip">
+				<div class="emoji no-line-height"><ArrowDown size="18" /></div>
+				<div>10</div>
+			</button>
 		</div>
 		<div class="comments">
 			<h2>Comments</h2>
-			<div class="all-comments">
-				No comments yet.
-			</div>
+			<div class="all-comments">No comments yet.</div>
 			<div class="comment-input">
 				<input type="text" name="comment" placeholder="write a comment" id="comment" />
 				<SendHorizontal />
@@ -44,38 +42,51 @@
 	}
 
 	.sub-container {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
 		max-width: 1100px;
 		margin: auto;
 	}
 
 	.content {
 		min-height: 5rem;
-        margin-top: 0.5rem;
-        border-radius: 5px;
+		margin-top: 0.5rem;
+		border-radius: 5px;
 	}
 
-    .actions {
-        display: flex;
-        gap: 1rem;
-		background-color: var(--btn-bg);
+	.actions {
+		display: flex;
 		width: fit-content;
-		padding: 0.3rem 0.7rem;
-		border-radius: 2rem;
-    }
+	}
 
-    .vote {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
+	.left-chip {
+		padding: 0.3rem 1rem 0.3rem 0.7rem;
+		border-radius: 2rem 0 0 2rem;
+	}
 
-    .vertical-line {
-        background-color: var(--grey);
-        width: 1px;
-    }
+	.right-chip {
+		padding: 0.3rem 1rem 0.3rem 0.7rem;
+		border-radius: 0 2rem 2rem 0;
+	}
+
+	.vote {
+		background-color: var(--btn-bg);
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		margin: 0;
+		border: none;
+	}
+
+	.vote:hover {
+		background-color: var(--blue);
+	}
+
+	.vertical-line {
+		background-color: var(--grey);
+		width: 1px;
+	}
 
 	.comments {
 		display: flex;
