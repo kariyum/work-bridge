@@ -11,16 +11,19 @@
 		<p class="content">
 			{data.featureRequest?.description}
 		</p>
-		<div class="actions">
-			<button class="vote left-chip">
-				<div class="emoji no-line-height"><ArrowUp size="18" /></div>
-				<div>10</div>
-			</button>
-			<div class="vertical-line"></div>
-			<button class="vote right-chip">
-				<div class="emoji no-line-height"><ArrowDown size="18" /></div>
-				<div>10</div>
-			</button>
+		<div class="actions-container">
+			<div class="actions">
+				<button class="vote left-chip">
+					<div class="emoji no-line-height"><ArrowUp size="18" /></div>
+					<div>10</div>
+				</button>
+				<div class="vertical-line"></div>
+				<button class="vote right-chip">
+					<div class="emoji no-line-height"><ArrowDown size="18" /></div>
+					<div>10</div>
+				</button>
+			</div>
+			<button class="delete-btn">Delete</button>
 		</div>
 		<div class="comments">
 			<h2>Comments</h2>
@@ -39,6 +42,11 @@
 		padding: 0.3rem;
 		background-color: transparent;
 		border: none;
+	}
+
+	.actions-container {
+		display: flex;
+		justify-content: space-between;
 	}
 
 	.sub-container {
@@ -77,6 +85,8 @@
 		gap: 0.5rem;
 		margin: 0;
 		border: none;
+		height: 2.5rem;
+		font-size: 1rem;
 	}
 
 	.vote:hover {
@@ -86,6 +96,7 @@
 	.vertical-line {
 		background-color: var(--grey);
 		width: 1px;
+		height: 2.5rem;
 	}
 
 	.comments {

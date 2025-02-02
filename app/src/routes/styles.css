@@ -62,6 +62,8 @@ textarea {
     --grey: #3d3d3d;
     --red: rgb(212, 166, 166);
 
+    --vibrant-red: red;
+
     --blue-bg: #e2eafb;
     --pink-bg: #fbe2f4;
     --violet-bg: #e3dbfa;
@@ -91,6 +93,8 @@ textarea {
     --blue: #7294af;
     --grey: #c2c2c2;
     --red: rgb(121, 84, 84);
+
+    --vibrant-red: rgb(199, 49, 49);
 
     --blue-bg: #596380;
     --pink-bg: #704e66;
@@ -145,4 +149,15 @@ input:focus, textarea:focus {
 
 .status[data-type='declined'] {
     background-color: var(--red);
+}
+
+.delete-btn {
+    background-color: var(--vibrant-red);
+    border: none;
+    color: var(--font-color);
+    font-size: medium;
+}
+
+.delete-btn:hover {
+    background-color: red;
 }
