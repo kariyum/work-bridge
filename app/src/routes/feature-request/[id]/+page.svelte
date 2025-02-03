@@ -12,17 +12,20 @@
 			{data.featureRequest?.description}
 		</p>
 		<div class="actions-container">
-			<div class="actions">
-				<button class="vote left-chip">
-					<div class="emoji no-line-height"><ArrowUp size="18" /></div>
-					<div>10</div>
-				</button>
-				<div class="vertical-line"></div>
-				<button class="vote right-chip">
-					<div class="emoji no-line-height"><ArrowDown size="18" /></div>
-					<div>10</div>
-				</button>
+			<div class="chip-container">
+				<div class="actions">
+					<button class="vote left-chip">
+						<div class="emoji no-line-height"><ArrowUp size="18" /></div>
+						<div>10</div>
+					</button>
+					<div class="vertical-line"></div>
+					<button class="vote right-chip">
+						<div class="emoji no-line-height"><ArrowDown size="18" /></div>
+						<div>10</div>
+					</button>
+				</div>
 			</div>
+
 			<button class="delete-btn">Delete</button>
 		</div>
 		<div class="comments">
@@ -69,12 +72,12 @@
 	}
 
 	.left-chip {
-		padding: 0.3rem 1rem 0.3rem 0.7rem;
+		padding: 0.5rem 1rem 0.5rem 0.7rem;
 		border-radius: 2rem 0 0 2rem;
 	}
 
 	.right-chip {
-		padding: 0.3rem 1rem 0.3rem 0.7rem;
+		padding: 0.5rem 1rem 0.5rem 0.7rem;
 		border-radius: 0 2rem 2rem 0;
 	}
 
@@ -85,7 +88,6 @@
 		gap: 0.5rem;
 		margin: 0;
 		border: none;
-		height: 2.5rem;
 		font-size: 1rem;
 	}
 
@@ -96,7 +98,6 @@
 	.vertical-line {
 		background-color: var(--grey);
 		width: 1px;
-		height: 2.5rem;
 	}
 
 	.comments {
