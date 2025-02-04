@@ -4,12 +4,21 @@
 	import { formDateSentence } from '$lib/utils';
 	let { project }: { project: ProjectGET } = $props();
 
-	async function deleteProject() {
-		const response = await fetch(`/api/projects/${project.id}`, {
-			method: 'DELETE'
+	async function handleEasyApply() {
+		const response = await fetch('/api/proposals', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				project_id: project.id
+			})
 		});
 		if (response.ok) {
-			await invalidate('/api/projects');
+			console.log('Applied');
+		} else {
+			console.log('Failed to apply', response.status);
+			alert('Failed to apply');
 		}
 	}
 
@@ -39,10 +48,8 @@
 			<div>{project.budget}</div>
 		</div>
 		<div class="button">
-			<button onclick={deleteProject}>Delete</button>
-			<button onclick={async () => await goto(`/project/${project.id}`)}>Edit</button>
+			<button onclick={handleEasyApply}>Apply</button>
 		</div>
-		<!-- <button>Post Job</button> -->
 	</div>
 </div>
 
@@ -66,6 +73,7 @@
 		display: block;
 		min-height: 1rem;
 	}
+
 	.outer-container {
 		padding: 0.5rem;
 		display: flex;
