@@ -28,6 +28,7 @@
 
 			<button class="delete-btn">Delete</button>
 		</div>
+		<hr>
 		<div class="comments">
 			<h2>Comments</h2>
 			<div class="all-comments">No comments yet.</div>
@@ -40,6 +41,11 @@
 </div>
 
 <style>
+	hr {
+		border: none;
+		border-top: 2px solid var(--border);
+		margin: 1rem 0 1rem 0;
+	}
 	.emoji {
 		margin: 0;
 		padding: 0.3rem;
@@ -50,6 +56,10 @@
 	.actions-container {
 		display: flex;
 		justify-content: space-between;
+	}
+
+	.container {
+		margin-top: 1rem;
 	}
 
 	.sub-container {

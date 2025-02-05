@@ -156,8 +156,10 @@ input:focus, textarea:focus {
     border: none;
     color: var(--font-color);
     font-size: medium;
+    font-weight: 500;
 }
 
 .delete-btn:hover {
     background-color: red;
+    box-shadow: 0 0 0.7rem red;
 }
