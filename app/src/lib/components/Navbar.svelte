@@ -50,7 +50,9 @@
 		</h1>
 		<nav>
 			<ul>
-				<li><a href="/project">Create a project</a></li>
+				{#if user.role === 'recruiter'}
+					<li><a href="/project">Create a project</a></li>
+				{/if}
 				<li><a href="/messages">Discussions</a></li>
 				<li class="notifications">
 					<button> Notifications </button>
