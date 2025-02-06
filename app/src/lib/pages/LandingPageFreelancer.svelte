@@ -5,7 +5,7 @@
 </script>
 
 <div class="outer-container">
-	<h3>My Projects</h3>
+	<h3>Recommended Jobs</h3>
 	<div>
 		{#if projects.length === 0}
 			<p>Sorry for the inconvenience, no projects were found.</p>
