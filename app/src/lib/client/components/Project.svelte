@@ -112,5 +112,10 @@
 		border-radius: 10px;
 		padding: 1rem;
 		height: 100%;
+		text-decoration: none;
+		color: inherit;
+		display: flex;
+		gap: 0.5rem;
+		flex-direction: column;
 	}
 </style>
