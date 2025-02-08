@@ -122,7 +122,7 @@
 		padding: 1rem;
 		border: 2px solid var(--border);
 		border-radius: 5px;
-		background-color: canvas;
+		background-color: var(--background-color);
 	}
 
 	.blur {
