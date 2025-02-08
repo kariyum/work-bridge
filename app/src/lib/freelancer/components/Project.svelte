@@ -29,19 +29,18 @@
 </script>
 
 <div class="outer-container">
-	<div
+	<a
+		href="/"
 		class="project {getRandomBgClass(
 			project.content.length + project.title.length + (project.id ?? 0)
 		)}"
 	>
-		<div class="project-top">
-			<div class="date">{formDateSentence(project.created_at)}</div>
-		</div>
+		<div class="date">{formDateSentence(project.created_at)}</div>
 		<div class="title">{project.title}</div>
 		<div class="content">
 			{@html project.content}
 		</div>
-	</div>
+	</a>
 	<div class="actions">
 		<div class="price">
 			<div class="currency"></div>
@@ -120,5 +119,10 @@
 		border-radius: 10px;
 		padding: 1rem;
 		height: 100%;
+		text-decoration: none;
+		color: inherit;
+		display: flex;
+		gap: 0.5rem;
+		flex-direction: column;
 	}
 </style>
