@@ -15,7 +15,6 @@ export const load = async ({ fetch, url, params }) => {
             return {
                 discussions: discussions as Array<Discussion>,
                 status: response.status,
-                selectedDiscussion: params.id
             }
         } else {
             return {

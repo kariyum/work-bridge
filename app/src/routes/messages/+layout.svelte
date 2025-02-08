@@ -1,7 +1,10 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { CircleUserRound } from 'lucide-svelte';
 
 	let { data, children } = $props();
+	const discussionIdMatcher = /messages\/(?<id>\d)/
+	const selectedDiscussion: string | undefined = $derived(discussionIdMatcher.exec(page.url.pathname)?.groups?.id || undefined);
 	let titles = $derived.by(() => {
 		const result = new Map<number, string>();
 		data.discussions.map((discussion) => {
@@ -24,7 +27,7 @@
 				{#each data.discussions as discussion}
 					{@const title = discussion.title ?? titles.get(discussion.id)}
 					<div class="discussion-container">
-						<a href="/messages/{discussion.id}" data-selected={data.selectedDiscussion === discussion.id.toString()}>
+						<a href="/messages/{discussion.id}" data-selected={selectedDiscussion === discussion.id.toString()}>
 							<CircleUserRound />
 							{title}
 						</a>
