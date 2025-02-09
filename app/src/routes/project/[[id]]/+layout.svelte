@@ -1,5 +1,6 @@
 <script lang="ts">
 	import CreateProject from '$lib/components/CreateProject.svelte';
+	import ProjectDetails from '$lib/components/ProjectDetails.svelte';
 
 	const { data, children } = $props();
 
@@ -7,8 +8,15 @@
 		let state = $state(data.tasksGlobalState);
 		return state;
 	});
+	let editMode = $state(false);
 </script>
 
-<CreateProject projectIn={data.project} {tasksGlobalState}></CreateProject>
+{#if editMode}
+	<CreateProject projectIn={data.project} {tasksGlobalState}></CreateProject>
+{:else if data.project !== undefined}
+	<ProjectDetails projectIn={data.project} role={data.user?.role ?? ""} userId={data.user?.email ?? ""} onedit={() => editMode = true}/>
+{:else}
+	Project does not exist
+{/if}
 
 {@render children()}
