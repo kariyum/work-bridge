@@ -30,7 +30,7 @@
 
 <div class="outer-container">
 	<a
-		href="/"
+		href="/project/{project.id}"
 		class="project {getRandomBgClass(
 			project.content.length + project.title.length + (project.id ?? 0)
 		)}"
