@@ -22,7 +22,11 @@
 			<span>{projectIn.user_id}</span>
 		</div>
 		<p class="content">
-			{@html projectIn.content}
+			{#if projectIn.content.length === 0}
+				<span>No content for this project</span>
+			{:else}
+				{@html projectIn.content}
+			{/if}
 		</p>
 
 		<hr />
@@ -42,13 +46,25 @@
 							Budget: {task.budget}
 						</div>
 						<div class="task-content">
-							{@html task.content}
+							{#if task.content.length === 0}
+								<div>No content for this task</div>
+							{:else}
+								{@html task.content}
+							{/if}
 						</div>
 						<h4>Required Skills</h4>
 						<div class="skills">
-							{#each task.skills as skill}
-								<div class="skill">{skill}</div>
-							{/each}
+							{#if task.skills.length === 0}
+								<div>No skills required.</div>
+							{:else}
+								{#each task.skills as skill}
+									<div class="skill">{skill}</div>
+								{/each}
+							{/if}
+						</div>
+						<div>
+							<span style="font-weight: 500;">Assigned to: </span>
+							<span>{task.assignee_id}</span>
 						</div>
 						{#if role === 'freelancer'}
 							<button class="apply-btn">Submit Application</button>
