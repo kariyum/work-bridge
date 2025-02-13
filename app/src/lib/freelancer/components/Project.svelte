@@ -4,24 +4,6 @@
 	import { formDateSentence } from '$lib/utils';
 	let { project }: { project: ProjectGET } = $props();
 
-	async function handleEasyApply() {
-		const response = await fetch('/api/proposals', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				project_id: project.id
-			})
-		});
-		if (response.ok) {
-			console.log('Applied');
-		} else {
-			console.log('Failed to apply', response.status);
-			alert('Failed to apply');
-		}
-	}
-
 	function getRandomBgClass(id: number) {
 		const classes = ['blue-bg', 'pink-bg', 'violet-bg', 'beige-bg'];
 		return classes[id % classes.length];
@@ -45,9 +27,6 @@
 		<div class="price">
 			<div class="currency"></div>
 			<div>{project.budget}</div>
-		</div>
-		<div class="button">
-			<button onclick={handleEasyApply}>Apply</button>
 		</div>
 	</div>
 </div>
