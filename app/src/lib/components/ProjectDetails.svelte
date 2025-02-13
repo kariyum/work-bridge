@@ -28,7 +28,6 @@
 				{@html projectIn.content}
 			{/if}
 		</p>
-
 		<hr />
 		<h2>Tasks</h2>
 		{#if projectIn.tasks?.length !== 0}
