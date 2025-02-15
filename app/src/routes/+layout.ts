@@ -16,9 +16,9 @@ export async function load({ url, fetch }) {
         }
     }
     
-    if (shouldRedirect(response, untrack(() => url.pathname))) {
-        return redirect(302, getRedirectionUrl(untrack(() => url.pathname)));
-    }
+    // if (shouldRedirect(response, untrack(() => url.pathname))) {
+    //     return redirect(302, getRedirectionUrl(untrack(() => url.pathname)));
+    // }
     return {
         error: response.error
     }

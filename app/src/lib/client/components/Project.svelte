@@ -20,7 +20,8 @@
 </script>
 
 <div class="outer-container">
-	<div
+	<a
+		href="/project/{project.id}"
 		class="project {getRandomBgClass(
 			project.content.length + project.title.length + (project.id ?? 0)
 		)}"
@@ -32,15 +33,11 @@
 		<div class="content">
 			{@html project.content}
 		</div>
-	</div>
+	</a>
 	<div class="actions">
 		<div class="price">
 			<div class="currency"></div>
 			<div>{project.budget}</div>
-		</div>
-		<div class="button">
-			<button onclick={deleteProject}>Delete</button>
-			<button onclick={async () => await goto(`/project/${project.id}`)}>Edit</button>
 		</div>
 		<!-- <button>Post Job</button> -->
 	</div>
@@ -73,12 +70,15 @@
 		justify-content: space-between;
 		/* cursor: pointer; */
 		border: 2px solid var(--border);
-		border-radius: 10px;
+		border-radius: calc(10px + 0.5rem);
 		min-height: 20rem;
 	}
 
 	.content {
 		margin-top: 1rem;
+		max-height: 15ch;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 
 	.title {
