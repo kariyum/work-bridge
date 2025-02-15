@@ -4,9 +4,8 @@
 		projectIn: ProjectGET;
 		role: string;
 		userId: string;
-		onedit: () => void;
 	}
-	let { projectIn, role, onedit, userId }: props = $props();
+	let { projectIn, role, userId }: props = $props();
 </script>
 
 <div class="container">
@@ -14,7 +13,7 @@
 		<div class="header">
 			<h1>#{projectIn.id} {projectIn.title}</h1>
 			{#if projectIn.user_id === userId}
-				<button class="edit-btn" onclick={onedit}>Edit</button>
+				<a class="edit-btn" href='/project/{projectIn.id}/edit'>Edit</a>
 			{/if}
 		</div>
 		<div>
@@ -28,8 +27,6 @@
 				{@html projectIn.content}
 			{/if}
 		</p>
-		<hr />
-		<h2>Tasks</h2>
 		{#if projectIn.tasks?.length !== 0}
 			<div class="tasks-container">
 				{#each projectIn.tasks?.sort((a, b) => a.id - b.id) ?? [] as task}
@@ -44,6 +41,10 @@
 						<div>
 							Budget: {task.budget}
 						</div>
+						<div>
+							<span style="font-weight: 500;">Assigned to: </span>
+							<span>{task.assignee_id}</span>
+						</div>
 						<div class="task-content">
 							{#if task.content.length === 0}
 								<div>No content for this task</div>
@@ -51,7 +52,6 @@
 								{@html task.content}
 							{/if}
 						</div>
-						<h4>Required Skills</h4>
 						<div class="skills">
 							{#if task.skills.length === 0}
 								<div>No skills required.</div>
@@ -61,10 +61,7 @@
 								{/each}
 							{/if}
 						</div>
-						<div>
-							<span style="font-weight: 500;">Assigned to: </span>
-							<span>{task.assignee_id}</span>
-						</div>
+
 						{#if role === 'freelancer'}
 							<button class="apply-btn">Submit Application</button>
 						{/if}
@@ -83,7 +80,12 @@
 		justify-content: space-between;
 	}
 	.edit-btn {
-		background-color: var(--blue);
+		padding: 0.3rem 1rem;
+		text-decoration: none;
+		color: inherit;
+		line-height: 2rem;
+		border-radius: 5px;
+		background-color: var(--btn-bg);
 	}
 	.apply-btn {
 		background-color: var(--blue);
@@ -103,8 +105,8 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		border: 2px solid var(--border);
-		padding: 0.5rem 0.5rem;
+		/* border: 2px solid var(--border); */
+		padding: 0.5rem 0;
 		border-radius: 5px;
 	}
 
@@ -114,8 +116,8 @@
 	}
 
 	.skill {
-		background-color: var(--btn-bg);
-		padding: 0.3rem 0.8rem;
+		background-color: var(--tag-bg);
+		padding: 0.5rem 0.8rem;
 		align-items: center;
 		border-radius: 50px;
 		width: fit-content;

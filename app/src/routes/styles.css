@@ -46,6 +46,7 @@ textarea {
     color-scheme: light;
     --font-color: #000;
     --background-color: #fff;
+    --message-bg: #e7e7e7;
     --navbar-color: #f8fbfd;
     --navbar-border: #e3e5e7;
     --selected-color: #ececec;
@@ -55,7 +56,9 @@ textarea {
     --bright-text: #f9fafb;
     --dark-text: #111827;
     --border: #ddd;
-    --btn-bg: #eeeeee;
+    --btn-bg: #abd9ff;
+
+    --tag-bg: #e7e7e7;
 
     --orange: #ffcb88;
     --blue: #abd9ff;
@@ -68,7 +71,7 @@ textarea {
     --pink-bg: #fbe2f4;
     --violet-bg: #e3dbfa;
     --beige-bg: #f6e2d4;
-    --green-bg: rgb(166, 212, 166);
+    --green-bg: rgb(184, 218, 184);
 }
 
 .dark {
@@ -78,19 +81,21 @@ textarea {
     --font-color: #bfbfbf;
 
     --background-color: #272727;
+    --message-bg: #272727;
     --navbar-color: #1d1d1d;
     --navbar-border: #727272;
-    --selected-color: #535455;
+    --selected-color: #414141;
     --hover-color: #727d88;
 
     --primary: #6366f1;
     --dark-text: #f9fafb;
     --bright-text: #111827;
     --border: #727272;
-    --btn-bg: #31333a;
-
-    --orange: #8d714b;
-    --blue: #7294af;
+    --btn-bg: #3a4e61;
+    --tag-bg: #464646;
+    
+    --orange: #785b3e;
+    --blue: #3e5e78;
     --grey: #c2c2c2;
     --red: rgb(121, 84, 84);
 

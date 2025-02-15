@@ -156,7 +156,7 @@
 	.message {
 		padding: 0.75rem;
 		border-radius: 9px;
-		background-color: var(--border);
+		background-color: var(--message-bg);
 		width: fit-content;
 		max-width: 70ch;
 		word-wrap: break-word;

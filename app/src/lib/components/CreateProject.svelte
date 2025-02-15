@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import { TasksGlobalState } from '$lib/states.svelte';
 	import type { ProjectForm, ProjectGET, ProjectPOST } from '$lib/types/project';
 	import type { TaskPOST } from '$lib/types/task';
@@ -66,7 +66,8 @@
 			});
 
 			if (response.status === 200) {
-				await goto('/');
+				await invalidate(`/api/projects/${projectIn.id}`)
+				history.back();
 			}
 			return;
 		} else {
@@ -138,7 +139,7 @@
 			</div>
 			<hr />
 			<div class="action-buttons">
-				<button onclick={async () => goto('/')}>Cancel</button>
+				<button onclick={() => history.back()}>Cancel</button>
 				<button onclick={handleSubmit}>{projectIn ? 'Update Project' : 'Save Project'}</button>
 			</div>
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->

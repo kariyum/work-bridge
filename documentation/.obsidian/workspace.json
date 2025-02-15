@@ -11,27 +11,28 @@
             "id": "fcbda8d8ba6aa466",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "excalidraw",
               "state": {
-                "file": "Kanban.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": [
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false,
-                    false
-                  ]
-                }
+                "file": "Excalidraw/Drawing 2025-01-02 21.05.03.excalidraw.md"
               },
-              "icon": "lucide-trello",
-              "title": "Kanban"
+              "icon": "excalidraw-icon",
+              "title": "Drawing 2025-01-02 21.05.03.excalidraw"
+            }
+          },
+          {
+            "id": "507eb5240d8cc926",
+            "type": "leaf",
+            "state": {
+              "type": "excalidraw",
+              "state": {
+                "file": "Excalidraw/Drawing 2025-02-13 22.17.47.excalidraw.md"
+              },
+              "icon": "excalidraw-icon",
+              "title": "Drawing 2025-02-13 22.17.47.excalidraw"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -175,8 +176,12 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "fcbda8d8ba6aa466",
+  "active": "507eb5240d8cc926",
   "lastOpenFiles": [
+    "Excalidraw/Drawing 2025-01-02 21.05.03.excalidraw.md",
+    "Excalidraw/Drawing 2025-02-13 22.17.47.excalidraw.md",
+    "Excalidraw/Drawing 2024-11-25 13.03.53.excalidraw.md",
+    "Kanban.md",
     "Design/Dark Mode.md",
     "Design/websocket_2024-10-17 22.26.09.excalidraw.md",
     "Design/Inspirations.md",
@@ -189,16 +194,13 @@
     "User stories/2 - User to project application.md",
     "Diagram.svg",
     "Diagram 1.svg",
-    "Kanban.md",
     "Pasted image 20241219204748.png",
     "Pasted image 20241230215105.png",
     "Problems encountered.md",
     "resources/css.md",
-    "Excalidraw/Drawing 2025-01-02 21.05.03.excalidraw.md",
     "Entity Relationship Diagram/ERD.md",
     "Entities/Task.md",
     "Entities/Project.md",
-    "Excalidraw/Drawing 2024-11-25 13.03.53.excalidraw.md",
     "resources/rust x sqlx.md",
     "User stories/Untitled.md",
     "resources",
