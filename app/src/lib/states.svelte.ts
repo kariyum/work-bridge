@@ -40,7 +40,7 @@ export class TaskClass {
             this.deadline,
             this.budget,
             this.skills
-        )
+        ).withId(this.id);
     }
 
     // assign from 
@@ -54,13 +54,13 @@ export class TaskClass {
         this.skills = task.skills;
     }
 
-    withId(id: number): TaskClass {
+    withId(id: number | undefined): TaskClass {
         this.id = id;
         return this;
     }
 
     static fromGET(task: TaskGET): TaskClass {
-        return new TaskClass(
+        const res = new TaskClass(
             task.title,
             task.assignee_id,
             task.status,
@@ -69,6 +69,7 @@ export class TaskClass {
             task.budget,
             task.skills
         ).withId(task.id);
+        return res;
     }
 
     addSkill(skill: string): void {
