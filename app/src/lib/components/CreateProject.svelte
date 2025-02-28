@@ -1,17 +1,15 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
-	import { TasksGlobalState } from '$lib/states.svelte';
+	import { TaskClass } from '$lib/states.svelte';
 	import type { ProjectForm, ProjectGET, ProjectPOST } from '$lib/types/project';
-	import type { TaskPOST } from '$lib/types/task';
+	import type { TaskGET, TaskPOST } from '$lib/types/task';
 	import RichTextEditor from './RichTextEditor.svelte';
 	import Tasks from './Tasks.svelte';
 
 	let {
 		projectIn,
-		tasksGlobalState
 	}: {
 		projectIn?: ProjectGET;
-		tasksGlobalState: TasksGlobalState;
 	} = $props();
 
 	let projectFormInput: ProjectForm = $derived.by(() => {
@@ -25,6 +23,12 @@
 		return projectState;
 	});
 
+	$effect(() => {
+		tasks = projectIn?.tasks?.map((task) => TaskClass.fromGET(task)) ?? ([] as TaskClass[]);
+	})
+	
+	let tasks = $state(projectIn?.tasks?.map((task) => TaskClass.fromGET(task)) ?? ([] as TaskClass[]));
+
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
 		const projectPost: ProjectPOST = {
@@ -35,7 +39,7 @@
 			deadline: new Date(projectFormInput.deadline).toISOString()
 		};
 
-		const tasks = tasksGlobalState.tasks.map((task) => {
+		const tasksPayload = tasks.map((task) => {
 			const attributes: TaskPOST = {
 				title: task.title,
 				content: task.content,
@@ -53,7 +57,7 @@
 
 		const payload = {
 			...projectPost,
-			tasks
+			tasks: tasksPayload
 		};
 
 		if (projectIn?.id) {
@@ -66,7 +70,7 @@
 			});
 
 			if (response.status === 200) {
-				await invalidate(`/api/projects/${projectIn.id}`)
+				await invalidate(`/api/projects/${projectIn.id}`);
 				history.back();
 			}
 			return;
@@ -93,7 +97,7 @@
 		{:else}
 			<h1>Create a project</h1>
 		{/if}
-		
+
 		<form action="" onsubmit={(event) => event.preventDefault()}>
 			<div class="input">
 				<label for="title">Project Title</label>
@@ -106,7 +110,8 @@
 			</div>
 			<div class="input">
 				<label for="">Project Description</label>
-				<RichTextEditor contentIn={projectIn?.content ?? ""} bind:x={projectFormInput.content}></RichTextEditor>
+				<RichTextEditor contentIn={projectIn?.content ?? ''} bind:x={projectFormInput.content}
+				></RichTextEditor>
 				<!-- <textarea name="content" id="content" placeholder="The project is about designing and implementing..." bind:value={content}></textarea> -->
 			</div>
 
@@ -135,11 +140,11 @@
 			</div> -->
 
 			<div style="width: 100%;">
-				<Tasks projectId={projectIn?.id} {tasksGlobalState}></Tasks>
+				<Tasks projectId={projectIn?.id} bind:tasks={tasks}></Tasks>
 			</div>
 			<hr />
 			<div class="action-buttons">
-				<button onclick={() => history.back()}>Cancel</button>
+				<button class="cancel-btn" onclick={() => history.back()}>Cancel</button>
 				<button onclick={handleSubmit}>{projectIn ? 'Update Project' : 'Save Project'}</button>
 			</div>
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->

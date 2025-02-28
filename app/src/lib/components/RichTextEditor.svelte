@@ -60,7 +60,7 @@
 					}}
 					class:active={myEditor?.isActive('heading', { level: 1 })}
 				>
-					<Heading1 />
+					<Heading1 size="1.3rem" />
 				</button>
 				<button
 					onclick={() => {
@@ -68,7 +68,7 @@
 					}}
 					class:active={myEditor?.isActive('heading', { level: 2 })}
 				>
-					<Heading2 />
+					<Heading2 size="1.3rem" />
 				</button>
 				<button
 					onclick={() => {
@@ -76,7 +76,7 @@
 					}}
 					class:active={myEditor?.isActive('paragraph')}
 				>
-					<Pilcrow />
+					<Pilcrow size="1.3rem" />
 				</button>
 			</div>
 
@@ -88,7 +88,7 @@
 					}}
 					class:active={myEditor?.isActive('bold')}
 				>
-					<Bold />
+					<Bold size="1.3rem" />
 				</button>
 				<button
 					onclick={() => {
@@ -96,7 +96,7 @@
 					}}
 					class:active={myEditor?.isActive('italic')}
 				>
-					<Italic />
+					<Italic size="1.3rem" />
 				</button>
 			</div>
 			<div class="vertical-separator"></div>
@@ -107,7 +107,7 @@
 					}}
 					class:active={myEditor?.isActive('orderedList')}
 				>
-					<ListOrdered />
+					<ListOrdered size="1.3rem" />
 				</button>
 				<button
 					onclick={() => {
@@ -115,7 +115,7 @@
 					}}
 					class:active={myEditor?.isActive('bulletList')}
 				>
-					<List />
+					<List size="1.3rem" />
 				</button>
 			</div>
 		</div>
@@ -133,11 +133,11 @@ Displayed:
 
 <style>
 	div {
-		background-color: Canvas;
+		background-color: var(--input-bg);
 	}
 
 	.active {
-		background-color: var(--border);
+		background-color: var(--active-button);
 	}
 
 	button {
@@ -146,10 +146,10 @@ Displayed:
 		justify-content: center;
 		border: none;
 		border-radius: 5px;
-		padding: 0.2rem 0.5rem;
+		padding: 0.4rem;
 		cursor: pointer;
 		aspect-ratio: 1;
-		background-color: canvas;
+		background-color: var(--input-bg);
 	}
 
 	.vertical-separator {
@@ -167,7 +167,7 @@ Displayed:
 		display: flex;
 		border-radius: 5px 5px 0 0;
 		flex-direction: row nowrap;
-		padding: 0.4rem;
+		padding: 0.3rem;
 		width: max-content;
 		justify-content: space-around;
 	}
@@ -194,6 +194,7 @@ Displayed:
 	:global(.editor) {
 		padding: 0.5rem;
 		border: 2px solid var(--border);
+		border-top: 0;
 		border-radius: 0 0 5px 5px;
 		min-height: 30vh;
 	}

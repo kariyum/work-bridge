@@ -23,6 +23,11 @@ input {
     padding: 10px;
     border: 1px solid var(--border);
     border-radius: 5px;
+    background-color: var(--input-bg);
+}
+
+select {
+    background-color: var(--input-bg);
 }
 
 button {
@@ -40,6 +45,7 @@ textarea {
     height: 10rem;
     padding: 10px;
     box-sizing: border-box;
+    background-color: var(--input-bg);
 }
 
 .light {
@@ -51,6 +57,8 @@ textarea {
     --navbar-border: #e3e5e7;
     --selected-color: #ececec;
     --hover-color: #d1deeb;
+    --input-bg: #f7f7f7;
+    --active-button: #d1d1d1;
 
     --primary: #4f46e5;
     --bright-text: #f9fafb;
@@ -86,6 +94,8 @@ textarea {
     --navbar-border: #727272;
     --selected-color: #414141;
     --hover-color: #727d88;
+    --input-bg: #1E1E1E;
+    --active-button: #424242;
 
     --primary: #6366f1;
     --dark-text: #f9fafb;
@@ -167,4 +177,12 @@ input:focus, textarea:focus {
 .delete-btn:hover {
     background-color: red;
     box-shadow: 0 0 0.7rem red;
+}
+
+button {
+    background-color: var(--btn-bg);
+}
+
+.cancel-btn {
+    background-color: transparent;
 }

@@ -45,7 +45,7 @@
 		flex-wrap: wrap;
 		align-items: center;
 		gap: 0.5rem;
-		background-color: Canvas;
+		background-color: var(--input-bg);
 		border: 2px solid var(--border);
 		padding: 0.5rem;
 		border-radius: 5px;

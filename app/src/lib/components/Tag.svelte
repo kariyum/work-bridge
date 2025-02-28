@@ -16,7 +16,7 @@
     .container {
         display: flex;
         gap: 0.5rem;
-        background-color: var(--background-color);
+        background-color: var(--selected-color);
         padding: 0.2rem 0.5rem;
         align-items: center;
         font-size: small;

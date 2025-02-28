@@ -4,8 +4,9 @@
 		projectIn: ProjectGET;
 		role: string;
 		userId: string;
+		onEdit: () => void;
 	}
-	let { projectIn, role, userId }: props = $props();
+	let { projectIn, role, userId, onEdit }: props = $props();
 </script>
 
 <div class="container">
@@ -13,7 +14,7 @@
 		<div class="header">
 			<h1>#{projectIn.id} {projectIn.title}</h1>
 			{#if projectIn.user_id === userId}
-				<a class="edit-btn" href='/project/{projectIn.id}/edit'>Edit</a>
+				<button onclick={onEdit}>Edit</button>
 			{/if}
 		</div>
 		<div>

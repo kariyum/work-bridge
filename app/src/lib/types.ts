@@ -34,3 +34,14 @@ export type FetchErrors = {
     parsingError?: ParsingError;
     unauthorizedError?: UnauthorizedError;
 }
+
+export interface TaskForm {
+    title: string;
+    assignee_id: string;
+    status: string;
+    content: string;
+    deadline: string;
+    budget?: number;
+    skills: string[];
+    id?: number;
+}

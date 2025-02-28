@@ -1,31 +1,40 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, pushState } from '$app/navigation';
 	import { Plus } from 'lucide-svelte';
 
 	import Task from '$lib/components/Task.svelte';
-	import type { TasksGlobalState } from '$lib/states.svelte';
+	import TaskForm from './TaskForm.svelte';
+	import type { TaskGET } from '$lib/types/task';
+	import { page } from '$app/state';
+	import { TaskClass } from '$lib/states.svelte';
+
 	let {
 		projectId,
-		tasksGlobalState
+		tasks = $bindable()
 	}: {
 		projectId?: number;
-		tasksGlobalState: TasksGlobalState;
+		tasks: TaskClass[];
 	} = $props();
-	
-	const taskUrl = $derived(
-		projectId ? `/project/${projectId}/task?s=${tasksGlobalState.selected}` : '/project/task'
-	);
 
-	async function openTask(index: number) {
-		tasksGlobalState.selectTask(index);
-		await goto(taskUrl);
+	function addTask() {}
+
+	function onSubmit(task: TaskClass) {
+		console.log("on submit", task.id, task.title)
+		if (task.id) {
+			const taksIndex = tasks.findIndex((t) => t.id === task.id);
+			if (taksIndex === -1) {
+				console.error("Something went wrong, task index is -1. Unexpected.");
+			} else {
+				console.log(taksIndex);
+				tasks[taksIndex] = task;
+			}
+		} else {
+			tasks.push(task);
+		}
+		history.back();
 	}
 
-	async function addTask() {
-		await goto(taskUrl);
-	}
-	let modal: HTMLDialogElement;
-	let content = $state('');
+	let selectedTask = $state(0);
 </script>
 
 <div class="headline">
@@ -33,14 +42,27 @@
 	<button onclick={addTask} class="add-task"><Plus /></button>
 </div>
 <div class="tasks-container">
-	{#if tasksGlobalState.tasks.length === 0}
+	{#if tasks.length === 0}
 		<p>Add tasks by clicking on the plus (+) button.</p>
 	{:else}
-		{#each tasksGlobalState.tasks as task, i}
-			<Task taskObject={task} onclick={() => openTask(i)}></Task>
+		{#each tasks as task, i}
+			<Task
+				taskObject={task}
+				onclick={() => {
+					selectedTask = i;
+					pushState('', {
+						projectEditMode: true,
+						showTaskPopup: true
+					});
+				}}
+			></Task>
 		{/each}
 	{/if}
 </div>
+
+{#if page.state.showTaskPopup}
+	<TaskForm taskInput={tasks[selectedTask]} onSubmit={(task) => onSubmit(task)} />
+{/if}
 
 <style>
 	.add-task {

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { TaskClass } from '$lib/states.svelte';
+	import type { TaskGET } from '$lib/types/task';
 	let { onclick, taskObject }: { onclick: (event: MouseEvent) => void, taskObject: TaskClass } = $props();
 </script>
 
