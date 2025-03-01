@@ -16,14 +16,18 @@
 		tasks: TaskClass[];
 	} = $props();
 
-	function addTask() {}
+	function addNewTask() {
+		pushState('', {
+			projectEditMode: true,
+			showTaskPopup: true
+		});
+	}
 
 	function onSubmit(task: TaskClass) {
-		console.log("on submit", task.id, task.title)
 		if (task.id) {
 			const taksIndex = tasks.findIndex((t) => t.id === task.id);
 			if (taksIndex === -1) {
-				console.error("Something went wrong, task index is -1. Unexpected.");
+				console.error('Something went wrong, task index is -1. Unexpected.');
 			} else {
 				console.log(taksIndex);
 				tasks[taksIndex] = task;
@@ -39,7 +43,7 @@
 
 <div class="headline">
 	<h2>Tasks</h2>
-	<button onclick={addTask} class="add-task"><Plus /></button>
+	<button onclick={addNewTask} class="add-task"><Plus /></button>
 </div>
 <div class="tasks-container">
 	{#if tasks.length === 0}
