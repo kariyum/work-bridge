@@ -36,6 +36,7 @@ button {
     border-radius: 5px;
     cursor: pointer;
     align-self: flex-end;
+    background-color: var(--btn-bg);
 }
 
 textarea {
@@ -64,7 +65,7 @@ textarea {
     --bright-text: #f9fafb;
     --dark-text: #111827;
     --border: #ddd;
-    --btn-bg: #abd9ff;
+    --btn-bg: #dfe6ec;
 
     --tag-bg: #e7e7e7;
 
@@ -177,10 +178,6 @@ input:focus, textarea:focus {
 .delete-btn:hover {
     background-color: red;
     box-shadow: 0 0 0.7rem red;
-}
-
-button {
-    background-color: var(--btn-bg);
 }
 
 .cancel-btn {
