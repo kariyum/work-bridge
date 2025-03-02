@@ -4,17 +4,17 @@
 	import Skills from '$lib/components/Skills.svelte';
 	import { TaskClass } from '$lib/states.svelte';
 	import { untrack } from 'svelte';
-    interface props {
-        taskInput?: TaskClass,
-		onSubmit: (x: TaskClass) => void,
-    }
-    let { taskInput, onSubmit }: props = $props();
+	interface props {
+		taskInput?: TaskClass;
+		onSubmit: (x: TaskClass) => void;
+	}
+	let { taskInput, onSubmit }: props = $props();
 
-    function cancel() {
+	function cancel() {
 		history.back();
 	}
 
-    let taskClass = $derived(taskInput?.copy() ?? new TaskClass());
+	let taskClass = $derived(taskInput?.copy() ?? new TaskClass());
 	const isEditingMode = taskInput !== undefined;
 </script>
 
@@ -28,11 +28,16 @@
 			{/if}
 			<form class="input-container" onsubmit={(event) => event.preventDefault()}>
 				<input type="text" placeholder="Title" bind:value={taskClass.title} />
-				<RichTextEditor contentIn={(() => taskClass.content)()} bind:x={taskClass.content}></RichTextEditor>
+				<RichTextEditor contentIn={(() => taskClass.content)()} bind:x={taskClass.content}
+				></RichTextEditor>
 				<input type="text" placeholder="Assignee" bind:value={taskClass.assignee_id} />
 				<!-- <input type="text" placeholder="Skills" bind:value={taskClass.skills} /> -->
 				<div class="skills-input">
-					<Skills skillsIn={taskClass.skills} addSkill={(skill) => taskClass.addSkill(skill)} removeSkillAtIndex={(index) => taskClass.removeSkillIndex(index)}></Skills>
+					<Skills
+						skillsIn={taskClass.skills}
+						addSkill={(skill) => taskClass.addSkill(skill)}
+						removeSkillAtIndex={(index) => taskClass.removeSkillIndex(index)}
+					></Skills>
 				</div>
 				<!-- <input type="text" placeholder="Status" bind:value={taskClass.status} /> -->
 				<select name="status" id="status" bind:value={taskClass.status}>
@@ -44,8 +49,14 @@
 				<input type="date" placeholder="Deadline" bind:value={taskClass.deadline} />
 				<!-- <input type="text" placeholder="Estimated Efforts" /> -->
 				<div class="act-task">
-					<button onclick={cancel}>Cancel</button>
-					<button onclick={() => onSubmit(taskClass)}>Add</button>
+					<button class="cancel-btn" onclick={cancel}>Cancel</button>
+					<button onclick={() => onSubmit(taskClass)}>
+						{#if isEditingMode}
+							Update
+						{:else}
+							Add
+						{/if}
+					</button>
 				</div>
 			</form>
 		</div>
