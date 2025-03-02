@@ -65,6 +65,9 @@
 
 	.content {
 		margin-top: 1rem;
+		max-height: 15ch;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 
 	.title {
