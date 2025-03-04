@@ -43,10 +43,10 @@
 							Budget: {task.budget}
 						</div>
 						<div>
-							<span style="font-weight: 500;">Assigned to: </span>
-							<span>{task.assignee_id}</span>
+							Assigned to: {task.assignee_id}
 						</div>
 						<div class="task-content">
+							Content:
 							{#if task.content.length === 0}
 								<div>No content for this task</div>
 							{:else}
