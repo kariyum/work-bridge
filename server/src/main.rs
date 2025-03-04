@@ -39,12 +39,6 @@ pub mod services {
     pub mod token;
 }
 
-pub mod project {
-    pub mod repo;
-    pub mod route;
-    pub mod service;
-}
-
 pub mod proposals {
     pub mod repo;
     pub mod route;
@@ -67,15 +61,14 @@ use futures_util::StreamExt as _;
 use crate::websocket::lobby::Lobby;
 use crate::websocket::ws::WsConn;
 use actix::{Actor, Addr};
-use actix_web::{web::Data, web::Path, web::Payload};
-use uuid::Uuid;
+use actix_web::{web::Data, web::Payload};
 
 #[get("/chat")]
 async fn start_connection(
     req: HttpRequest,
     stream: Payload,
     lobby_addr: Data<Addr<Lobby>>,
-    pgpool: web::Data<PgPool>,
+    pgpool: Data<PgPool>,
 ) -> Result<HttpResponse, Error> {
     let user_id = req
         .cookie("Authorization")

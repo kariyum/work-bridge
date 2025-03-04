@@ -1,15 +1,11 @@
-use crate::{
-    messaging::discussions,
-    project::{self, repo::ProjectRow},
-};
+use crate::services::token::validate_jwt;
 use actix_web::{
-    delete, get, post,
-    web::{self, Json, Path},
+    get,
+    web::{self, Path},
     HttpRequest, HttpResponse, Responder,
 };
 use serde::{Deserialize, Serialize};
 use sqlx::{pool::PoolConnection, PgPool, Postgres};
-use crate::services::token::validate_jwt;
 
 #[derive(Serialize, sqlx::FromRow)]
 struct MessageRow {
