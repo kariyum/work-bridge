@@ -155,7 +155,7 @@ input:focus, textarea:focus {
     background-color: var(--green-bg);
 }
 
-.status[data-type='in_progress'] {
+.status[data-type='inprogress'] {
     background-color: var(--violet-bg);
 }
 
