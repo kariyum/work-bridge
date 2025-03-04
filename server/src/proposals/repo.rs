@@ -1,4 +1,4 @@
-use crate::project::repo::ProjectRow;
+use crate::repository::project::ProjectRaw;
 use actix_web::{
     delete, get, post,
     web::{self, Json, Path},
@@ -61,7 +61,7 @@ pub async fn create_proposal(
             .fetch_optional(&mut *client)
             .await
             .expect("Failed to insert proposal into database");
-        let project = sqlx::query_as::<_, ProjectRow>("SELECT * FROM projects WHERE id = $1")
+        let project = sqlx::query_as::<_, ProjectRaw>("SELECT * FROM projects WHERE id = $1")
             .bind(&proposal_create.project_id)
             .fetch_optional(&mut *client)
             .await
