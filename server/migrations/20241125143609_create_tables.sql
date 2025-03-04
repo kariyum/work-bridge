@@ -91,14 +91,14 @@ CREATE TABLE
     IF NOT EXISTS proposals (
         id SERIAL PRIMARY KEY,
         user_id VARCHAR(255) NOT NULL,
-        project_id INT NOT NULL,
+        task_id INT NOT NULL,
         -- status: 0 - pending, 1 - accepted, 2 - rejected, 3 - cancelled
         status INT NOT NULL, -- ENUM
         budget NUMERIC,
         content TEXT,
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (email),
-        FOREIGN KEY (project_id) REFERENCES projects (id)
+        FOREIGN KEY (task_id) REFERENCES tasks (id)
     );
 
 CREATE TABLE
