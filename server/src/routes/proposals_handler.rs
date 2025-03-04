@@ -1,12 +1,10 @@
 use crate::repository::project::ProjectRaw;
-use actix_web::{
-    delete, get, post,
-    web::{self, Json, Path},
-    HttpRequest, HttpResponse, Responder,
-};
+use crate::services::token::validate_jwt;
+use actix_web::dev::HttpServiceFactory;
+use actix_web::web::{Json, Path};
+use actix_web::{web, HttpRequest, HttpResponse, Responder};
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
-use crate::services::token::validate_jwt;
 
 #[derive(Serialize, sqlx::FromRow)]
 struct ProposalRow {
@@ -27,7 +25,6 @@ struct ProposalCreate {
     content: Option<String>,
 }
 
-#[post("proposals")]
 pub async fn create_proposal(
     request: HttpRequest,
     proposal_create: Json<ProposalCreate>,
@@ -53,14 +50,14 @@ pub async fn create_proposal(
                 content
             ) VALUES ($1, $2, $3, $4, $5) RETURNING *",
         )
-            .bind(&claims.sub)
-            .bind(&proposal_create.project_id)
-            .bind(0)
-            .bind(&proposal_create.budget)
-            .bind(&proposal_create.content)
-            .fetch_optional(&mut *client)
-            .await
-            .expect("Failed to insert proposal into database");
+        .bind(&claims.sub)
+        .bind(&proposal_create.project_id)
+        .bind(0)
+        .bind(&proposal_create.budget)
+        .bind(&proposal_create.content)
+        .fetch_optional(&mut *client)
+        .await
+        .expect("Failed to insert proposal into database");
         let project = sqlx::query_as::<_, ProjectRaw>("SELECT * FROM projects WHERE id = $1")
             .bind(&proposal_create.project_id)
             .fetch_optional(&mut *client)
@@ -90,7 +87,6 @@ pub async fn create_proposal(
     }
 }
 
-#[get("/")]
 pub async fn get_proposals(request: HttpRequest, pgpool: web::Data<PgPool>) -> impl Responder {
     let cookie = request
         .cookie("Authorization")
@@ -114,7 +110,6 @@ pub async fn get_proposals(request: HttpRequest, pgpool: web::Data<PgPool>) -> i
     HttpResponse::Ok().json(proposals)
 }
 
-#[delete("proposals/{id}")]
 pub async fn delete_proposal(
     request: HttpRequest,
     path: Path<i32>,
@@ -144,7 +139,6 @@ pub async fn delete_proposal(
     HttpResponse::Ok().finish()
 }
 
-#[get("proposals/{id}")]
 pub async fn get_proposal(
     request: HttpRequest,
     path: Path<i32>,
@@ -172,4 +166,12 @@ pub async fn get_proposal(
         .expect(format!("Failed to delete project from the database {proposal_id}").as_str());
 
     HttpResponse::Ok().json(proposal)
+}
+
+pub fn routes() -> impl HttpServiceFactory {
+    web::scope("proposals")
+        .route("", web::post().to(create_proposal))
+        .route("", web::get().to(get_proposals))
+        .route("{id}", web::delete().to(delete_proposal))
+        .route("{id}", web::get().to(get_proposal))
 }

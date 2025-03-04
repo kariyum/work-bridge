@@ -4,3 +4,4 @@ pub mod user_handler;
 pub mod profiles_handler;
 pub mod feature_requests_handler;
 pub mod comments_handler;
+pub mod proposals_handler;
