@@ -7,6 +7,24 @@
 		onEdit: () => void;
 	}
 	let { projectIn, role, userId, onEdit }: props = $props();
+
+	async function submitApplication(taskId: number) {
+		const payload = {
+			task_id: taskId
+		};
+		const response = await fetch('/api/proposals', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(payload)
+		});
+		if (response.ok) {
+			console.log("OK");
+		} else {
+			alert("Failed for submit to task!");
+		}
+	}
 </script>
 
 <div class="container">
@@ -64,7 +82,9 @@
 						</div>
 
 						{#if role === 'freelancer'}
-							<button class="apply-btn">Submit Application</button>
+							<button class="apply-btn" onclick={() => submitApplication(task.id)}
+								>Submit Application</button
+							>
 						{/if}
 					</div>
 				{/each}
