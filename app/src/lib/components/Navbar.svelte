@@ -19,6 +19,7 @@
 		const response = await fetch('/api/auth/logout');
 
 		if (response.ok) {
+			WebSocketService.getInstance().close();
 			await goto('/', { invalidateAll: true });
 		}
 	}

@@ -28,10 +28,12 @@ export class WebSocketService {
     }
 
     public static getInstance(): WebSocketService {
+        console.log("GET INSTANCE");
+        console.log(WebSocketService.instance);
         if (!WebSocketService.instance) {
             WebSocketService.instance = new WebSocketService("/api/chat");
         }
-        return WebSocketService.instance;
+        return WebSocketService.instance.ensureOpen();
     }
 
     public subscribe(handler: (data: MessagesJsonResponse) => void) {
@@ -55,5 +57,13 @@ export class WebSocketService {
         if (this.socket) {
             this.socket.close();
         }
+    }
+
+    private ensureOpen(): WebSocketService {
+        if (this.socket.readyState === this.socket.CLOSED) {
+            console.log("SOCKET IS CLOSED? OPENING NEW ONE");
+            WebSocketService.instance = new WebSocketService("/api/chat");
+        }
+        return this;
     }
 }
