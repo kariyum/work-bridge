@@ -123,7 +123,7 @@
 
 <div class="input">
 	<form onsubmit={onClick} class="input-form">
-		<input type="text" bind:value={message} placeholder="Type a message..." />
+		<input type="text" bind:value={message} placeholder="Type a message... as {data.user?.email}" />
 		<button type="submit" class="icon">
 			<SendHorizontal />
 		</button>
