@@ -9,6 +9,7 @@ export interface TaskJSON {
     deadline: string,
     created_at: string,
     skills: string[],
+    application_submitted: boolean,
 }
 
 export interface TaskGET {
@@ -22,6 +23,7 @@ export interface TaskGET {
     skills: string[],
     deadline: Date,
     created_at: Date,
+    application_submitted: boolean
 }
 
 export function processTaskJson(json: TaskJSON) {
@@ -35,7 +37,8 @@ export function processTaskJson(json: TaskJSON) {
         status: json.status,
         deadline: new Date(json.deadline),
         created_at: new Date(json.created_at),
-        skills: json.skills
+        skills: json.skills,
+        application_submitted: json.application_submitted
     };
     return result;
 }
