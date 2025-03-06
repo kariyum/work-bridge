@@ -4,3 +4,4 @@ pub mod project;
 pub mod profiles;
 pub mod feature_requests;
 pub mod comments;
+pub mod tasks_proposals;

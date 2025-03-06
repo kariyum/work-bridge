@@ -8,6 +8,7 @@ use actix_web::{web, HttpResponse, Responder};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
+use crate::repository::tasks_proposals::RawTaskProposal;
 
 #[derive(Serialize)]
 struct ProjectResponse {
@@ -19,7 +20,7 @@ struct ProjectResponse {
     budget: f32,
     currency_code: String,
     created_at: DateTime<Utc>,
-    tasks: Option<Vec<RawTask>>,
+    tasks: Option<Vec<RawTaskProposal>>,
 }
 
 impl From<ProjectRaw> for ProjectResponse {
@@ -67,7 +68,7 @@ async fn get_project(
 }
 
 async fn get_project_with_tasks(
-    _: Claims,
+    claims: Claims,
     path: Path<i32>,
     pgpool: web::Data<PgPool>,
 ) -> impl Responder {
@@ -77,7 +78,7 @@ async fn get_project_with_tasks(
         .expect(&format!("Failed to get project by id {}", project_id))
         .map(ProjectResponse::from);
 
-    let tasks = repository::tasks::read_tasks_by_project_id(project_id, pgpool.as_ref())
+    let tasks = repository::tasks_proposals::read_tasks_with_submission_by_project_id(project_id, claims.sub, pgpool.as_ref())
         .await
         .expect(&format!("Failed to read tasks {}", project_id));
 
