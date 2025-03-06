@@ -17,6 +17,7 @@
 	} = $props();
 
 	function addNewTask() {
+		selectedTask = -1;
 		pushState('', {
 			projectEditMode: true,
 			showTaskPopup: true

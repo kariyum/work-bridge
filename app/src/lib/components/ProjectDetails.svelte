@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { invalidate } from '$app/navigation';
 	import type { ProjectGET } from '$lib/types/project';
 	interface props {
 		projectIn: ProjectGET;
@@ -21,6 +22,7 @@
 		});
 		if (response.ok) {
 			console.log('OK');
+			await invalidate(`/api/projects/${projectIn.id}`);
 		} else {
 			alert('Failed for submit to task!');
 		}
