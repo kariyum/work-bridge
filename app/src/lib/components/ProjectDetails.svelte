@@ -20,9 +20,9 @@
 			body: JSON.stringify(payload)
 		});
 		if (response.ok) {
-			console.log("OK");
+			console.log('OK');
 		} else {
-			alert("Failed for submit to task!");
+			alert('Failed for submit to task!');
 		}
 	}
 </script>
@@ -82,9 +82,13 @@
 						</div>
 
 						{#if role === 'freelancer'}
-							<button class="apply-btn" onclick={() => submitApplication(task.id)}
-								>Submit Application</button
-							>
+							{#if task.application_submitted}
+								<button class="applied-btn" disabled>Application submitted</button>
+							{:else}
+								<button class="apply-btn" onclick={() => submitApplication(task.id)}
+									>Submit Application</button
+								>
+							{/if}
 						{/if}
 					</div>
 				{/each}
@@ -96,6 +100,9 @@
 </div>
 
 <style>
+	.applied-btn {
+		background-color: rgb(65, 65, 65);
+	}
 	.header {
 		display: flex;
 		justify-content: space-between;
