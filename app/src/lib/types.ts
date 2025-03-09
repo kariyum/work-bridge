@@ -1,3 +1,4 @@
+import type { Snippet } from "svelte";
 import type { NetworkError, TimeoutError, ClientError, ServerError, ParsingError, UnauthorizedError } from "./utils";
 
 export interface User {
@@ -44,4 +45,11 @@ export interface TaskForm {
     budget?: number;
     skills: string[];
     id?: number;
+}
+
+export interface Tab {
+    snippet: Snippet;
+    title: string;
+    url: string,
+    tab: string
 }

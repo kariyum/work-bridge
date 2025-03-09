@@ -1,6 +1,9 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
+	import { page } from '$app/state';
+	import type { Tab } from '$lib/types';
 	import type { ProjectGET } from '$lib/types/project';
+	import Tabs from './Tabs.svelte';
 	interface props {
 		projectIn: ProjectGET;
 		role: string;
@@ -27,7 +30,79 @@
 			alert('Failed for submit to task!');
 		}
 	}
+
+	const tabs: Tab[] = [
+		{
+			snippet: tasksSnippet,
+			title: 'Tasks',
+			url: `/project/${projectIn.id}`,
+			tab: 'tasks'
+		},
+		{
+			snippet: tab2,
+			title: 'Proposals',
+			url: `/project/${projectIn.id}?tabs=proposals`,
+			tab: 'proposals'
+		}
+	];
 </script>
+
+{#snippet tab2()}
+	<div>TAB 2</div>
+{/snippet}
+
+{#snippet tasksSnippet()}
+	{#if projectIn.tasks?.length !== 0}
+		<div class="tasks-container">
+			{#each projectIn.tasks?.sort((a, b) => a.id - b.id) ?? [] as task}
+				<div class="task">
+					<h3>
+						#{task.id}
+						{task.title}
+					</h3>
+					<div class="status" data-type={task.status}>
+						{task.status}
+					</div>
+					<div>
+						Budget: {task.budget}
+					</div>
+					<div>
+						Assigned to: {task.assignee_id}
+					</div>
+					<div class="task-content">
+						Content:
+						{#if task.content.length === 0}
+							<div>No content for this task</div>
+						{:else}
+							{@html task.content}
+						{/if}
+					</div>
+					<div class="skills">
+						{#if task.skills.length === 0}
+							<div>No skills required.</div>
+						{:else}
+							{#each task.skills as skill}
+								<div class="skill">{skill}</div>
+							{/each}
+						{/if}
+					</div>
+
+					{#if role === 'freelancer'}
+						{#if task.application_submitted}
+							<button class="applied-btn" disabled>Application submitted</button>
+						{:else}
+							<button class="apply-btn" onclick={() => submitApplication(task.id)}
+								>Submit Application</button
+							>
+						{/if}
+					{/if}
+				</div>
+			{/each}
+		</div>
+	{:else}
+		<div>No tasks are available for this project yet!</div>
+	{/if}
+{/snippet}
 
 <div class="container">
 	<div class="sub-container">
@@ -48,56 +123,7 @@
 				{@html projectIn.content}
 			{/if}
 		</p>
-		{#if projectIn.tasks?.length !== 0}
-			<div class="tasks-container">
-				{#each projectIn.tasks?.sort((a, b) => a.id - b.id) ?? [] as task}
-					<div class="task">
-						<h3>
-							#{task.id}
-							{task.title}
-						</h3>
-						<div class="status" data-type={task.status}>
-							{task.status}
-						</div>
-						<div>
-							Budget: {task.budget}
-						</div>
-						<div>
-							Assigned to: {task.assignee_id}
-						</div>
-						<div class="task-content">
-							Content:
-							{#if task.content.length === 0}
-								<div>No content for this task</div>
-							{:else}
-								{@html task.content}
-							{/if}
-						</div>
-						<div class="skills">
-							{#if task.skills.length === 0}
-								<div>No skills required.</div>
-							{:else}
-								{#each task.skills as skill}
-									<div class="skill">{skill}</div>
-								{/each}
-							{/if}
-						</div>
-
-						{#if role === 'freelancer'}
-							{#if task.application_submitted}
-								<button class="applied-btn" disabled>Application submitted</button>
-							{:else}
-								<button class="apply-btn" onclick={() => submitApplication(task.id)}
-									>Submit Application</button
-								>
-							{/if}
-						{/if}
-					</div>
-				{/each}
-			</div>
-		{:else}
-			<div>No tasks are available for this project yet!</div>
-		{/if}
+		<Tabs {tabs}></Tabs>
 	</div>
 </div>
 
