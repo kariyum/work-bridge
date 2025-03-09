@@ -15,7 +15,7 @@
 			</div>
 			<div class="right-container">
 				<div>{taskObject.assignee_id}</div>
-				<div class="status">{taskObject.status}</div>
+				<div class="status" data-type={taskObject.status}>{taskObject.status}</div>
 			</div>
 		</div>
 	</div>
@@ -32,7 +32,6 @@
 		align-items: center;
 	}
 	.status {
-		background-color: var(--btn-bg);
 		border: 2px solid var(--border);
 		border-radius: 5px;
 		padding: 0.5rem;
@@ -58,7 +57,6 @@
 	}
 	.container:hover {
 		cursor: pointer;
-		border: 2px solid var(--blue);
-		background-color: var(--blue);
+		background-color: var(--hover-color);
 	}
 </style>

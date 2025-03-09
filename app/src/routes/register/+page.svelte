@@ -169,7 +169,9 @@
 				<a href="/login">Already have an account? Login!</a>
 			{/if}
 			<div style="margin-left:auto;">
-				<button onclick={() => (currentStep -= 1)} disabled={currentStep <= 0}>Previous</button>
+				<button class="secondary-btn" onclick={() => (currentStep -= 1)} disabled={currentStep <= 0}
+					>Previous</button
+				>
 				{#if currentStep < steps.length - 1}
 					<button
 						onclick={() => {
@@ -190,7 +192,6 @@
 		</div>
 	</div>
 </div>
-
 
 <style>
 	.input-info {
@@ -230,7 +231,7 @@
 	}
 
 	.card {
-		border: 1px solid #ccc;
+		border: 2px solid var(--border);
 		padding: 5rem 2rem;
 		border-radius: 5px;
 		height: 100%;

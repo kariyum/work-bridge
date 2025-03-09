@@ -84,11 +84,11 @@
 
 	.popover {
 		position: absolute;
-		top: 50%;
+		top: 10%;
 		left: 50%;
 		width: 50%;
 		max-width: 1000px;
-		transform: translate(-50%, -50%);
+		transform: translate(-50%, 0);
 		padding: 1rem;
 		border: 2px solid var(--border);
 		border-radius: 5px;
