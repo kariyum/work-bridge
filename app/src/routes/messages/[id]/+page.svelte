@@ -195,6 +195,6 @@
 		border-left: 0;
 		border-top: 0;
 		border-radius: 0;
-		background-color: canvas;
+		background-color: var(--input-bg);
 	}
 </style>

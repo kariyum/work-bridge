@@ -37,6 +37,23 @@ button {
     cursor: pointer;
     align-self: flex-end;
     background-color: var(--btn-bg);
+    font-size: medium;
+
+    &.secondary-btn {
+        background-color: transparent;
+    }
+
+    &.secondary-btn:hover:enabled {
+        background-color: var(--hover-color);
+    }
+
+    &:hover {
+        background-color: var(--hover-color);
+    }
+
+    &:disabled {
+        background-color: transparent;
+    }
 }
 
 textarea {
@@ -89,20 +106,20 @@ textarea {
 
     --font-color: #bfbfbf;
 
-    --background-color: #272727;
+    --background-color: #212121;
     --message-bg: #272727;
     --navbar-color: #1d1d1d;
     --navbar-border: #727272;
-    --selected-color: #414141;
-    --hover-color: #727d88;
+    --selected-color: #272a2e;
+    --hover-color: #353a3f;
     --input-bg: #1E1E1E;
     --active-button: #424242;
 
     --primary: #6366f1;
     --dark-text: #f9fafb;
     --bright-text: #111827;
-    --border: #727272;
-    --btn-bg: #3a4e61;
+    --border: #505050;
+    --btn-bg: #272d31; 
     --tag-bg: #464646;
     
     --orange: #785b3e;
