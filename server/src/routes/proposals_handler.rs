@@ -1,4 +1,5 @@
 use crate::repository::project::ProjectRaw;
+use crate::repository::proposal::read_proposals;
 use crate::services::token::Claims;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::web::{Json, Path};
@@ -81,17 +82,15 @@ pub async fn create_proposal(
     HttpResponse::Created().json(proposals)
 }
 
-pub async fn get_proposals(_: Claims, pgpool: web::Data<PgPool>) -> impl Responder {
-    let mut client = pgpool
-        .acquire()
+pub async fn get_proposals(
+    _: Claims,
+    path: Path<(i32, i32)>,
+    pgpool: web::Data<PgPool>,
+) -> impl Responder {
+    let (_, task_id) = path.into_inner();
+    let proposals = read_proposals(task_id, pgpool.as_ref())
         .await
-        .expect("Failed to acquire a Postgres connection from the pool");
-
-    let proposals = sqlx::query_as::<_, ProposalRow>("SELECT * FROM proposals")
-        .fetch_all(&mut *client)
-        .await
-        .expect("Failed to insert project into database");
-
+        .expect("Failed to read proposals");
     HttpResponse::Ok().json(proposals)
 }
 

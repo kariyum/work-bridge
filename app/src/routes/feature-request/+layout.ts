@@ -8,7 +8,7 @@ interface FeatureRequestJSON {
     created_at: string;
 }
 
-interface FeatureRequestGET {
+export interface FeatureRequestGET {
     id: number;
     title: string;
     created_by: string;

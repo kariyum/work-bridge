@@ -30,26 +30,7 @@
 			alert('Failed for submit to task!');
 		}
 	}
-
-	const tabs: Tab[] = [
-		{
-			snippet: tasksSnippet,
-			title: 'Tasks',
-			url: `/project/${projectIn.id}`,
-			tab: 'tasks'
-		},
-		{
-			snippet: tab2,
-			title: 'Proposals',
-			url: `/project/${projectIn.id}?tabs=proposals`,
-			tab: 'proposals'
-		}
-	];
 </script>
-
-{#snippet tab2()}
-	<div>TAB 2</div>
-{/snippet}
 
 {#snippet tasksSnippet()}
 	{#if projectIn.tasks?.length !== 0}
@@ -95,6 +76,8 @@
 								>Submit Application</button
 							>
 						{/if}
+					{:else if role === 'recruiter'}
+						<a href={`/project/${projectIn.id}/task/${task.id}`}> View </a>
 					{/if}
 				</div>
 			{/each}
@@ -123,7 +106,7 @@
 				{@html projectIn.content}
 			{/if}
 		</p>
-		<Tabs {tabs}></Tabs>
+		{@render tasksSnippet()}
 	</div>
 </div>
 
