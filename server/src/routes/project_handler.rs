@@ -9,6 +9,7 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 use crate::repository::tasks_proposals::RawTaskProposal;
+use crate::routes::proposals_handler::get_proposals;
 
 #[derive(Serialize)]
 struct ProjectResponse {
@@ -233,4 +234,5 @@ pub fn routes() -> impl HttpServiceFactory {
         .route("/{id}", web::get().to(get_project_with_tasks))
         .route("/{id}", web::delete().to(delete_project_handler))
         .route("/{id}", web::put().to(put_project_handler))
+        .route("/{id}/task/{task_id}/proposals", web::get().to(get_proposals))
 }
