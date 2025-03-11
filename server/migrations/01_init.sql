@@ -87,16 +87,17 @@ CREATE TABLE
         FOREIGN KEY (user_id) REFERENCES users (email)
     );
 
+CREATE TYPE proposal_status AS ENUM ('pending', 'accepted', 'rejected', 'cancelled');
+
 CREATE TABLE
     IF NOT EXISTS proposals (
         id SERIAL PRIMARY KEY,
         user_id VARCHAR(255) NOT NULL,
         task_id INT NOT NULL,
-        -- status: 0 - pending, 1 - accepted, 2 - rejected, 3 - cancelled
-        status INT NOT NULL, -- ENUM
+        status proposal_status NOT NULL, -- ENUM
         budget NUMERIC,
         content TEXT,
-        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users (email),
         FOREIGN KEY (task_id) REFERENCES tasks (id)
     );
