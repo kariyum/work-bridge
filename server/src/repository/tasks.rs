@@ -14,13 +14,17 @@ pub struct RawTask {
     budget: f32,
     status: String,
     created_at: DateTime<Utc>,
-    skills: Vec<String>
+    skills: Vec<String>,
 }
 
-pub async fn read_tasks_by_project_id(project_id: i32, conn: impl Executor<'_, Database=Postgres>) -> Result<Vec<RawTask>, sqlx::Error> {
+pub async fn read_tasks_by_project_id(
+    project_id: i32,
+    conn: impl Executor<'_, Database = Postgres>,
+) -> Result<Vec<RawTask>, sqlx::Error> {
     sqlx::query_as::<_, RawTask>("SELECT * FROM tasks WHERE project_id = $1")
         .bind(project_id)
-        .fetch_all(conn).await
+        .fetch_all(conn)
+        .await
 }
 
 pub struct CreateTask {
@@ -31,10 +35,13 @@ pub struct CreateTask {
     pub assignee_id: String,
     pub budget: f32,
     pub status: String,
-    pub skills: Vec<String>
+    pub skills: Vec<String>,
 }
 
-pub async fn insert_task(create_task: CreateTask, conn: impl Executor<'_, Database=Postgres>) -> Result<(), sqlx::Error> {
+pub async fn insert_task(
+    create_task: CreateTask,
+    conn: impl Executor<'_, Database = Postgres>,
+) -> Result<(), sqlx::Error> {
     sqlx::query("INSERT INTO tasks (project_id, title, content, deadline, assignee_id, budget, status, skills)
                      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)")
         .bind(create_task.project_id)
@@ -50,7 +57,11 @@ pub async fn insert_task(create_task: CreateTask, conn: impl Executor<'_, Databa
         .map(|_| {})
 }
 
-pub async fn update_task(task_id: i32, create_task: CreateTask, conn: impl Executor<'_, Database=Postgres>) -> Result<RawTask, sqlx::Error> {
+pub async fn update_task(
+    task_id: i32,
+    create_task: CreateTask,
+    conn: impl Executor<'_, Database = Postgres>,
+) -> Result<RawTask, sqlx::Error> {
     sqlx::query_as::<_, RawTask>("UPDATE tasks SET project_id = $1, title = $2, content = $3, deadline = $4, assignee_id = $5, budget = $6, status = $7, skills = $8
                      WHERE id = $9
                      RETURNING *")
@@ -67,14 +78,22 @@ pub async fn update_task(task_id: i32, create_task: CreateTask, conn: impl Execu
         .await
 }
 
-pub async fn insert_tasks_sequentially(tasks: Vec<CreateTask>, conn: &PgPool) -> Result<(), sqlx::Error> {
+pub async fn insert_tasks_sequentially(
+    tasks: Vec<CreateTask>,
+    conn: &PgPool,
+) -> Result<(), sqlx::Error> {
     for task in tasks {
-        insert_task(task, conn).await.expect("Failed to insert task");
+        insert_task(task, conn)
+            .await
+            .expect("Failed to insert task");
     }
     Ok(())
 }
 
-pub async fn insert_tasks_concurrently(tasks: Vec<CreateTask>, conn: &PgPool) -> Result<(), sqlx::Error> {
+pub async fn insert_tasks_concurrently(
+    tasks: Vec<CreateTask>,
+    conn: &PgPool,
+) -> Result<(), sqlx::Error> {
     let insertions = stream::iter(tasks)
         .map(|task| insert_task(task, conn))
         .buffer_unordered(3)
@@ -88,8 +107,23 @@ pub async fn insert_tasks_concurrently(tasks: Vec<CreateTask>, conn: &PgPool) ->
     Ok(())
 }
 
+pub struct TaskCreator {
+    pub user_id: String,
+}
+
+pub async fn read_task_creator_by_id(
+    task_id: i32,
+    conn: impl Executor<'_, Database = Postgres>,
+) -> Result<Option<TaskCreator>, sqlx::Error> {
+    sqlx::query_as!(TaskCreator, "SELECT projects.user_id AS user_id FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.id = $1", task_id)
+        .fetch_optional(conn)
+        .await
+}
+
 mod test {
-    use crate::repository::tasks::{insert_task, read_tasks_by_project_id, update_task, CreateTask};
+    use crate::repository::tasks::{
+        insert_task, read_tasks_by_project_id, update_task, CreateTask,
+    };
     use chrono::Utc;
     use sqlx::PgPool;
 
@@ -103,7 +137,7 @@ mod test {
             assignee_id: "Assignee1".to_string(),
             budget: 10.5,
             status: "todo".to_string(),
-            skills: vec!["Skill1".to_string()]
+            skills: vec!["Skill1".to_string()],
         };
         let result = insert_task(create_task, &pg_pool).await;
         assert!(result.is_ok());
@@ -127,7 +161,7 @@ mod test {
             assignee_id: "Assignee1".to_string(),
             budget: 10.5,
             status: "todo".to_string(),
-            skills: vec!["Skill1".to_string()]
+            skills: vec!["Skill1".to_string()],
         };
         let result = update_task(2, create_task, &pg_pool).await.unwrap();
         assert_eq!(result.title, "Updated");

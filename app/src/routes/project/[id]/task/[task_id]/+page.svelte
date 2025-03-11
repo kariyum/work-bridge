@@ -41,26 +41,30 @@
 		<div>
 			<h1>Applications</h1>
 			<div class="proposals">
-				{#each proposals as proposal}
-					<div class="proposal">
-						<div>
-							{proposal.user_id}
+				{#if proposals.length !== 0}
+					{#each proposals as proposal}
+						<div class="proposal">
+							<div>
+								{proposal.user_id}
+							</div>
+							<div>
+								{#if proposal.budget}
+									Requesting: {proposal.budget}
+								{:else}
+									Budget Not Specified
+								{/if}
+							</div>
+							<div>
+								{proposal.status}
+							</div>
+							<a href="/messages">Open discussion</a>
+							<button>Accept</button>
+							<button>Not Interested</button>
 						</div>
-						<div>
-							{#if proposal.budget}
-								Requesting: {proposal.budget}
-							{:else}
-								Budget Not Specified
-							{/if}
-						</div>
-						<div>
-							{proposal.status}
-						</div>
-						<a href="/messages">Open discussion</a>
-						<button>Accept</button>
-						<button>Not Interested</button>
-					</div>
-				{/each}
+					{/each}
+				{:else}
+					<div>No applications yet!</div>
+				{/if}
 			</div>
 		</div>
 	{:else}

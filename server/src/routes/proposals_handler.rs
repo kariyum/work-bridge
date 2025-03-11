@@ -1,9 +1,10 @@
-use crate::repository::project::ProjectRaw;
-use crate::repository::proposal::read_proposals;
+use crate::repository::proposal::{insert_proposal, read_proposals, CreateProposal, ProposalStatus};
+use crate::repository::tasks::{read_task_creator_by_id, TaskCreator};
 use crate::services::token::Claims;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::web::{Json, Path};
 use actix_web::{web, HttpResponse, Responder};
+use bigdecimal::BigDecimal;
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
 
@@ -21,65 +22,52 @@ struct ProposalRow {
 #[derive(Deserialize)]
 struct ProposalCreate {
     task_id: i32,
-    status: Option<i32>,
-    budget: Option<f32>,
+    budget: Option<BigDecimal>,
     content: Option<String>,
 }
 
 pub async fn create_proposal(
     claims: Claims,
-    proposal_create: Json<ProposalCreate>,
+    Json(proposal_create): Json<ProposalCreate>,
     pgpool: web::Data<PgPool>,
 ) -> impl Responder {
-    let mut client = pgpool
-        .acquire()
+
+    let create_proposal = CreateProposal {
+        user_id: claims.sub.clone(),
+        task_id: proposal_create.task_id,
+        status: ProposalStatus::Pending,
+        budget: proposal_create.budget,
+        content: proposal_create.content
+    };
+
+    insert_proposal(create_proposal, pgpool.as_ref())
         .await
-        .expect("Failed to acquire a Postgres connection from the pool");
+        .expect("Failed to insert proposal");
 
-    let proposals = sqlx::query_as::<_, ProposalRow>(
-        "INSERT INTO proposals (
-                user_id,
-                task_id,
-                status,
-                budget,
-                content
-            ) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-    )
-    .bind(&claims.sub)
-    .bind(&proposal_create.task_id)
-    .bind(0)
-    .bind(&proposal_create.budget)
-    .bind(&proposal_create.content)
-    .fetch_optional(&mut *client)
-    .await
-    .expect("Failed to insert proposal into database");
-
-    let project = sqlx::query_as::<_, ProjectRaw>("SELECT * FROM projects WHERE id = $1")
-        .bind(&proposal_create.task_id)
-        .fetch_optional(&mut *client)
+    let task_creator = read_task_creator_by_id(proposal_create.task_id, pgpool.as_ref())
         .await
-        .expect("Failed to fetch project from database");
+        .expect("Failed to fetch task creator by id");
 
-    if let Some(project) = project {
+    if let Some(TaskCreator { user_id: project_creator }) = task_creator {
         let exists = sqlx::query("SELECT * FROM discussions where user_ids = $1")
-            .bind(vec![&claims.sub, &project.user_id])
-            .fetch_optional(&mut *client)
+            .bind(vec![&claims.sub, &project_creator])
+            .fetch_optional(pgpool.as_ref())
             .await
             .expect("Failed to fetch discussion from database")
             .is_some();
 
         if !exists {
             sqlx::query("INSERT INTO discussions (user_ids, created_by, created_at) VALUES ($1, $2, $3) RETURNING *")
-                .bind(vec![&claims.sub, &project.user_id])
+                .bind(vec![&claims.sub, &project_creator])
                 .bind(&claims.sub)
                 .bind(chrono::Utc::now())
-                .execute(&mut *client)
+                .execute(pgpool.as_ref())
                 .await
                 .expect("Failed to insert discussion into database");
         }
     }
 
-    HttpResponse::Created().json(proposals)
+    HttpResponse::Created()
 }
 
 pub async fn get_proposals(

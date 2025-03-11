@@ -1,17 +1,21 @@
+use actix_web::Responder;
 use chrono::{DateTime, Utc};
 use serde::Serialize;
+use sqlx::types::BigDecimal;
+use sqlx::Type;
 use sqlx::{Executor, Postgres};
+use sqlx::FromRow;
 
 #[derive(Serialize, sqlx::Type, Debug)]
 #[sqlx(type_name = "proposal_status", rename_all = "lowercase")]
-enum ProposalStatus {
+pub enum ProposalStatus {
     Pending,
     Accepted,
     Rejected,
-    Cancelled
+    Cancelled,
 }
 
-#[derive(Serialize, sqlx::FromRow, Debug)]
+#[derive(Serialize, Debug)]
 pub struct RawProposal {
     id: i32,
     user_id: String,
@@ -20,6 +24,14 @@ pub struct RawProposal {
     budget: Option<BigDecimal>,
     content: Option<String>,
     created_at: DateTime<Utc>,
+}
+
+pub struct CreateProposal {
+    pub user_id: String,
+    pub task_id: i32,
+    pub status: ProposalStatus,
+    pub budget: Option<BigDecimal>,
+    pub content: Option<String>,
 }
 
 pub async fn read_proposals(
@@ -31,39 +43,32 @@ pub async fn read_proposals(
         .await
 }
 
+pub async fn insert_proposal(
+    insert_proposal: CreateProposal,
+    conn: impl Executor<'_, Database = Postgres>,
+) -> Result<(), sqlx::Error> {
+    sqlx::query!("INSERT INTO proposals (user_id, task_id, status, budget, content) VALUES ($1, $2, $3, $4, $5)",
+        insert_proposal.user_id,
+        insert_proposal.task_id,
+        insert_proposal.status as ProposalStatus,
+        insert_proposal.budget,
+        insert_proposal.content
+    ).execute(conn).await?;
 
-use sqlx::FromRow;
-use sqlx::Type;
-use sqlx::types::BigDecimal;
-
-#[derive(Debug, sqlx::Type)]
-#[sqlx(type_name = "mood", rename_all = "lowercase")]
-enum Mood {
-    Happy,
-    Sad,
-    Neutral,
-}
-
-// Define the struct for the table
-#[derive(Debug, FromRow)]
-struct ExampleTable {
-    id: i32,
-    name: String,
-    current_mood: Mood,
+    Ok(())
 }
 
 mod test {
+    use crate::repository::proposal::read_proposals;
     use sqlx::PgPool;
-    use crate::repository::proposal::{read_proposals, ExampleTable};
-    use crate::repository::proposal::Mood;
 
-    #[sqlx::test(fixtures(path = "./fixtures", scripts("users.sql", "tasks.sql", "proposals.sql")))]
-    async fn insert_task_test(pg_pool: PgPool) {
-        let x = read_proposals(1, &pg_pool)
-            .await
-            .unwrap();
+    #[sqlx::test(fixtures(
+        path = "./fixtures",
+        scripts("users.sql", "tasks.sql", "proposals.sql")
+    ))]
+    async fn read_proposal_test(pg_pool: PgPool) {
+        let x = read_proposals(1, &pg_pool).await.unwrap();
 
         println!("Result is = {:?}", x);
     }
-
 }
