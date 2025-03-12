@@ -83,9 +83,11 @@ pub async fn delete_project(project_id: i32, conn: impl Executor<'_, Database=Po
     Ok(())
 }
 
+#[cfg(test)]
 mod tests {
-    use super::*;
+    use chrono::Utc;
     use sqlx::PgPool;
+    use crate::repository::project::{delete_project, get_project_by_id, get_projects, insert_project, put_project, ProjectInsert};
 
     #[sqlx::test(fixtures(path = "./fixtures", scripts("projects.sql")))]
     async fn get_project_by_id_test(conn: PgPool) {

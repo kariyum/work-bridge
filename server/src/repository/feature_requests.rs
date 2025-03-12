@@ -34,9 +34,10 @@ pub async fn insert_feature_request(create_feature_request: CreateFeatureRequest
         .await
 }
 
+#[cfg(test)]
 mod tests {
-    use super::*;
     use sqlx::PgPool;
+    use crate::repository::feature_requests::{insert_feature_request, read_all_feature_request, CreateFeatureRequest};
 
     #[sqlx::test(fixtures(path = "./fixtures", scripts("feature_requests.sql")))]
     async fn read_all_feature_requests_test(conn: PgPool) {

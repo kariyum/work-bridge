@@ -17,6 +17,7 @@ pub struct RawTask {
     skills: Vec<String>,
 }
 
+#[allow(dead_code)]
 pub async fn read_tasks_by_project_id(
     project_id: i32,
     conn: impl Executor<'_, Database = Postgres>,
@@ -121,6 +122,7 @@ pub async fn read_task_creator_by_id(
         .await
 }
 
+#[cfg(test)]
 mod test {
     use crate::repository::tasks::{
         insert_task, read_tasks_by_project_id, update_task, CreateTask,
