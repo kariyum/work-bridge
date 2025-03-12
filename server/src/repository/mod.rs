@@ -6,3 +6,4 @@ pub mod feature_requests;
 pub mod comments;
 pub mod tasks_proposals;
 pub mod proposal;
+pub mod discussions;
