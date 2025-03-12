@@ -1,9 +1,10 @@
 use serde::Deserialize;
-use sqlx::{Error, Executor, PgPool, Postgres};
+use sqlx::{Error, Executor, Postgres};
 use std::hash::{DefaultHasher, Hash, Hasher};
 
 #[derive(sqlx::FromRow, Debug, Clone)]
 pub struct UserRow {
+    #[allow(dead_code)]
     pub email: String,
     pub role: String,
 }
@@ -55,11 +56,12 @@ fn hash_password(password: &String) -> String {
     hasher.finish().to_string()
 }
 
+#[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::repository::user::{get_user, get_user_by_credentials, insert_user, RegisterRequest};
 
     #[sqlx::test(fixtures(path = "fixtures", scripts("users.sql")))]
-    async fn read_user_test(pool: PgPool) -> sqlx::Result<()> {
+    async fn read_user_test(pool: sqlx::PgPool) -> sqlx::Result<()> {
         let row = get_user("test@gmail.com".to_string(), "password".to_string(), &pool).await;
 
         assert_eq!(row?.unwrap().email, "test@gmail.com");
@@ -68,7 +70,7 @@ mod tests {
     }
 
     #[sqlx::test]
-    async fn insert_user_test(pool: PgPool) -> sqlx::Result<()> {
+    async fn insert_user_test(pool: sqlx::PgPool) -> sqlx::Result<()> {
         let register_request = RegisterRequest {
             email: "test_email@gmail.com".to_string(),
             password: "password".to_string(),

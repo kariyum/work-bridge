@@ -28,6 +28,7 @@ pub async fn read_tasks_with_submission_by_project_id(
         .fetch_all(conn).await
 }
 
+#[cfg(test)]
 mod test {
     use crate::repository::tasks::{insert_task, CreateTask};
     use crate::repository::tasks_proposals::read_tasks_with_submission_by_project_id;

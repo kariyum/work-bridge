@@ -55,6 +55,7 @@ pub async fn insert_proposal(
     Ok(())
 }
 
+#[cfg(test)]
 mod test {
     use crate::repository::proposal::read_proposals;
     use sqlx::PgPool;

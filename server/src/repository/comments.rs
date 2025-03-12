@@ -38,9 +38,10 @@ pub async fn insert_comment(create_comment: CreateComment, conn: impl Executor<'
         .await
 }
 
+#[cfg(test)]
 mod tests {
-    use super::*;
     use sqlx::PgPool;
+    use crate::repository::comments::{insert_comment, read_comments_by_post_id, CreateComment};
 
     #[sqlx::test(fixtures(path = "./fixtures", scripts("comments.sql")))]
     async fn read_comment_by_post_id_test(conn: PgPool) {
