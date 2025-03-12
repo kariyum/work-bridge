@@ -1,5 +1,6 @@
 mod repository;
 
+use crate::services::token::validate_jwt;
 use actix_cors::Cors;
 use actix_web::{
     dev::Service,
@@ -10,15 +11,6 @@ use actix_web::{
     App, HttpRequest, HttpResponse, HttpServer, Responder,
 };
 use sqlx::{postgres::PgPoolOptions, PgPool};
-
-
-pub mod messaging {
-    pub mod discussions;
-}
-use messaging::discussions::get_discussions;
-
-
-use crate::services::token::validate_jwt;
 
 #[get("/")]
 async fn hello(request: HttpRequest) -> impl Responder {
@@ -47,8 +39,8 @@ pub mod messages {
 pub mod tasks {
     pub mod repo;
 }
-pub mod routes;
 mod error;
+pub mod routes;
 
 use actix_ws::AggregatedMessage;
 use futures_util::StreamExt as _;
@@ -145,14 +137,14 @@ async fn main() -> std::io::Result<()> {
             .service(routes::feature_requests_handler::routes())
             .service(routes::comments_handler::routes())
             .service(routes::proposals_handler::routes())
-            .service(get_discussions)
+            .service(routes::discussions_handler::routes())
             .route("/echo", web::get().to(echo))
             .service(start_connection)
             .service(messages::repo::get_messages)
             .service(tasks::repo::create_task)
             .service(tasks::repo::get_tasks)
     })
-        .bind(("127.0.0.1", 8080))?
-        .run()
-        .await
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
 }
