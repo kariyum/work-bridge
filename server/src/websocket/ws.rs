@@ -1,6 +1,5 @@
 use crate::websocket::lobby::Lobby;
 
-use crate::messages::repo::{create_message, MessageCreate};
 use crate::websocket::messages::{ClientActorMessage, Connect, Disconnect, WsMessage};
 use actix::{fut, ActorContext, ActorFuture, ActorFutureExt, ContextFutureSpawner, Message, WrapFuture};
 use actix::{Actor, Addr, Running, StreamHandler};
@@ -13,6 +12,7 @@ use serde_json;
 use sqlx::PgPool;
 use std::time::{Duration, Instant};
 use uuid::Uuid;
+use crate::repository::messages::{insert_message, MessageCreate};
 
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
@@ -36,7 +36,7 @@ struct ClientMessage {
 #[derive(Serialize, Deserialize, Message)]
 #[rtype(result = "()")]
 struct ClientMessageResponse {
-    disucssion_id: i32,
+    discussion_id: i32,
     content: String,
     sender_id: i32,
 }
@@ -164,11 +164,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsConn {
                         discussion_id: client_message.discussion_id.unwrap(),
                         content: client_message.content.clone(),
                     };
-                    let client = pool
-                        .acquire()
-                        .await
-                        .expect("Failed to acquire a Postgres connection from the pool");
-                    create_message(user_id, message_create, client).await;
+                    insert_message(user_id, message_create, pool.as_ref()).await;
                 }
                 .into_actor(self)
                 .spawn(ctx);
