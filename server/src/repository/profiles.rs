@@ -1,5 +1,4 @@
 use chrono::{DateTime, Utc};
-use futures_util::StreamExt;
 use serde::Serialize;
 use sqlx::{Executor, Postgres};
 
@@ -11,6 +10,7 @@ pub struct RawProfile {
     phone: String,
 }
 
+#[allow(dead_code)]
 pub async fn read_profile(user_id: String, conn: impl Executor<'_, Database=Postgres>) -> Result<Vec<RawProfile>, sqlx::Error> {
     sqlx::query_as::<_, RawProfile>("SELECT * FROM profiles WHERE user_id = $1")
         .bind(user_id)

@@ -1,9 +1,6 @@
 use crate::repository::comments::{
     insert_comment, read_comments_by_post_id, CreateComment, RawComment,
 };
-use crate::repository::feature_requests::{
-    insert_feature_request, read_all_feature_request, CreateFeatureRequest, RawFeatureRequest,
-};
 use crate::services::token::Claims;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::web::{Json, Path};

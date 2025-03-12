@@ -1,10 +1,7 @@
-use actix_web::Responder;
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use sqlx::types::BigDecimal;
-use sqlx::Type;
 use sqlx::{Executor, Postgres};
-use sqlx::FromRow;
 
 #[derive(Serialize, sqlx::Type, Debug)]
 #[sqlx(type_name = "proposal_status", rename_all = "lowercase")]
@@ -38,7 +35,7 @@ pub async fn read_proposals(
     task_id: i32,
     conn: impl Executor<'_, Database = Postgres>,
 ) -> Result<Vec<RawProposal>, sqlx::Error> {
-    sqlx::query_as!(RawProposal, "SELECT id, user_id, task_id, status as \"status: ProposalStatus\", budget, content, created_at FROM proposals")
+    sqlx::query_as!(RawProposal, "SELECT id, user_id, task_id, status as \"status: ProposalStatus\", budget, content, created_at FROM proposals WHERE task_id = $1", task_id)
         .fetch_all(conn)
         .await
 }

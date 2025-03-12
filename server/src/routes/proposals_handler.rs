@@ -20,7 +20,7 @@ struct ProposalRow {
 }
 
 #[derive(Deserialize)]
-struct ProposalCreate {
+pub struct ProposalCreate {
     task_id: i32,
     budget: Option<BigDecimal>,
     content: Option<String>,
