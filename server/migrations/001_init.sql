@@ -6,7 +6,7 @@ CREATE TABLE
         last_name VARCHAR(255) NOT NULL,
         role VARCHAR(255) NOT NULL, -- enum [Recruiter, Freelancer]
         hashed_password VARCHAR(255) NOT NULL,
-        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL
     );
 CREATE TYPE skill AS ENUM ('developer', 'engineer', 'designer', 'manager', 'analyst', 'consultant', 'other');
 
@@ -30,7 +30,7 @@ CREATE TABLE
         deadline TIMESTAMPTZ NOT NULL, -- maybe start_date would be better
         budget FLOAT4 NOT NULL,
         currency_code VARCHAR(255) NOT NULL, -- enum TD
-        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users (email)
     );
 
@@ -53,7 +53,7 @@ CREATE TABLE
         budget FLOAT4 NOT NULL,
         status VARCHAR(255) NOT NULL,
         skills TEXT[] NOT NULL,
-        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE
     );
 
@@ -73,7 +73,7 @@ CREATE TABLE
         from_user_id VARCHAR(255) NOT NULL,
         discussion_id INT NOT NULL,
         content VARCHAR(255) NOT NULL,
-        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (discussion_id) REFERENCES discussions (id)
     ); -- ordered by created_at most recent first
 
@@ -83,7 +83,7 @@ CREATE TABLE
         user_id VARCHAR(255) NOT NULL,
         content VARCHAR(255) NOT NULL,
         type VARCHAR(255) NOT NULL, -- enum [message, proposal]
-        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users (email)
     );
 
@@ -110,7 +110,7 @@ CREATE TABLE
         description VARCHAR(255) NOT NULL,
         ups VARCHAR(255)[] NOT NULL DEFAULT '{}',
         downs VARCHAR(255)[] NOT NULL DEFAULT '{}',
-        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (created_by) REFERENCES users (email)
 );
 
@@ -123,7 +123,7 @@ CREATE TABLE
         comment VARCHAR(255) NOT NULL,
         ups VARCHAR(255)[] NOT NULL DEFAULT '{}',
         downs VARCHAR(255)[] NOT NULL DEFAULT '{}',
-        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (post_id) REFERENCES feature_requests (id),
         FOREIGN KEY (created_by) REFERENCES users (email),
         FOREIGN KEY (parent_comment_id) REFERENCES comments (id)

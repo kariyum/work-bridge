@@ -6,3 +6,4 @@ pub mod feature_requests_handler;
 pub mod comments_handler;
 pub mod proposals_handler;
 pub mod discussions_handler;
+pub mod messages_handler;

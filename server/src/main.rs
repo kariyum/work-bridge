@@ -31,11 +31,6 @@ pub mod services {
     pub mod token;
 }
 
-pub mod messages {
-    pub mod repo;
-    // pub mod route;
-}
-
 pub mod tasks {
     pub mod repo;
 }
@@ -138,9 +133,9 @@ async fn main() -> std::io::Result<()> {
             .service(routes::comments_handler::routes())
             .service(routes::proposals_handler::routes())
             .service(routes::discussions_handler::routes())
+            .service(routes::messages_handler::routes())
             .route("/echo", web::get().to(echo))
             .service(start_connection)
-            .service(messages::repo::get_messages)
             .service(tasks::repo::create_task)
             .service(tasks::repo::get_tasks)
     })
