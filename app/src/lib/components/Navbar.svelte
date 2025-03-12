@@ -108,6 +108,10 @@
 		padding: 0;
 		font-weight: normal;
 		font-size: medium;
+
+		&:hover {
+			background-color: transparent;
+		}
 	}
 
 	.showNotifications {
