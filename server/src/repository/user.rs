@@ -14,7 +14,7 @@ pub async fn get_user_by_credentials(email: String, password: String, conn: impl
 }
 
 pub async fn get_user(email: String, password: String, conn: impl Executor<'_, Database=Postgres>) -> Result<Option<UserRow>, Error> {
-    let user = sqlx::query_as::<_, UserRow>("SELECT email, password, role FROM users WHERE email = $1 AND hashed_password = $2")
+    let user = sqlx::query_as::<_, UserRow>("SELECT email, role FROM users WHERE email = $1 AND hashed_password = $2")
         .bind(&email)
         .bind(&password)
         .fetch_optional(conn)
