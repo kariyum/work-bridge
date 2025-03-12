@@ -1,8 +1,8 @@
-use actix_web::{get, post, web::{self, Path}, HttpRequest, HttpResponse, Responder};
-use actix_web::web::Json;
-use serde::{Deserialize, Serialize};
-use sqlx::{pool::PoolConnection, PgPool, Postgres};
 use crate::services::token::validate_jwt;
+use actix_web::web::Json;
+use actix_web::{get, post, web::{self, Path}, HttpRequest, HttpResponse, Responder};
+use serde::{Deserialize, Serialize};
+use sqlx::PgPool;
 
 #[derive(Serialize, sqlx::FromRow)]
 struct TaskRow {

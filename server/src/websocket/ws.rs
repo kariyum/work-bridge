@@ -1,7 +1,8 @@
 use crate::websocket::lobby::Lobby;
 
+use crate::repository::messages::{insert_message, MessageCreate};
 use crate::websocket::messages::{ClientActorMessage, Connect, Disconnect, WsMessage};
-use actix::{fut, ActorContext, ActorFuture, ActorFutureExt, ContextFutureSpawner, Message, WrapFuture};
+use actix::{fut, ActorContext, ActorFutureExt, ContextFutureSpawner, Message, WrapFuture};
 use actix::{Actor, Addr, Running, StreamHandler};
 use actix::{AsyncContext, Handler};
 use actix_web::web;
@@ -12,7 +13,6 @@ use serde_json;
 use sqlx::PgPool;
 use std::time::{Duration, Instant};
 use uuid::Uuid;
-use crate::repository::messages::{insert_message, MessageCreate};
 
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);

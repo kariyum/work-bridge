@@ -90,6 +90,7 @@ pub async fn insert_tasks_sequentially(
     Ok(())
 }
 
+#[allow(dead_code)]
 pub async fn insert_tasks_concurrently(
     tasks: Vec<CreateTask>,
     conn: &PgPool,

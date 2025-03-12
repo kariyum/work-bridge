@@ -1,5 +1,4 @@
 use chrono::{DateTime, Utc};
-use futures_util::StreamExt;
 use serde::Serialize;
 use sqlx::{Executor, Postgres};
 

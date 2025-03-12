@@ -3,7 +3,6 @@ mod repository;
 use crate::services::token::validate_jwt;
 use actix_cors::Cors;
 use actix_web::{
-    dev::Service,
     get,
     middleware::Logger,
     rt,

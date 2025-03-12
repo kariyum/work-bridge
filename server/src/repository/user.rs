@@ -1,13 +1,10 @@
-use actix_web::Responder;
-use serde::{Deserialize, Serialize};
-use sqlx::{Error, Executor, PgPool, Postgres, Row};
-use std::future::Future;
-use std::hash::{BuildHasher, DefaultHasher, Hash, Hasher};
+use serde::Deserialize;
+use sqlx::{Error, Executor, PgPool, Postgres};
+use std::hash::{DefaultHasher, Hash, Hasher};
 
 #[derive(sqlx::FromRow, Debug, Clone)]
 pub struct UserRow {
     pub email: String,
-    pub hashed_password: String,
     pub role: String,
 }
 
@@ -17,7 +14,7 @@ pub async fn get_user_by_credentials(email: String, password: String, conn: impl
 }
 
 pub async fn get_user(email: String, password: String, conn: impl Executor<'_, Database=Postgres>) -> Result<Option<UserRow>, Error> {
-    let user = sqlx::query_as::<_, UserRow>("SELECT * FROM users WHERE email = $1 AND hashed_password = $2")
+    let user = sqlx::query_as::<_, UserRow>("SELECT email, password, role FROM users WHERE email = $1 AND hashed_password = $2")
         .bind(&email)
         .bind(&password)
         .fetch_optional(conn)

@@ -1,6 +1,8 @@
 use crate::repository;
 use crate::repository::project::{delete_project, insert_project, put_project, ProjectInsert, ProjectRaw};
-use crate::repository::tasks::{insert_tasks_sequentially, update_task, CreateTask, RawTask};
+use crate::repository::tasks::{insert_tasks_sequentially, update_task, CreateTask};
+use crate::repository::tasks_proposals::RawTaskProposal;
+use crate::routes::proposals_handler::get_proposals;
 use crate::services::token::Claims;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::web::{Json, Path};
@@ -8,8 +10,6 @@ use actix_web::{web, HttpResponse, Responder};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
-use crate::repository::tasks_proposals::RawTaskProposal;
-use crate::routes::proposals_handler::get_proposals;
 
 #[derive(Serialize)]
 struct ProjectResponse {
@@ -51,6 +51,7 @@ async fn get_projects(_: Claims, pgpool: web::Data<PgPool>) -> impl Responder {
     HttpResponse::Ok().json(projects)
 }
 
+#[allow(dead_code)]
 async fn get_project(
     _: Claims,
     path: Path<i32>,

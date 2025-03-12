@@ -53,14 +53,14 @@ impl Handler<Disconnect> for Lobby {
         // println!("Disconnect message {:}", &msg);
         // self.connections.remove() TODO remove connections
         if self.sessions.remove(&msg.id).is_some() {
-            self.rooms
-                .get(&msg.room_id)
-                .unwrap()
-                .iter()
-                .filter(|conn_id| *conn_id.to_owned() != msg.id)
-                .for_each(|user_id| {
-                    // self.send_message(&format!("{} disconnected.", &msg.id), user_id)
-                });
+            // self.rooms
+            //     .get(&msg.room_id)
+            //     .unwrap()
+            //     .iter()
+            //     .filter(|conn_id| *conn_id.to_owned() != msg.id)
+            //     .for_each(|user_id| {
+            //         self.send_message(&format!("{} disconnected.", &msg.id), user_id)
+            //     });
             if let Some(lobby) = self.rooms.get_mut(&msg.room_id) {
                 if lobby.len() > 1 {
                     lobby.remove(&msg.id);
@@ -86,19 +86,19 @@ impl Handler<Connect> for Lobby {
             .or_insert_with(HashSet::new)
             .insert(msg.self_id);
 
-        self.rooms
-            .get(&msg.lobby_id)
-            .unwrap()
-            .iter()
-            .filter(|conn_id| *conn_id.to_owned() != msg.self_id)
-            .for_each(|conn_id| {
-                // let wsMessage = WsMessage {
-                //     disucssion_id: -1,
-                //     content: format!("{} just joined!", msg.self_id),
-                //     sender_id: msg.self_id.to_string(),
-                // };
-                // self.send_message(&wsMessage, conn_id)
-            });
+        // self.rooms
+        //     .get(&msg.lobby_id)
+        //     .unwrap()
+        //     .iter()
+        //     .filter(|conn_id| *conn_id.to_owned() != msg.self_id)
+        //     .for_each(|conn_id| {
+        //         let wsMessage = WsMessage {
+        //             disucssion_id: -1,
+        //             content: format!("{} just joined!", msg.self_id),
+        //             sender_id: msg.self_id.to_string(),
+        //         };
+        //         self.send_message(&wsMessage, conn_id)
+        //     });
 
         // self.sessions.insert(msg.self_id, msg.addr);
 
@@ -114,6 +114,6 @@ impl Handler<ClientActorMessage> for Lobby {
         msg.msg
             .receivers
             .iter()
-            .for_each(|client| self.send_message(&msg.msg))
+            .for_each(|_| self.send_message(&msg.msg))
     }
 }
