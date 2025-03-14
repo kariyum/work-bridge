@@ -1,7 +1,35 @@
 <script lang="ts">
+	import { invalidate } from '$app/navigation';
+	import type { TaskGET } from '$lib/types/task.js';
+	import { fetchIntoResult, snakeToCapital } from '$lib/utils.js';
+	import type { ProposalGET } from './+page.js';
+
 	let { data } = $props();
 	let task = $derived(data.task);
-	let proposals = $derived(data.proposals);
+	let proposals: ProposalGET[] | undefined = $derived(data.proposals);
+
+	async function patchProposalStatus(
+		projectId: number,
+		taksId: number,
+		proposalId: number,
+		action: string
+	) {
+		const payload = {
+			action
+		};
+		const response = await fetch(`/api/proposals/${proposalId}/status`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(payload)
+		});
+		if (response.ok) {
+			await invalidate(`/api/projects/${projectId}/task/${taksId}/proposals`);
+		} else {
+			// todo show error banner
+		}
+	}
 </script>
 
 <div class="container">
@@ -12,7 +40,7 @@
 				{task.title}
 			</h3>
 			<div class="status" data-type={task.status}>
-				{task.status}
+				{snakeToCapital(task.status)}
 			</div>
 			<div>
 				Budget: {task.budget}
@@ -44,6 +72,9 @@
 				{#if proposals.length !== 0}
 					{#each proposals as proposal}
 						<div class="proposal">
+							<div class="status" data-type={proposal.status}>
+								{snakeToCapital(proposal.status)}
+							</div>
 							<div>
 								{proposal.user_id}
 							</div>
@@ -51,15 +82,24 @@
 								{#if proposal.budget}
 									Requesting: {proposal.budget}
 								{:else}
-									Budget Not Specified
+									Budget not specified
 								{/if}
 							</div>
-							<div>
-								{proposal.status}
+
+							<div class="actions">
+								<a href="/messages?user_id={proposal.user_id}">Open discussion</a>
+								<button
+									class="muted-btn"
+									onclick={() =>
+										patchProposalStatus(task.project_id, task.id, proposal.id, 'reject')}
+									>Not Interested</button
+								>
+								<button
+									onclick={() =>
+										patchProposalStatus(task.project_id, task.id, proposal.id, 'accept')}
+									>Accept</button
+								>
 							</div>
-							<a href="/messages">Open discussion</a>
-							<button>Accept</button>
-							<button>Not Interested</button>
 						</div>
 					{/each}
 				{:else}
@@ -73,9 +113,30 @@
 </div>
 
 <style>
+	.status {
+		margin-bottom: 0.3rem;
+	}
+
+	.muted-btn {
+		background-color: transparent;
+	}
+
+	.actions {
+		margin-left: auto;
+		width: fit-content;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.proposal {
+		width: 100%;
+	}
+
 	.proposals {
 		margin-top: 1rem;
 		display: flex;
+		flex-direction: column;
 		gap: 1rem;
 	}
 

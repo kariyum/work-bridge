@@ -1,33 +1,31 @@
 import type { Discussion } from "$lib/types";
+import { fetchIntoResult } from "$lib/utils.js";
+import { error, redirect } from "@sveltejs/kit";
 
-export const load = async ({ fetch, url, params }) => {
-    const response = await fetch("/api/discussions");
-    if (response.status === 401) {
+export const load = async ({ fetch, url, params, parent }) => {
+    const response = await fetchIntoResult<Array<Discussion>>(() => fetch("/api/discussions"));
+    if (response.value) {
+        const discussions = response.value;
+        const parentData = await parent();
+        const targetDiscussionUserId = url.searchParams.get("user_id");
+        const currentUserId = parentData.user?.email;
+        if (targetDiscussionUserId && currentUserId) {
+            const maybeDiscussionId = discussions
+                .find((discussion) =>
+                    discussion.user_ids.includes(targetDiscussionUserId) &&
+                    discussion.user_ids.includes(currentUserId) &&
+                    discussion.user_ids.length === 2
+                )?.id;
+            if (maybeDiscussionId) {
+                console.log("Redirecting to ", `/messages/${maybeDiscussionId}`);
+                redirect(303, `/messages/${maybeDiscussionId}`);
+            }
+        }
         return {
-            error: "Unauthorized",
-            status: 401,
-            discussions: [] as Array<Discussion>
+            discussions: discussions as Array<Discussion>
         }
     }
-    try {
-        const discussions = await response.json();
-        if (response.ok) {
-            return {
-                discussions: discussions as Array<Discussion>,
-                status: response.status,
-            }
-        } else {
-            return {
-                error: "Something went wrong",
-                discussions: [] as Array<Discussion>,
-                status: response.status
-            }
-        }
-    } catch (error) {
-        return {
-            error: `An error occurred while fetching discussions: ${error}`,
-            status: response.status,
-            discussions: [] as Array<Discussion>
-        }
+    if (response.error?.clientError) {
+        error(response.error.clientError.status)
     }
 };

@@ -1,4 +1,6 @@
-use crate::repository::proposal::{insert_proposal, read_proposals, CreateProposal, ProposalStatus};
+use crate::repository::proposal::{
+    insert_proposal, read_proposals, update_proposal_status, CreateProposal, ProposalStatus,
+};
 use crate::repository::tasks::{read_task_creator_by_id, TaskCreator};
 use crate::services::token::Claims;
 use actix_web::dev::HttpServiceFactory;
@@ -31,13 +33,12 @@ pub async fn create_proposal(
     Json(proposal_create): Json<ProposalCreate>,
     pgpool: web::Data<PgPool>,
 ) -> impl Responder {
-
     let create_proposal = CreateProposal {
         user_id: claims.sub.clone(),
         task_id: proposal_create.task_id,
         status: ProposalStatus::Pending,
         budget: proposal_create.budget,
-        content: proposal_create.content
+        content: proposal_create.content,
     };
 
     insert_proposal(create_proposal, pgpool.as_ref())
@@ -48,7 +49,10 @@ pub async fn create_proposal(
         .await
         .expect("Failed to fetch task creator by id");
 
-    if let Some(TaskCreator { user_id: project_creator }) = task_creator {
+    if let Some(TaskCreator {
+                    user_id: project_creator,
+                }) = task_creator
+    {
         let exists = sqlx::query("SELECT * FROM discussions where user_ids = $1")
             .bind(vec![&claims.sub, &project_creator])
             .fetch_optional(pgpool.as_ref())
@@ -118,10 +122,46 @@ pub async fn get_proposal(_: Claims, path: Path<i32>, pgpool: web::Data<PgPool>)
     HttpResponse::Ok().json(proposal)
 }
 
+#[derive(Deserialize)]
+struct ProposalAction {
+    action: ProposalActions,
+}
+
+#[derive(Deserialize)]
+#[serde(rename_all = "snake_case")]
+enum ProposalActions {
+    Accept,
+    Reject,
+    Cancel,
+}
+
+async fn update_proposal_status_handler(
+    _: Claims,
+    path: Path<i32>,
+    Json(ProposalAction { action }): Json<ProposalAction>,
+    pgpool: web::Data<PgPool>,
+) -> impl Responder {
+    let proposal_id = path.into_inner();
+    let target_status = match action {
+        ProposalActions::Accept => ProposalStatus::Accepted,
+        ProposalActions::Reject => ProposalStatus::Rejected,
+        ProposalActions::Cancel => ProposalStatus::Cancelled,
+    };
+    update_proposal_status(proposal_id, target_status, pgpool.as_ref())
+        .await
+        .expect("Failed to update Proposal status");
+
+    HttpResponse::Ok().finish()
+}
+
 pub fn routes() -> impl HttpServiceFactory {
     web::scope("proposals")
         .route("", web::post().to(create_proposal))
         .route("", web::get().to(get_proposals))
         .route("{id}", web::delete().to(delete_proposal))
         .route("{id}", web::get().to(get_proposal))
+        .route(
+            "{id}/status",
+            web::patch().to(update_proposal_status_handler),
+        )
 }

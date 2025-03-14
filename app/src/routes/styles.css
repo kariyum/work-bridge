@@ -184,6 +184,18 @@ input:focus, textarea:focus {
     background-color: var(--red);
 }
 
+.status[data-type='pending'] {
+    background-color: var(--orange);
+}
+
+.status[data-type='rejected'] {
+    background-color: var(--red);
+}
+
+.status[data-type='accepted'] {
+    background-color: var(--green-bg);
+}
+
 .delete-btn {
     background-color: var(--vibrant-red);
     border: none;

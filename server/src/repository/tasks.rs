@@ -117,7 +117,11 @@ pub async fn read_task_creator_by_id(
     task_id: i32,
     conn: impl Executor<'_, Database = Postgres>,
 ) -> Result<Option<TaskCreator>, sqlx::Error> {
-    sqlx::query_as!(TaskCreator, "SELECT projects.user_id AS user_id FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.id = $1", task_id)
+    sqlx::query_as!(
+        TaskCreator,
+        "SELECT projects.user_id AS user_id FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.id = $1",
+        task_id
+    )
         .fetch_optional(conn)
         .await
 }
