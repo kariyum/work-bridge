@@ -184,3 +184,9 @@ export function shouldRedirect(result: Result<any, FetchErrors>, pathname: strin
     }
     return false;
 }
+
+export function snakeToCapital(value: string): string {
+    return value.split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}

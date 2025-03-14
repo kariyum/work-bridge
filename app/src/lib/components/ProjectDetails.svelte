@@ -77,7 +77,9 @@
 							>
 						{/if}
 					{:else if role === 'recruiter'}
-						<a href={`/project/${projectIn.id}/task/${task.id}`}> View </a>
+						<div class="view-link">
+							<a href={`/project/${projectIn.id}/task/${task.id}`}> View </a>
+						</div>
 					{/if}
 				</div>
 			{/each}
@@ -111,6 +113,15 @@
 </div>
 
 <style>
+	.view-link {
+		width: 100%;
+		
+		a {
+			display: block;
+			width: fit-content;
+			margin-left: auto;
+		}
+	}
 	.applied-btn {
 		background-color: rgb(65, 65, 65);
 	}

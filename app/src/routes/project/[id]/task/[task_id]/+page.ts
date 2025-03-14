@@ -5,17 +5,17 @@ interface ProposalJSON {
     id: number,
     user_id: string,
     task_id: number,
-    status: number,
+    status: string,
     budget: number | undefined,
     content: string | undefined,
     created_at: string,
 }
 
-interface ProposalGET {
+export interface ProposalGET {
     id: number,
     user_id: string,
     task_id: number,
-    status: number,
+    status: string,
     budget: number | undefined,
     content: string | undefined,
     created_at: Date,
