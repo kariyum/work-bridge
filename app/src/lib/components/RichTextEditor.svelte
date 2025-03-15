@@ -120,16 +120,8 @@
 			</div>
 		</div>
 	</div>
-	<div bind:this={element}></div>
+	<div bind:this={element} class="editor-content"></div>
 </div>
-
-<!-- 
-<hr />
-
-Displayed:
-<pre>
-	{@html content}
-</pre> -->
 
 <style>
 	div {
@@ -203,16 +195,4 @@ Displayed:
 		outline: none;
 	}
 
-	:global(ol) {
-		margin-left: 2rem;
-	}
-
-	:global(ul) {
-		margin-left: 2rem;
-	}
-
-	:global(p) {
-		display: block;
-		min-height: 1rem;
-	}
 </style>

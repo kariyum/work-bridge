@@ -60,5 +60,9 @@
 		height: fit-content;
 		font-size: large;
 		line-height: 0;
+
+		&:hover {
+			background-color: transparent;
+		}
 	}
 </style>

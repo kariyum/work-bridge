@@ -212,3 +212,18 @@ input:focus, textarea:focus {
 .cancel-btn {
     background-color: transparent;
 }
+
+.editor-content, .rich-content {
+    ol {
+		margin-left: 2rem;
+	}
+
+	ul {
+		margin-left: 2rem;
+	}
+
+    p {
+        display: block;
+        min-height: 1rem;
+    }
+}

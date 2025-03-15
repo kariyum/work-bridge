@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 	import type { Tab } from '$lib/types';
 	import type { ProjectGET } from '$lib/types/project';
+	import { formatDate } from '$lib/utils';
 	import Tabs from './Tabs.svelte';
 	interface props {
 		projectIn: ProjectGET;
@@ -50,7 +51,7 @@
 					<div>
 						Assigned to: {task.assignee_id}
 					</div>
-					<div class="task-content">
+					<div class="task-content rich-content">
 						Content:
 						{#if task.content.length === 0}
 							<div>No content for this task</div>
@@ -101,13 +102,18 @@
 			<span style="font-weight: 500;">Client's email:</span>
 			<span>{projectIn.user_id}</span>
 		</div>
-		<p class="content">
+		<p class="content rich-content">
 			{#if projectIn.content.length === 0}
 				<span>No content for this project</span>
 			{:else}
 				{@html projectIn.content}
 			{/if}
 		</p>
+		<div>
+			<span style="font-weight: 500;">Posted on: </span>
+			{formatDate(projectIn.created_at)}
+		</div>
+		<h2>Tasks</h2>
 		{@render tasksSnippet()}
 	</div>
 </div>
@@ -115,7 +121,7 @@
 <style>
 	.view-link {
 		width: 100%;
-		
+
 		a {
 			display: block;
 			width: fit-content;
@@ -148,7 +154,7 @@
 	.tasks-container {
 		display: flex;
 		flex-direction: column;
-		gap: 1rem;
+		gap: 0.5rem;
 	}
 
 	.task {
