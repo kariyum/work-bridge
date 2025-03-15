@@ -1,13 +1,17 @@
 <script lang="ts">
-	import { page } from '$app/state';
+	import { browser } from '$app/environment';
+	import { WebSocketService } from '$lib/realtime.js';
+	import type { MessagesJsonResponse } from '$lib/types.js';
 	import { CircleUserRound } from 'lucide-svelte';
+	import { onDestroy, onMount, untrack } from 'svelte';
+	import { SvelteMap } from 'svelte/reactivity';
 
 	let { data, children } = $props();
-	const discussionIdMatcher = /messages\/(?<id>\d)/
-	const selectedDiscussion: string | undefined = $derived(discussionIdMatcher.exec(page.url.pathname)?.groups?.id || undefined);
+	const selectedDiscussion: string | undefined = $derived(data.discussion_id);
+
 	let titles = $derived.by(() => {
 		const result = new Map<number, string>();
-		data.discussions.map((discussion) => {
+		data.discussions?.map((discussion) => {
 			const title = discussion.user_ids
 				.filter((email) => email != data.user?.email)
 				.reduce((userA, userB) => userA + userB, '');
@@ -15,31 +19,76 @@
 		});
 		return result;
 	});
+
+	let discussionNotif = $state(new SvelteMap<string, number>());
+	$effect(() => {
+		selectedDiscussion;
+		untrack(() => {
+			if (selectedDiscussion) {
+				discussionNotif.delete(selectedDiscussion);
+			}
+		});
+	});
+	let unsubscribe: () => void;
+
+	onMount(() => {
+		if (browser) {
+			const websocketInstance = WebSocketService.getInstance();
+			unsubscribe = websocketInstance.subscribe((message: MessagesJsonResponse) => {
+				if (
+					!selectedDiscussion ||
+					(selectedDiscussion && message.discussion_id != parseInt(selectedDiscussion))
+				) {
+					const oldCount = discussionNotif.get(message.discussion_id.toString());
+					discussionNotif.set(message.discussion_id.toString(), (oldCount ?? 0) + 1);
+				}
+			});
+		}
+	});
+
+	onDestroy(() => {
+		if (browser) {
+			unsubscribe();
+		}
+	});
 </script>
 
-<div class="component">
-	<div class="container">
-		<div class="menu">
-			<div class="header">
-				<div>Discussions</div>
+{#if data.discussions}
+	<div class="component">
+		<div class="container">
+			<div class="menu">
+				<div class="header">
+					<div>Discussions</div>
+				</div>
+				<div class="discussions">
+					{#each data.discussions as discussion}
+						{@const title = discussion.title ?? titles.get(discussion.id)}
+						{@const count = discussionNotif.get(discussion.id.toString())}
+						<div class="discussion-container">
+							<a
+								href="/messages/{discussion.id}"
+								data-selected={selectedDiscussion === discussion.id.toString()}
+							>
+								<CircleUserRound />
+								{title}
+								{#if count}
+									<div class="count">
+										{count}
+									</div>
+								{/if}
+							</a>
+						</div>
+					{/each}
+				</div>
 			</div>
-			<div class="discussions">
-				{#each data.discussions as discussion}
-					{@const title = discussion.title ?? titles.get(discussion.id)}
-					<div class="discussion-container">
-						<a href="/messages/{discussion.id}" data-selected={selectedDiscussion === discussion.id.toString()}>
-							<CircleUserRound />
-							{title}
-						</a>
-					</div>
-				{/each}
+			<div class="messages-col">
+				{@render children()}
 			</div>
-		</div>
-		<div class="messages-col">
-			{@render children()}
 		</div>
 	</div>
-</div>
+{:else}
+	<div>Error</div>
+{/if}
 
 <style>
 	.component {
@@ -48,6 +97,15 @@
 
 	.discussion-container {
 		margin-left: 0.5rem;
+
+		.count {
+			border-radius: 50%;
+			display: flex;
+			justify-content: center;
+			background-color: var(--vibrant-red);
+			width: 1.5rem;
+			aspect-ratio: 1;
+		}
 	}
 
 	.container {
@@ -80,37 +138,37 @@
 	.header > div {
 		font-weight: 500;
 	}
-	
+
 	a {
-        position: relative;
+		position: relative;
 		gap: 1rem;
 		display: flex;
 		text-decoration: none;
 		background-color: transparent;
 		border: 2px solid transparent;
 		color: var(--font-color);
-        padding: 0.5rem;
-        border-radius: 3px 0 0 3px;
+		padding: 0.5rem;
+		border-radius: 3px 0 0 3px;
 	}
 
-    a[data-selected = "true"] {
-        background-color: var(--selected-color);
-    }
+	a[data-selected='true'] {
+		background-color: var(--selected-color);
+	}
 
-    a[data-selected = "true"]::before {
-        content: "";
-        position: absolute;
-        width: 5px;
-        height: 2.2rem;
-        border-radius: 10px;
-        background-color: var(--blue);
-        left: -0.6rem;
-        top: 0.15rem;
-    }
+	a[data-selected='true']::before {
+		content: '';
+		position: absolute;
+		width: 5px;
+		height: 2.2rem;
+		border-radius: 10px;
+		background-color: var(--blue);
+		left: -0.6rem;
+		top: 0.15rem;
+	}
 
-    a:hover {
-        background-color: var(--hover-color);
-    }
+	a:hover {
+		background-color: var(--hover-color);
+	}
 
 	.discussions {
 		display: flex;

@@ -26,7 +26,6 @@
 
 	let localMessages: Array<MessagesJsonResponse> = $derived.by(() => {
 		data.messages;
-		console.log("UPDATING DATA.MESSAGES?");
 		let result = $state([]);
 		return result;
 	});
@@ -80,7 +79,6 @@
 			discussion_id: parseInt(data.discussion_id),
 			created_at: new Date().toISOString()
 		};
-		console.log('SENDING MESSAGE', message);
 		localMessages.push(msg);
 		message = '';
 	}
@@ -97,7 +95,6 @@
 		messages;
 		const autoscroll = viewport && Math.abs(viewport.scrollTop) < 100;
 		if (viewport && (autoscroll ||  justSwitched)) {
-			console.log("SCROLLING TO BOTTOM");
 			if (viewport.scrollTop == 0) {
 				viewport.scrollTo({
 					left: 0,
