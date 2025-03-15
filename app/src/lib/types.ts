@@ -10,7 +10,8 @@ export type MessagesJsonResponse = {
     id: number,
     from_user_id: string,
     content: string,
-    created_at: string
+    created_at: string,
+    discussion_id: number
 };
 
 export type ClientMessage = {

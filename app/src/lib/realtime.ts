@@ -13,6 +13,7 @@ export class WebSocketService {
 				id: Math.random(),
 				from_user_id: wsMessage.sender_id,
 				content: wsMessage.content,
+                discussion_id: wsMessage.discussion_id,
 				created_at: new Date().toISOString()
 			};
             this.subscribers.forEach(handler => handler(message))
@@ -28,10 +29,9 @@ export class WebSocketService {
     }
 
     public static getInstance(): WebSocketService {
-        console.log("GET INSTANCE");
         console.log(WebSocketService.instance);
         if (!WebSocketService.instance) {
-            WebSocketService.instance = new WebSocketService("/api/chat");
+            WebSocketService.instance = new WebSocketService("/api/push_events");
         }
         return WebSocketService.instance.ensureOpen();
     }
@@ -62,8 +62,7 @@ export class WebSocketService {
 
     private ensureOpen(): WebSocketService {
         if (this.socket.readyState === this.socket.CLOSED) {
-            console.log("SOCKET IS CLOSED? OPENING NEW ONE");
-            WebSocketService.instance = new WebSocketService("/api/chat");
+            WebSocketService.instance = new WebSocketService("/api/push_events");
         }
         return this;
     }
