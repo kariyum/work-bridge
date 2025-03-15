@@ -52,7 +52,8 @@
 </script>
 
 {#snippet proposalsSnippet(proposals: ProposalGET[], task: TaskGET)}
-	{#each proposals as proposal}
+	{@const sortedProposals = proposals.sort((a, b) => a.created_at.getTime() - b.created_at.getTime())}
+	{#each sortedProposals as proposal}
 		<div class="proposal">
 			<div class="status" data-type={proposal.status}>
 				{snakeToCapital(proposal.status)}
