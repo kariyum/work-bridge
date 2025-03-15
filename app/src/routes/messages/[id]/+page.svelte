@@ -18,21 +18,26 @@
 	let receivers: string[] = $derived.by(() => {
 		data.discussion_id;
 		data.discussions;
-		const maybeDiscussion = data.discussions.find(
+		const maybeDiscussion = data.discussions?.find(
 			(discussion) => discussion.id.toString() == data.discussion_id
 		);
 		return maybeDiscussion?.user_ids.filter((user_id) => user_id != data.user?.email) ?? [];
 	});
 
-	let localMessages: Array<MessagesJsonResponse> = $state([]);
+	let localMessages: Array<MessagesJsonResponse> = $derived.by(() => {
+		data.messages;
+		console.log("UPDATING DATA.MESSAGES?");
+		let result = $state([]);
+		return result;
+	});
 	let messages: Array<MessagesJsonResponse> = $derived(data.messages.concat(localMessages));
 	
 	onMount(() => {
 		if (browser) {
 			webSocketService = WebSocketService.getInstance();
 			unsubscribe = webSocketService.subscribe((msg) => {
-				console.log(msg.from_user_id, data.user?.email, msg.from_user_id != data.user?.email);
-				if (msg.from_user_id != data.user?.email) {
+				console.log(`msg from user id: ${msg.from_user_id}, data.user.email ${data.user?.email}, from_user_id != data.user?.email ${msg.from_user_id != data.user?.email}`);
+				if (parseInt(data.discussion_id) == msg.discussion_id) {
 					localMessages.push(msg);
 				}
 			});
@@ -59,7 +64,11 @@
 		if (message.length == 0 || message.trim().length == 0) {
 			return;
 		}
-		webSocketService.send(toClientMessage(message));
+		try {
+			webSocketService.send(toClientMessage(message));
+		} catch (err) {
+			console.error("Failed to push message upstream...");
+		}
 		if (data.user?.email == undefined) {
 			console.log('Email is undefined');
 			return;
@@ -68,6 +77,7 @@
 			id: Math.random(),
 			from_user_id: data.user?.email,
 			content: message,
+			discussion_id: parseInt(data.discussion_id),
 			created_at: new Date().toISOString()
 		};
 		console.log('SENDING MESSAGE', message);
