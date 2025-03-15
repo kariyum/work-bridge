@@ -30,7 +30,7 @@
 			<div class="date">{formDateSentence(project.created_at)}</div>
 		</div>
 		<div class="title">{project.title}</div>
-		<div class="content">
+		<div class="content rich-content">
 			{@html project.content}
 		</div>
 	</a>
@@ -59,10 +59,6 @@
 		}
 	}
 
-	:global(p) {
-		display: block;
-		min-height: 1rem;
-	}
 	.outer-container {
 		padding: 0.5rem;
 		display: flex;

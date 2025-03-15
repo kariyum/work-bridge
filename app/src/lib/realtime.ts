@@ -50,6 +50,7 @@ export class WebSocketService {
         } else {
             console.error("Websocket is closed. Unable to send a message.");
             // maybe add better error handling, propagation??
+            this.ensureOpen().socket.send(data);
         }
     }
 

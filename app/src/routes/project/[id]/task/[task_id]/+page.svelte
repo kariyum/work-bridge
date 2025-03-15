@@ -1,12 +1,24 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
 	import type { TaskGET } from '$lib/types/task.js';
-	import { fetchIntoResult, snakeToCapital } from '$lib/utils.js';
+	import { snakeToCapital } from '$lib/utils.js';
 	import type { ProposalGET } from './+page.js';
 
 	let { data } = $props();
 	let task = $derived(data.task);
 	let proposals: ProposalGET[] | undefined = $derived(data.proposals);
+	const filterProposalsOnStatus = (proposals: ProposalGET[], status: string) =>
+		proposals?.filter((prop) => prop.status.toLowerCase() === status);
+
+	let proposalsCount = $derived.by(() => {
+		if (proposals) {
+			return {
+				accepted: filterProposalsOnStatus(proposals, 'accepted').length,
+				rejected: filterProposalsOnStatus(proposals, 'rejected').length,
+				pending: filterProposalsOnStatus(proposals, 'pending').length,
+			};
+		}
+	});
 
 	async function patchProposalStatus(
 		projectId: number,
@@ -30,10 +42,49 @@
 			// todo show error banner
 		}
 	}
+
+	let filterStatus: string | undefined = $state(undefined); // enum: all, pending, rejected, accepted
+	let filteredProposals = $derived.by(() => {
+		if (filterStatus && proposals) {
+			return filterProposalsOnStatus(proposals, filterStatus);
+		} else return proposals;
+	});
 </script>
 
+{#snippet proposalsSnippet(proposals: ProposalGET[], task: TaskGET)}
+	{#each proposals as proposal}
+		<div class="proposal">
+			<div class="status" data-type={proposal.status}>
+				{snakeToCapital(proposal.status)}
+			</div>
+			<div>
+				{proposal.user_id}
+			</div>
+			<div>
+				{#if proposal.budget}
+					Requesting: {proposal.budget}
+				{:else}
+					Budget not specified
+				{/if}
+			</div>
+
+			<div class="actions">
+				<a href="/messages?user_id={proposal.user_id}">Open discussion</a>
+				<button
+					class="muted-btn"
+					onclick={() => patchProposalStatus(task.project_id, task.id, proposal.id, 'reject')}
+					>Not Interested</button
+				>
+				<button onclick={() => patchProposalStatus(task.project_id, task.id, proposal.id, 'accept')}
+					>Accept</button
+				>
+			</div>
+		</div>
+	{/each}
+{/snippet}
+
 <div class="container">
-	{#if task && proposals}
+	{#if task && filteredProposals}
 		<div class="task">
 			<h3>
 				#{task.id}
@@ -48,7 +99,7 @@
 			<div>
 				Assigned to: {task.assignee_id}
 			</div>
-			<div class="task-content">
+			<div class="task-content rich-content">
 				Content:
 				{#if task.content.length === 0}
 					<div>No content for this task</div>
@@ -66,42 +117,27 @@
 				{/if}
 			</div>
 		</div>
-		<div>
+		<div class="applications">
 			<h1>Applications</h1>
+			<div class="app-actions">
+				<button data-active={filterStatus == undefined} onclick={() => (filterStatus = undefined)}
+					>All</button
+				>
+				<button data-active={filterStatus == 'pending'} onclick={() => (filterStatus = 'pending')}
+					>{proposalsCount?.pending ?? ''} Pending</button
+				>
+				<button data-active={filterStatus == 'accepted'} onclick={() => (filterStatus = 'accepted')}
+					>{proposalsCount?.accepted ?? ''} Accepted</button
+				>
+				<button data-active={filterStatus == 'rejected'} onclick={() => (filterStatus = 'rejected')}
+					>{proposalsCount?.rejected ?? ''} Rejected</button
+				>
+			</div>
 			<div class="proposals">
-				{#if proposals.length !== 0}
-					{#each proposals as proposal}
-						<div class="proposal">
-							<div class="status" data-type={proposal.status}>
-								{snakeToCapital(proposal.status)}
-							</div>
-							<div>
-								{proposal.user_id}
-							</div>
-							<div>
-								{#if proposal.budget}
-									Requesting: {proposal.budget}
-								{:else}
-									Budget not specified
-								{/if}
-							</div>
-
-							<div class="actions">
-								<a href="/messages?user_id={proposal.user_id}">Open discussion</a>
-								<button
-									class="muted-btn"
-									onclick={() =>
-										patchProposalStatus(task.project_id, task.id, proposal.id, 'reject')}
-									>Not Interested</button
-								>
-								<button
-									onclick={() =>
-										patchProposalStatus(task.project_id, task.id, proposal.id, 'accept')}
-									>Accept</button
-								>
-							</div>
-						</div>
-					{/each}
+				{#if filteredProposals.length !== 0}
+					{@render proposalsSnippet(filteredProposals, task)}
+				{:else if filterStatus}
+					<div>0 {filterStatus} applications</div>
 				{:else}
 					<div>No applications yet!</div>
 				{/if}
@@ -113,6 +149,31 @@
 </div>
 
 <style>
+	.applications {
+		h1 {
+			margin-bottom: 1rem;
+		}
+
+		.app-actions {
+			display: flex;
+			gap: 0.2rem;
+
+			button {
+				background-color: transparent;
+				border: none;
+				padding: 0;
+				padding: 0.1rem 0.6rem 0.1rem 0.6rem;
+			}
+
+			button[data-active='true'] {
+				background-color: var(--selected-color);
+			}
+
+			button[data-active='false'] {
+				color: rgba(var(--font-color), 0.1);
+			}
+		}
+	}
 	.status {
 		margin-bottom: 0.3rem;
 	}
