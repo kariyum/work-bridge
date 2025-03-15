@@ -14,7 +14,7 @@ pub struct RawTaskProposal {
     status: String,
     created_at: DateTime<Utc>,
     skills: Vec<String>,
-    application_submitted: bool,
+    application_submitted: Option<bool>,
 }
 
 pub async fn read_tasks_with_submission_by_project_id(
@@ -22,9 +22,17 @@ pub async fn read_tasks_with_submission_by_project_id(
     user_id: String,
     conn: impl Executor<'_, Database = Postgres>,
 ) -> Result<Vec<RawTaskProposal>, sqlx::Error> {
-    sqlx::query_as::<_, RawTaskProposal>("SELECT tasks.*, proposals.task_id IS NOT NULL AS application_submitted FROM tasks LEFT JOIN proposals ON tasks.id = proposals.task_id AND project_id = $1 AND proposals.user_id = $2;")
-        .bind(project_id)
-        .bind(user_id)
+    sqlx::query_as!(RawTaskProposal,
+        "SELECT \
+            tasks.id, tasks.project_id, tasks.title, tasks.content, tasks.deadline, tasks.assignee_id, tasks.budget, tasks.status, tasks.created_at, tasks.skills, \
+            COALESCE(proposals.task_id IS NOT NULL, False) AS application_submitted \
+        FROM \
+            tasks LEFT JOIN proposals \
+                ON tasks.id = proposals.task_id AND proposals.user_id = $2 \
+        WHERE tasks.project_id = $1;",
+        project_id,
+        user_id
+    )
         .fetch_all(conn).await
 }
 

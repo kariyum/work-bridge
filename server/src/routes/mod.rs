@@ -7,3 +7,4 @@ pub mod comments_handler;
 pub mod proposals_handler;
 pub mod discussions_handler;
 pub mod messages_handler;
+pub mod push_events_handler;
