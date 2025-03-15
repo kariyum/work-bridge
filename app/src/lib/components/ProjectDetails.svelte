@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	import type { Tab } from '$lib/types';
 	import type { ProjectGET } from '$lib/types/project';
-	import { formatDate } from '$lib/utils';
+	import { formatDate, snakeToCapital } from '$lib/utils';
 	import Tabs from './Tabs.svelte';
 	interface props {
 		projectIn: ProjectGET;
@@ -43,7 +43,7 @@
 						{task.title}
 					</h3>
 					<div class="status" data-type={task.status}>
-						{task.status}
+						{snakeToCapital(task.status)}
 					</div>
 					<div>
 						Budget: {task.budget}
