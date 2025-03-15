@@ -38,6 +38,7 @@ export class WebSocketService {
 
     public subscribe(handler: (data: MessagesJsonResponse) => void) {
         this.subscribers.push(handler);
+        console.log("component subscribed", this.subscribers.length);
         return () => {
             console.log("Socket unsubscribed.");
             this.subscribers = this.subscribers.filter((h) => h != handler);

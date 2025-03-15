@@ -22,7 +22,8 @@ export const load = async ({ fetch, url, params, parent }) => {
             }
         }
         return {
-            discussions: discussions as Array<Discussion>
+            discussions: discussions as Array<Discussion>,
+            discussion_id: params.id
         }
     }
     if (response.error?.clientError) {
