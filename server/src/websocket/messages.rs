@@ -1,10 +1,25 @@
-use actix::prelude::{Message, Recipient};
-use serde::{Deserialize, Serialize};
+use crate::repository::proposal::ProposalStatus;
+use crate::websocket::client::Client;
+use actix::prelude::Message;
+use actix::Addr;
+use serde::Serialize;
 use uuid::Uuid;
 
-#[derive(Message, Debug, Serialize, Deserialize)]
+pub type Socket = Addr<Client>;
+
+#[derive(Message, Serialize, Debug)]
 #[rtype(result = "()")]
-pub struct WsMessage {
+pub struct ProposalNotification {
+    pub proposal_status: ProposalStatus,
+    pub sub_id: String,
+    pub proposal_id: i32,
+    pub task_id: i32,
+    pub project_id: i32,
+}
+
+#[derive(Message, Serialize, Debug, Clone)]
+#[rtype(result = "()")]
+pub struct ChatMessage {
     pub discussion_id: i32,
     pub content: String,
     pub sender_id: String,
@@ -16,7 +31,7 @@ pub struct WsMessage {
 #[derive(Message)]
 #[rtype(result = "()")]
 pub struct Connect {
-    pub addr: Recipient<WsMessage>,
+    pub addr: Socket,
     pub lobby_id: Uuid,
     pub self_id: Uuid,
     pub user_id: String,
@@ -26,13 +41,5 @@ pub struct Connect {
 #[rtype(result = "()")]
 pub struct Disconnect {
     pub id: Uuid,
-    pub room_id: Uuid,
-}
-
-#[derive(Message)]
-#[rtype(result = "()")]
-pub struct ClientActorMessage {
-    pub id: Uuid,
-    pub msg: WsMessage,
     pub room_id: Uuid,
 }

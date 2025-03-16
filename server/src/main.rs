@@ -7,7 +7,7 @@ use sqlx::postgres::PgPoolOptions;
 pub mod websocket {
     pub mod lobby;
     pub mod messages;
-    pub mod ws;
+    pub mod client;
 }
 
 pub mod services {

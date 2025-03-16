@@ -1,7 +1,7 @@
 use crate::websocket::lobby::Lobby;
 
 use crate::repository::messages::{insert_message, MessageCreate};
-use crate::websocket::messages::{ClientActorMessage, Connect, Disconnect, WsMessage};
+use crate::websocket::messages::{ChatMessage, Connect, Disconnect};
 use actix::{fut, ActorContext, ActorFutureExt, ContextFutureSpawner, Message, WrapFuture};
 use actix::{Actor, Addr, Running, StreamHandler};
 use actix::{AsyncContext, Handler};
@@ -17,7 +17,7 @@ use uuid::Uuid;
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
 
-pub struct WsConn {
+pub struct Client {
     room: Uuid,
     lobby_addr: Addr<Lobby>,
     hb: Instant,
@@ -41,13 +41,9 @@ struct ClientMessageResponse {
     sender_id: i32,
 }
 
-impl WsConn {
-    pub fn new(
-        lobby: Addr<Lobby>,
-        pgpool: web::Data<PgPool>,
-        user_id: String,
-    ) -> WsConn {
-        WsConn {
+impl Client {
+    pub fn new(lobby: Addr<Lobby>, pgpool: web::Data<PgPool>, user_id: String) -> Client {
+        Client {
             id: Uuid::new_v4(),
             room: Uuid::new_v4(),
             hb: Instant::now(),
@@ -70,19 +66,19 @@ impl WsConn {
     }
 }
 
-impl Actor for WsConn {
+impl Actor for Client {
     type Context = ws::WebsocketContext<Self>;
 
     fn started(&mut self, ctx: &mut Self::Context) {
         // called automatically from the websocket route
-        println!("WsConn is started");
+        println!("Client connected!");
 
         // register heartbeats
         self.hb(ctx);
 
         let addr = ctx.address();
         let connect = Connect {
-            addr: addr.recipient(),
+            addr,
             lobby_id: self.room,
             self_id: self.id,
             user_id: self.user_id.clone(),
@@ -110,7 +106,7 @@ impl Actor for WsConn {
     }
 }
 
-impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsConn {
+impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Client {
     fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
         match msg {
             Ok(ws::Message::Ping(msg)) => {
@@ -137,7 +133,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsConn {
                     let response = ClientMessage {
                         discussion_id: None,
                         content: err.to_string(),
-                        receivers: vec!(),
+                        receivers: vec![],
                     };
                     ctx.text(serde_json::to_string(&response).unwrap());
                     println!(
@@ -149,15 +145,11 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsConn {
                 let client_message = client_message.unwrap();
                 let pool = self.pgpool.clone();
                 let user_id = self.user_id.clone();
-                let client_actor_message = ClientActorMessage {
-                    id: self.id,
-                    msg: WsMessage {
-                        discussion_id: client_message.discussion_id.unwrap(),
-                        content: client_message.content.clone(),
-                        sender_id: user_id.clone(),
-                        receivers: client_message.receivers.clone(),
-                    },
-                    room_id: self.room,
+                let client_actor_message = ChatMessage {
+                    discussion_id: client_message.discussion_id.unwrap(),
+                    content: client_message.content.clone(),
+                    sender_id: user_id.clone(),
+                    receivers: client_message.receivers.clone(),
                 };
                 async move {
                     let message_create = MessageCreate {
@@ -175,10 +167,10 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsConn {
     }
 }
 
-impl Handler<WsMessage> for WsConn {
+impl Handler<ChatMessage> for Client {
     type Result = ();
 
-    fn handle(&mut self, msg: WsMessage, ctx: &mut Self::Context) {
+    fn handle(&mut self, msg: ChatMessage, ctx: &mut Self::Context) {
         // messages coming from Lobby actor are handled here
         println!("Sending message to client: {:?}", msg);
         ctx.text(serde_json::to_string(&msg).unwrap());
