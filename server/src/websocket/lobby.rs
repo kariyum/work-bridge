@@ -1,9 +1,7 @@
-use crate::websocket::messages::{ClientActorMessage, Connect, Disconnect, WsMessage};
-use actix::prelude::{Actor, Context, Handler, Recipient};
+use crate::websocket::messages::{ChatMessage, Connect, Disconnect, Socket};
+use actix::prelude::{Actor, Context, Handler};
 use std::collections::{HashMap, HashSet};
 use uuid::Uuid;
-
-type Socket = Recipient<WsMessage>;
 
 pub struct Lobby {
     sessions: HashMap<Uuid, Socket>,      // actor id to actor address
@@ -18,27 +16,6 @@ impl Default for Lobby {
             rooms: HashMap::new(),
             connections: HashMap::new(),
         }
-    }
-}
-
-impl Lobby {
-    /// This function receives a message from a websocket
-    /// and broadcasts it to the websocket end
-    fn send_message(&self, message: &WsMessage) {
-        message.receivers.iter().for_each(|id| {
-            println!("In lobby sending message to {:?}", id);
-            if let Some(mailbox) = self.connections.get(id) {
-                let msg = WsMessage {
-                    discussion_id: message.discussion_id,
-                    content: message.content.clone(),
-                    sender_id: message.sender_id.clone(),
-                    receivers: message.receivers.clone(),
-                };
-                let _ = mailbox.do_send(msg);
-            } else {
-                println!("Attempted to send message but couldn't find user id.");
-            }
-        });
     }
 }
 
@@ -78,8 +55,7 @@ impl Handler<Connect> for Lobby {
 
     fn handle(&mut self, msg: Connect, _: &mut Context<Self>) -> Self::Result {
         // println!("Connect message handle {:}", &msg);
-        self.connections
-            .insert(msg.user_id, msg.addr);
+        self.connections.insert(msg.user_id, msg.addr);
 
         self.rooms
             .entry(msg.lobby_id)
@@ -93,7 +69,7 @@ impl Handler<Connect> for Lobby {
         //     .filter(|conn_id| *conn_id.to_owned() != msg.self_id)
         //     .for_each(|conn_id| {
         //         let wsMessage = WsMessage {
-        //             disucssion_id: -1,
+        //             discussion_id: -1,
         //             content: format!("{} just joined!", msg.self_id),
         //             sender_id: msg.self_id.to_string(),
         //         };
@@ -106,14 +82,18 @@ impl Handler<Connect> for Lobby {
     }
 }
 
-impl Handler<ClientActorMessage> for Lobby {
+impl Handler<ChatMessage> for Lobby {
     type Result = ();
 
-    fn handle(&mut self, msg: ClientActorMessage, _ctx: &mut Context<Self>) -> Self::Result {
+    fn handle(&mut self, msg: ChatMessage, _ctx: &mut Context<Self>) -> Self::Result {
         // println!("Client ActorMessage handle {:}", &msg);
-        msg.msg
-            .receivers
-            .iter()
-            .for_each(|_| self.send_message(&msg.msg))
+        msg.receivers.iter().for_each(|id| {
+            println!("In lobby sending message to {:?}", id);
+            if let Some(mailbox) = self.connections.get(id) {
+                let _ = mailbox.do_send(msg.clone());
+            } else {
+                println!("Attempted to send message but couldn't find user id.");
+            }
+        })
     }
 }
