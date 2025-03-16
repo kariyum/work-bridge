@@ -8,3 +8,4 @@ pub mod tasks_proposals;
 pub mod proposal;
 pub mod discussions;
 pub mod messages;
+pub mod notifications;

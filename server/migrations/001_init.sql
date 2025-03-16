@@ -77,12 +77,14 @@ CREATE TABLE
         FOREIGN KEY (discussion_id) REFERENCES discussions (id)
     ); -- ordered by created_at most recent first
 
+CREATE TYPE notification_type AS ENUM ('proposal', 'message');
+
 CREATE TABLE
     IF NOT EXISTS notifications (
         id SERIAL PRIMARY KEY,
         user_id VARCHAR(255) NOT NULL,
-        content VARCHAR(255) NOT NULL,
-        type VARCHAR(255) NOT NULL, -- enum [message, proposal]
+        content JSONB NOT NULL,
+        type notification_type NOT NULL,
         created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users (email)
     );

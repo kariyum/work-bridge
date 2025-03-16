@@ -53,6 +53,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::discussions_handler::routes())
             .service(routes::messages_handler::routes())
             .service(routes::push_events_handler::routes())
+            .service(routes::notifications_handler::routes())
     })
     .bind(("127.0.0.1", 8080))?
     .run()
