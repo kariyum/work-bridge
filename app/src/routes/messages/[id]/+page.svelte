@@ -34,7 +34,7 @@
 	onMount(() => {
 		if (browser) {
 			webSocketService = WebSocketService.getInstance();
-			unsubscribe = webSocketService.subscribe((msg) => {
+			unsubscribe = webSocketService.subscribeToChatMessages((msg) => {
 				console.log(`msg from user id: ${msg.from_user_id}, data.user.email ${data.user?.email}, from_user_id != data.user?.email ${msg.from_user_id != data.user?.email}`);
 				if (parseInt(data.discussion_id) == msg.discussion_id) {
 					localMessages.push(msg);

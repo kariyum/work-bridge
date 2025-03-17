@@ -1,13 +1,18 @@
+use crate::repository::notifications::{insert_notification, CreateNotification, NotificationType};
 use crate::repository::proposal::{
-    insert_proposal, read_proposals, update_proposal_status, CreateProposal, ProposalStatus,
+    insert_proposal, read_proposal, read_proposals, update_proposal_status, CreateProposal,
+    ProposalStatus,
 };
 use crate::repository::tasks::{read_task_creator_by_id, TaskCreator};
 use crate::services::token::Claims;
+use crate::websocket::lobby::Lobby;
+use actix::Addr;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::web::{Json, Path};
 use actix_web::{web, HttpResponse, Responder};
 use bigdecimal::BigDecimal;
 use serde::{Deserialize, Serialize};
+use serde_json::json;
 use sqlx::PgPool;
 
 #[derive(Serialize, sqlx::FromRow)]
@@ -50,8 +55,8 @@ pub async fn create_proposal(
         .expect("Failed to fetch task creator by id");
 
     if let Some(TaskCreator {
-                    user_id: project_creator,
-                }) = task_creator
+        user_id: project_creator,
+    }) = task_creator
     {
         let exists = sqlx::query("SELECT * FROM discussions where user_ids = $1")
             .bind(vec![&claims.sub, &project_creator])
@@ -137,6 +142,7 @@ enum ProposalActions {
 
 async fn update_proposal_status_handler(
     _: Claims,
+    lobby: web::Data<Addr<Lobby>>,
     path: Path<i32>,
     Json(ProposalAction { action }): Json<ProposalAction>,
     pgpool: web::Data<PgPool>,
@@ -147,9 +153,27 @@ async fn update_proposal_status_handler(
         ProposalActions::Reject => ProposalStatus::Rejected,
         ProposalActions::Cancel => ProposalStatus::Cancelled,
     };
-    update_proposal_status(proposal_id, target_status, pgpool.as_ref())
+    update_proposal_status(proposal_id, target_status.clone(), pgpool.as_ref())
         .await
         .expect("Failed to update Proposal status");
+    let proposal = read_proposal(proposal_id, pgpool.as_ref())
+        .await
+        .expect("Failed to read proposal");
+    if let Some(proposal) = proposal {
+        let create_notification = CreateNotification {
+            user_id: proposal.user_id.clone(),
+            content: json!({
+                "proposal_id": proposal.id,
+                "proposal_status": target_status
+            }),
+            notification_type: NotificationType::Proposal,
+        };
+        let inserted_notification = insert_notification(create_notification.clone(), pgpool.as_ref())
+            .await
+            .expect("Failed to insert proposal notification");
+
+        lobby.do_send(inserted_notification);
+    }
 
     HttpResponse::Ok().finish()
 }

@@ -34,7 +34,7 @@
 	onMount(() => {
 		if (browser) {
 			const websocketInstance = WebSocketService.getInstance();
-			unsubscribe = websocketInstance.subscribe((message: MessagesJsonResponse) => {
+			unsubscribe = websocketInstance.subscribeToChatMessages((message: MessagesJsonResponse) => {
 				if (
 					!selectedDiscussion ||
 					(selectedDiscussion && message.discussion_id != parseInt(selectedDiscussion))

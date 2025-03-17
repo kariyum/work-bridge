@@ -5,14 +5,28 @@ export interface User {
     email: string,
     role: string
 }
+export type NotificationType = "message" | "proposal";
 
-export type MessagesJsonResponse = {
+export interface BaseNotification {
+    notification_type: NotificationType,
+    created_at: Date
+}
+
+export interface MessagesJsonResponse extends BaseNotification {
     id: number,
     from_user_id: string,
     content: string,
-    created_at: string,
-    discussion_id: number
+    discussion_id: number,
 };
+
+export interface ProposalNotification extends BaseNotification {
+    id: number,
+    content: {
+        proposal_id: string,
+        proposal_status: string,
+    },
+    user_id: string,
+}
 
 export type ClientMessage = {
     discussion_id: number,

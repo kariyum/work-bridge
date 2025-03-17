@@ -1,23 +1,41 @@
-import type { MessagesJsonResponse } from "./types";
+import type { MessagesJsonResponse, ProposalNotification, NotificationType } from "./types";
 
 export class WebSocketService {
     private static instance: WebSocketService;
     private socket: WebSocket;
-    private subscribers: ((data: MessagesJsonResponse) => void)[] = [];
-    
+    private onMessage: ((data: MessagesJsonResponse) => void)[] = [];
+    private onProposalNotificationHandlers: ((data: ProposalNotification) => void)[] = [];
+
     private constructor(url: string) {
         this.socket = new WebSocket(url);
         this.socket.onmessage = (event) => {
-			const wsMessage = JSON.parse(event.data);
-			const message: MessagesJsonResponse = {
-				id: Math.random(),
-				from_user_id: wsMessage.sender_id,
-				content: wsMessage.content,
-                discussion_id: wsMessage.discussion_id,
-				created_at: new Date().toISOString()
-			};
-            this.subscribers.forEach(handler => handler(message))
-		};
+            const wsMessage = JSON.parse(event.data);
+            const notificationType: NotificationType = wsMessage.notification_type;
+
+            switch (notificationType) {
+                case "message":
+                    const message: MessagesJsonResponse = {
+                        id: Math.random(),
+                        from_user_id: wsMessage.sender_id,
+                        content: wsMessage.content,
+                        discussion_id: wsMessage.discussion_id,
+                        created_at: new Date(),
+                        notification_type: wsMessage.notification_type
+                    };
+                    this.onMessage.forEach(handler => handler(message))
+                    break;
+
+                case "proposal":
+                    const proposalNotification: ProposalNotification = {
+                        ...wsMessage,
+                        created_at: new Date(wsMessage.created_at)
+                    };
+                    this.onProposalNotificationHandlers.forEach(handler => handler(proposalNotification));
+                default:
+                    break;
+            }
+
+        };
         console.log("Socket?", this.socket.readyState);
         this.socket.onopen = (event: Event) => {
             console.log("Socket is open", event);
@@ -36,13 +54,20 @@ export class WebSocketService {
         return WebSocketService.instance.ensureOpen();
     }
 
-    public subscribe(handler: (data: MessagesJsonResponse) => void) {
-        this.subscribers.push(handler);
-        console.log("component subscribed", this.subscribers.length);
+    public subscribeToChatMessages(handler: (data: MessagesJsonResponse) => void) {
+        this.onMessage.push(handler);
+        console.log("component subscribed", this.onMessage.length);
         return () => {
             console.log("Socket unsubscribed.");
-            this.subscribers = this.subscribers.filter((h) => h != handler);
+            this.onMessage = this.onMessage.filter((h) => h != handler);
         };
+    }
+
+    public subscribeToProposalNotifications(handler: (data: ProposalNotification) => void) {
+        this.onProposalNotificationHandlers.push(handler)
+        return () => {
+            this.onProposalNotificationHandlers = this.onProposalNotificationHandlers.filter((h) => h != handler);
+        }
     }
 
     public send(data: string): void {

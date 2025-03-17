@@ -2,6 +2,7 @@ use crate::websocket::messages::{ChatMessage, Connect, Disconnect, Socket};
 use actix::prelude::{Actor, Context, Handler};
 use std::collections::{HashMap, HashSet};
 use uuid::Uuid;
+use crate::repository::notifications::{RawNotification};
 
 pub struct Lobby {
     sessions: HashMap<Uuid, Socket>,      // actor id to actor address
@@ -95,5 +96,15 @@ impl Handler<ChatMessage> for Lobby {
                 println!("Attempted to send message but couldn't find user id.");
             }
         })
+    }
+}
+
+impl Handler<RawNotification> for Lobby {
+    type Result = ();
+
+    fn handle(&mut self, create_notification: RawNotification, _ctx: &mut Context<Self>) {
+        if let Some(mailbox) = self.connections.get(&create_notification.user_id) {
+            mailbox.do_send(create_notification)
+        }
     }
 }
