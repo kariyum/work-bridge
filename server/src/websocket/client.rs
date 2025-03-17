@@ -13,6 +13,7 @@ use serde_json;
 use sqlx::PgPool;
 use std::time::{Duration, Instant};
 use uuid::Uuid;
+use crate::repository::notifications::{NotificationType, RawNotification};
 
 const HEARTBEAT_INTERVAL: Duration = Duration::from_secs(5);
 const CLIENT_TIMEOUT: Duration = Duration::from_secs(10);
@@ -150,6 +151,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Client {
                     content: client_message.content.clone(),
                     sender_id: user_id.clone(),
                     receivers: client_message.receivers.clone(),
+                    notification_type: NotificationType::Message
                 };
                 async move {
                     let message_create = MessageCreate {
@@ -174,5 +176,13 @@ impl Handler<ChatMessage> for Client {
         // messages coming from Lobby actor are handled here
         println!("Sending message to client: {:?}", msg);
         ctx.text(serde_json::to_string(&msg).unwrap());
+    }
+}
+
+impl Handler<RawNotification> for Client {
+    type Result = ();
+
+    fn handle(&mut self, msg: RawNotification, ctx: &mut Self::Context) -> Self::Result {
+       ctx.text(serde_json::to_string(&msg).unwrap())
     }
 }

@@ -4,6 +4,7 @@ use actix::prelude::Message;
 use actix::Addr;
 use serde::Serialize;
 use uuid::Uuid;
+use crate::repository::notifications::NotificationType;
 
 pub type Socket = Addr<Client>;
 
@@ -26,6 +27,7 @@ pub struct ChatMessage {
     // This does not have to be cloned when sent to the Client websocket actor
     // because it doesn't need to know about other receivers maybe?
     pub receivers: Vec<String>,
+    pub notification_type: NotificationType
 }
 
 #[derive(Message)]

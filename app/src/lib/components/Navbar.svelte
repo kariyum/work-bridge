@@ -1,12 +1,14 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { WebSocketService } from '$lib/realtime';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import type { User } from '$lib/types';
+	import type { BaseNotification, User } from '$lib/types';
 	import ThemeToggler from './ThemeToggler.svelte';
+	import NotificationMenu from './NotificationMenu.svelte';
+	import Notifications from './Notifications.svelte';
 
-	let { user }: { user: User } = $props();
+	let { user, notifications }: { user: User, notifications: BaseNotification[] } = $props();
 	let webSocketService: WebSocketService;
 
 	onMount(() => {
@@ -51,6 +53,8 @@
 		</h1>
 		<nav>
 			<ul>
+				<button onclick={() => invalidateAll()} >Refresh</button>
+
 				{#if user.role === 'recruiter'}
 					<li><a href="/project">Create a project</a></li>
 				{/if}
@@ -58,9 +62,7 @@
 				<li class="notifications">
 					<button> Notifications </button>
 					<div class="notification-container" class:showNotifications bind:this={dropdownModal}>
-						<h1>Notifications</h1>
-						<div>Notification 1</div>
-						<div>Notification 2</div>
+						<NotificationMenu notifications={notifications}/>
 					</div>
 				</li>
 				<li><a href="/settings">Settings</a></li>
@@ -118,6 +120,10 @@
 		display: block !important;
 	}
 
+	.notifications {
+		position: relative;
+	}
+
 	.notification-container {
 		display: none;
 		position: absolute;
@@ -125,8 +131,11 @@
 		border-radius: 5px;
 		padding: 1rem;
 		z-index: 1;
-		width: 15rem;
-		transform: translateX(-35%);
+		width: 25rem;
+		max-height: 30rem;
+		overflow-y: scroll;
+		top: 2rem;
+		transform: translateX(-20%);
 		background-color: var(--background-color);
 	}
 

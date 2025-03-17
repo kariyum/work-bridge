@@ -1,9 +1,9 @@
 use chrono::{DateTime, Utc};
-use serde::{Serialize};
+use serde::Serialize;
 use sqlx::types::BigDecimal;
 use sqlx::{Executor, Postgres};
 
-#[derive(Serialize, sqlx::Type, Debug)]
+#[derive(Serialize, sqlx::Type, Debug, Clone)]
 #[serde(rename_all(serialize = "snake_case"))]
 #[sqlx(type_name = "proposal_status", rename_all = "lowercase")]
 pub enum ProposalStatus {
@@ -15,13 +15,13 @@ pub enum ProposalStatus {
 
 #[derive(Serialize, Debug)]
 pub struct RawProposal {
-    id: i32,
-    user_id: String,
-    task_id: i32,
-    status: ProposalStatus,
-    budget: Option<BigDecimal>,
-    content: Option<String>,
-    created_at: DateTime<Utc>,
+    pub id: i32,
+    pub user_id: String,
+    pub task_id: i32,
+    pub status: ProposalStatus,
+    pub budget: Option<BigDecimal>,
+    pub content: Option<String>,
+    pub created_at: DateTime<Utc>,
 }
 
 pub struct CreateProposal {
@@ -45,6 +45,17 @@ pub async fn read_proposals(
         .await
 }
 
+pub async fn read_proposal(
+    proposal_id: i32,
+    conn: impl Executor<'_, Database = Postgres>,
+) -> Result<Option<RawProposal>, sqlx::Error> {
+    sqlx::query_as!(
+        RawProposal,
+        "SELECT id, user_id, task_id, status as \"status: ProposalStatus\", budget, content, created_at FROM proposals WHERE id = $1",
+        proposal_id
+    ).fetch_optional(conn).await
+}
+
 pub async fn insert_proposal(
     insert_proposal: CreateProposal,
     conn: impl Executor<'_, Database = Postgres>,
@@ -56,9 +67,7 @@ pub async fn insert_proposal(
         insert_proposal.status as ProposalStatus,
         insert_proposal.budget,
         insert_proposal.content
-    ).execute(conn).await?;
-
-    Ok(())
+    ).execute(conn).await.map(|_| ())
 }
 
 pub async fn update_proposal_status(
@@ -72,9 +81,8 @@ pub async fn update_proposal_status(
         proposal_id
     )
     .execute(conn)
-    .await?;
-
-    Ok(())
+    .await
+    .map(|_| ())
 }
 
 #[cfg(test)]
