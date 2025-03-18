@@ -3,19 +3,57 @@
 	import { WebSocketService } from '$lib/realtime';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import type { BaseNotification, User } from '$lib/types';
+	import type { BaseNotification, ProposalNotification, User } from '$lib/types';
 	import ThemeToggler from './ThemeToggler.svelte';
 	import NotificationMenu from './NotificationMenu.svelte';
 	import Notifications from './Notifications.svelte';
+	import Toast from './Toast.svelte';
 
-	let { user, notifications }: { user: User, notifications: BaseNotification[] } = $props();
+	let { user, notifications }: { user: User; notifications: BaseNotification[] } = $props();
 	let webSocketService: WebSocketService;
 
 	onMount(() => {
 		if (browser) {
 			webSocketService = WebSocketService.getInstance();
+			webSocketService.subscribeToProposalNotifications((notif) => {
+				const id = Date.now();
+				toastsQueue.push({
+					id,
+					notification: notif,
+					remove: () => {
+						toastsQueue = toastsQueue.filter((p) => p.id !== id);
+					}
+				});
+			});
 		}
 	});
+
+	export interface ToastInterface {
+		id: number;
+		notification: BaseNotification;
+		remove: () => void;
+	}
+
+	let toastsQueue: ToastInterface[] = $state([]);
+	function showToast() {
+		const id = Date.now();
+		toastsQueue.push({
+			id,
+			notification: {
+				notification_type: 'proposal',
+				content: {
+					proposal_id: 'Proposal #1',
+					proposal_status: 'approved'
+				},
+				created_at: new Date(Date.now()),
+				id: 2013,
+				user_id: 'this user'
+			} as ProposalNotification,
+			remove: () => {
+				toastsQueue = toastsQueue.filter((p) => p.id !== id);
+			}
+		});
+	}
 
 	async function logout() {
 		const response = await fetch('/api/auth/logout');
@@ -53,7 +91,8 @@
 		</h1>
 		<nav>
 			<ul>
-				<button onclick={() => invalidateAll()} >Refresh</button>
+				<button onclick={() => showToast()}>Show Toast</button>
+				<button onclick={() => invalidateAll()}>Refresh</button>
 
 				{#if user.role === 'recruiter'}
 					<li><a href="/project">Create a project</a></li>
@@ -62,7 +101,7 @@
 				<li class="notifications">
 					<button> Notifications </button>
 					<div class="notification-container" class:showNotifications bind:this={dropdownModal}>
-						<NotificationMenu notifications={notifications}/>
+						<NotificationMenu {notifications} />
 					</div>
 				</li>
 				<li><a href="/settings">Settings</a></li>
@@ -77,6 +116,8 @@
 		</nav>
 	</div>
 </section>
+
+<Toast bind:toasts={toastsQueue} />
 
 <style>
 	:global(.theme-icons) {
@@ -133,7 +174,7 @@
 		z-index: 1;
 		width: 25rem;
 		max-height: 30rem;
-		overflow-y: scroll;
+		overflow-y: auto;
 		top: 2rem;
 		transform: translateX(-20%);
 		background-color: var(--background-color);
