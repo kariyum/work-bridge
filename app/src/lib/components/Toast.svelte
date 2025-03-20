@@ -3,11 +3,11 @@
 	import type { ToastInterface } from './Navbar.svelte';
 	import { untrack } from 'svelte';
 	import type { ProposalNotification } from '$lib/types';
+	import { flip } from 'svelte/animate';
 
-	const TIMEOUT = 4000;
-	const PAUSE_BETWEEN_TOASTS = 1000;
+	const TIMEOUT = 3000;
+	const PAUSE_BETWEEN_TOASTS = 0;
 	let { toasts = $bindable([]) }: { toasts: ToastInterface[] } = $props();
-	let currentToast: ToastInterface | undefined = $state();
 	let loopId: number | undefined = undefined;
 
 	let timer = $state(0);
@@ -15,39 +15,21 @@
 	let setIntervalId: number | undefined = undefined;
 
 	function renderToast() {
-		if (!currentToast && toasts.length > 0) {
+		if (toasts.length > 0) {
 			console.log('IN f()');
 			show = true;
-			currentToast = toasts.at(0);
+			const currentToast = toasts.at(-1);
 			timer = TIMEOUT / 1000;
-			clearInterval(setIntervalId);
-			setIntervalId = setInterval(() => {
-				timer -= 1;
-				if (timer < 0) {
-					timer = 0;
-				}
-			}, 1000);
 
 			setTimeout(() => {
 				show = false;
-				setTimeout(() => {
-					currentToast?.remove();
-					currentToast = undefined;
-					console.log('Removed', currentToast);
-					if (toasts.length > 0) {
-						console.log('Called again');
-						show = false;
-						console.log('IN SET TIMEOUT???');
-						renderToast();
-					}
-				}, PAUSE_BETWEEN_TOASTS);
+				currentToast?.remove();
 			}, TIMEOUT);
 		}
-		console.log('OUT OF f()');
 	}
 
 	$effect(() => {
-		toasts.at(0); // trigger effect run
+		toasts.length; // trigger effect run
 		renderToast();
 	});
 </script>
@@ -58,27 +40,99 @@
 	</div>
 {/snippet}
 
-{#if currentToast && show}
-	<div transition:fly={{ y: 20, duration: 1000 }} class="toast">
-		<!-- TIMER = {timer} -->
-		{#if currentToast.notification.notification_type === 'proposal'}
-			{@render renderProposalNotificationToast(currentToast.notification as ProposalNotification)}
-		{:else}
-			<div>
-				Which notification to render?
-			</div>
-		{/if}
-	</div>
-{/if}
+<div class="container" style:--toasts={toasts.length}>
+	{#each toasts as toast, i (toast.id)}
+		<div
+			class="toast toast-style"
+			in:fly={{ duration: 400, y: '60', opacity: 0.9 }}
+			out:fly={{ duration: 400, y: '20' }}
+			style:--n={toasts.length - i}
+		>
+			<!-- TIMER = {timer} -->
+			{#if toast.notification.notification_type === 'proposal'}
+				{@render renderProposalNotificationToast(toast.notification as ProposalNotification)}
+			{:else}
+				<div>Which notification to render?</div>
+			{/if}
+		</div>
+	{/each}
+</div>
 
 <style>
-	.toast {
-		position: absolute;
-		left: 50%;
-		transform: translateX(-50%);
-		bottom: 1.5rem;
-		background-color: var(--blue);
-		padding: 1rem;
-		border-radius: 5px;
+	.container {
+		--gap: 0.75rem;
+		--hover-offset: 1rem;
+		--toast-height: 5rem;
+		--hidden-offset: 0.75rem;
+
+		--hidden-toasts: calc(var(--toasts) - 1);
+
+		position: fixed;
+		right: 0rem;
+		bottom: 0rem;
+		margin: 1rem;
+
+		display: flex;
+		flex-direction: column-reverse;
+
+		&:hover {
+			height: calc(var(--toast-height) * var(--toasts));
+		}
+
+		&:hover .toast {
+			scale: 1 !important;
+			opacity: 1;
+			translate: 0 calc(-1rem + -1 * (var(--n) - 1) * (var(--toast-height) + var(--gap))) !important;
+
+			&:nth-last-child(n + 4) {
+				visibility: visible;
+			}
+
+		}
+
+		.toast {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			
+			height: var(--toast-height);
+			width: 20rem;
+			
+			transform-origin: 50% 0%;
+			transition: all 350ms ease;
+
+			&:nth-last-child(-n + 3) {
+				z-index: 2;
+				scale: 0.95;
+				translate: 0 calc(-2 * var(--hidden-offset));
+			}
+
+			&:nth-last-child(-n + 2) {
+				z-index: 3;
+				scale: 0.975;
+				translate: 0 calc(-1 * var(--hidden-offset));
+			}
+
+			&:nth-last-child(-n + 1) {
+				z-index: 4;
+				scale: 1;
+				translate: 0;
+			}
+
+			&:nth-last-child(n + 4) {
+				translate: 0 calc(-1 * var(--hidden-offset));
+				scale: 0.95;
+				visibility: hidden;
+			}
+		}
+
+		.toast-style {
+			pointer-events: auto;
+
+			background-color: var(--toast-bg);
+			padding: 1rem;
+			border-radius: 10px;
+			box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+		}
 	}
 </style>
