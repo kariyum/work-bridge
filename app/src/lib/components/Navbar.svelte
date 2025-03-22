@@ -6,16 +6,20 @@
 	import type { BaseNotification, ProposalNotification, User } from '$lib/types';
 	import ThemeToggler from './ThemeToggler.svelte';
 	import NotificationMenu from './NotificationMenu.svelte';
-	import Notifications from './Notifications.svelte';
 	import Toast from './Toast.svelte';
 
 	let { user, notifications }: { user: User; notifications: BaseNotification[] } = $props();
 	let webSocketService: WebSocketService;
+	let realtimeNotifications: BaseNotification[] = $state([]);
+	let finalNotifications = $derived.by(() => {
+		return realtimeNotifications.concat(notifications);
+	})
 
 	onMount(() => {
 		if (browser) {
 			webSocketService = WebSocketService.getInstance();
 			webSocketService.subscribeToProposalNotifications((notif) => {
+				realtimeNotifications = [notif, ...realtimeNotifications];
 				const id = Date.now();
 				toastsQueue.push({
 					id,
@@ -65,7 +69,6 @@
 	}
 
 	let showNotifications = $state(false);
-	let dropdownModal: HTMLDivElement;
 
 	function notificationClickHandler(event: MouseEvent) {
 		if ((event.target as Element)?.closest('.notification-container')) {
@@ -100,9 +103,11 @@
 				<li><a href="/messages">Discussions</a></li>
 				<li class="notifications">
 					<button> Notifications </button>
-					<div class="notification-container" class:showNotifications bind:this={dropdownModal}>
-						<NotificationMenu {notifications} />
-					</div>
+					{#if showNotifications}
+						<div class="notification-container">
+							<NotificationMenu notifications={finalNotifications} />
+						</div>
+					{/if}
 				</li>
 				<li><a href="/settings">Settings</a></li>
 				<li><a href="/feature-request">Feature Requests</a></li>
@@ -166,7 +171,7 @@
 	}
 
 	.notification-container {
-		display: none;
+		display: block;
 		position: absolute;
 		border: 2px solid var(--border);
 		border-radius: 5px;

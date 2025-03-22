@@ -2,7 +2,7 @@
 	import { fly } from 'svelte/transition';
 	import type { ToastInterface } from './Navbar.svelte';
 	import { untrack } from 'svelte';
-	import type { ProposalNotification } from '$lib/types';
+	import { ProposalNotification } from '$lib/types';
 	import Progress from './Progress.svelte';
 	import { X } from 'lucide-svelte';
 	import { SvelteMap } from 'svelte/reactivity';
@@ -62,11 +62,11 @@
 </script>
 
 {#snippet renderProposalNotificationToast(notif: ProposalNotification, toast: ToastInterface)}
-	<a href="/messages" onclick={() => removeToast(toast)} class="proposal-notif">
+	<a href={ProposalNotification.getHref(notif)} onclick={() => removeToast(toast)} class="proposal-notif">
 		<div class="link-container">
 			<div class="content-container">
 				<p>
-					Your application #{notif.content.proposal_id} has been {notif.content.proposal_status}
+					{ProposalNotification.getContent(notif)}
 				</p>
 				<button
 					class="close-btn"
@@ -226,7 +226,7 @@
 
 	.content-container {
 		display: flex;
-		justify-content: start;
+		justify-content: space-between;
 		gap: 0.2rem;
 	}
 
