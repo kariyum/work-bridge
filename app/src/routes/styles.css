@@ -77,7 +77,8 @@ textarea {
     --hover-color: #d1deeb;
     --input-bg: #f7f7f7;
     --active-button: #d1d1d1;
-
+    --toast-bg: #eef2f7;
+    
     --primary: #4f46e5;
     --bright-text: #f9fafb;
     --dark-text: #111827;
@@ -98,7 +99,6 @@ textarea {
     --violet-bg: #e3dbfa;
     --beige-bg: #f6e2d4;
     --green-bg: rgb(184, 218, 184);
-    --toast-bg: #1E1E1E;
 }
 
 .dark {
