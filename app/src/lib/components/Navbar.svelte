@@ -34,7 +34,6 @@
 		remove: () => void;
 	}
 
-
 	let toastsQueue: ToastInterface[] = $state([]);
 	function showToast() {
 		const id = Date.now();

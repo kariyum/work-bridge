@@ -1,7 +1,5 @@
 <div class="messages-col">
-	<div class="messages">
-		<h1>Select a discussion please! 😊</h1>
-	</div>
+	<h1>Select a discussion please! 😊</h1>
 </div>
 
 <style>
@@ -13,18 +11,12 @@
 		transform: translate(-50%, -50%);
 		width: fit-content;
 	}
-	
+
 	.messages-col {
 		flex: 3;
 		display: flex;
 		flex-direction: column;
+		z-index: -1;
 	}
 
-	.messages {
-		flex-grow: 1;
-		overflow-y: auto;
-		padding: 1rem;
-		border-left: none;
-		/* border-radius: 5px; */
-	}
 </style>
