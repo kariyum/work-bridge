@@ -28,6 +28,16 @@ export interface ProposalNotification extends BaseNotification {
     user_id: string,
 }
 
+export class ProposalNotification {
+    static getHref(notif: ProposalNotification) {
+        return `${notif.content.proposal_id}`;
+    }
+
+    static getContent(notif: ProposalNotification) {
+        return `Your proposal ${notif.content.proposal_id} was ${notif.content.proposal_status}`;
+    }
+}
+
 export type ClientMessage = {
     discussion_id: number,
     content: string,

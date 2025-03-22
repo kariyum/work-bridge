@@ -27,7 +27,7 @@ export async function load({ url, fetch }) {
         const notifications = notificationsResponse.getOrThrow().map(processNotifications);
         return {
             user: user,
-            notifications: notifications
+            notifications: notifications.toSorted((a, b) => b.created_at.getTime() - a.created_at.getTime())
         }
     }
 
