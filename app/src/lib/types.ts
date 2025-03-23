@@ -7,7 +7,7 @@ export interface User {
 }
 export type NotificationType = "message" | "proposal";
 
-export type ProposalStatus = "rejected" | "approved" | "pending";
+export type ProposalStatus = "declined" | "approved" | "pending" | "cancelled";
 
 export interface BaseNotification {
     notification_type: NotificationType,

@@ -9,7 +9,7 @@ use sqlx::{Executor, Postgres};
 pub enum ProposalStatus {
     Pending,
     Accepted,
-    Rejected,
+    Declined,
     Cancelled,
 }
 

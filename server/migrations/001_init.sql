@@ -89,7 +89,7 @@ CREATE TABLE
         FOREIGN KEY (user_id) REFERENCES users (email)
     );
 
-CREATE TYPE proposal_status AS ENUM ('pending', 'accepted', 'rejected', 'cancelled');
+CREATE TYPE proposal_status AS ENUM ('pending', 'accepted', 'declined', 'cancelled');
 
 CREATE TABLE
     IF NOT EXISTS proposals (
