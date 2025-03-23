@@ -133,7 +133,7 @@ struct ProposalAction {
 #[serde(rename_all = "snake_case")]
 enum ProposalActions {
     Accept,
-    Reject,
+    Decline,
     Cancel,
 }
 
@@ -147,7 +147,7 @@ async fn update_proposal_status_handler(
     let proposal_id = path.into_inner();
     let target_status = match action {
         ProposalActions::Accept => ProposalStatus::Accepted,
-        ProposalActions::Reject => ProposalStatus::Rejected,
+        ProposalActions::Decline => ProposalStatus::Declined,
         ProposalActions::Cancel => ProposalStatus::Cancelled,
     };
     update_proposal_status(proposal_id, target_status.clone(), pgpool.as_ref())

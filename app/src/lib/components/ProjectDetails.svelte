@@ -25,7 +25,6 @@
 			body: JSON.stringify(payload)
 		});
 		if (response.ok) {
-			console.log('OK');
 			await invalidate(`/api/projects/${projectIn.id}`);
 		} else {
 			alert('Failed for submit to task!');
@@ -70,10 +69,10 @@
 					</div>
 
 					{#if role === 'freelancer'}
-						{#if task.proposal_status && task.proposal_status != 'pending'}
-							<button class="applied-btn" disabled>Application {snakeToCapital(task.proposal_status)}</button>
-						{:else if task.proposal_status}
-							<button class="applied-btn" disabled>{snakeToCapital(task.proposal_status)} application</button>
+						{#if task.proposal_status}
+							<div class="proposal-status">
+								<p>Application {snakeToCapital(task.proposal_status)}</p>
+							</div>
 						{:else}
 							<button class="apply-btn" onclick={() => submitApplication(task.id)}
 								>Submit Application</button
@@ -266,5 +265,9 @@
 
 	.comment-input > input {
 		width: 100%;
+	}
+
+	.proposal-status {
+		margin-left: auto;
 	}
 </style>
