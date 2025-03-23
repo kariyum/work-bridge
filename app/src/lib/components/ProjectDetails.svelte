@@ -37,7 +37,7 @@
 	{#if projectIn.tasks?.length !== 0}
 		<div class="tasks-container">
 			{#each projectIn.tasks?.sort((a, b) => a.id - b.id) ?? [] as task}
-				<div class="task" id="{task.id.toString()}">
+				<div class="task" id={task.id.toString()}>
 					<h3>
 						#{task.id}
 						{task.title}
@@ -52,7 +52,7 @@
 						Assigned to: {task.assignee_id}
 					</div>
 					<div class="task-content rich-content">
-						Content:
+						Description:
 						{#if task.content.length === 0}
 							<div>No content for this task</div>
 						{:else}
@@ -70,8 +70,10 @@
 					</div>
 
 					{#if role === 'freelancer'}
-						{#if task.application_submitted}
-							<button class="applied-btn" disabled>Application submitted</button>
+						{#if task.proposal_status && task.proposal_status != 'pending'}
+							<button class="applied-btn" disabled>Application {snakeToCapital(task.proposal_status)}</button>
+						{:else if task.proposal_status}
+							<button class="applied-btn" disabled>{snakeToCapital(task.proposal_status)} application</button>
 						{:else}
 							<button class="apply-btn" onclick={() => submitApplication(task.id)}
 								>Submit Application</button

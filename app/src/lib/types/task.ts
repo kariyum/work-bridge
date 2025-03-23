@@ -1,3 +1,5 @@
+import type { ProposalStatus } from "$lib/types";
+
 export interface TaskJSON {
     id: number,
     project_id: number,
@@ -9,7 +11,7 @@ export interface TaskJSON {
     deadline: string,
     created_at: string,
     skills: string[],
-    application_submitted: boolean,
+    proposal_status: string | undefined,
 }
 
 export interface TaskGET {
@@ -23,7 +25,7 @@ export interface TaskGET {
     skills: string[],
     deadline: Date,
     created_at: Date,
-    application_submitted: boolean
+    proposal_status: ProposalStatus | undefined
 }
 
 export function processTaskJson(json: TaskJSON) {
@@ -38,7 +40,7 @@ export function processTaskJson(json: TaskJSON) {
         deadline: new Date(json.deadline),
         created_at: new Date(json.created_at),
         skills: json.skills,
-        application_submitted: json.application_submitted
+        proposal_status: json.proposal_status as ProposalStatus
     };
     return result;
 }

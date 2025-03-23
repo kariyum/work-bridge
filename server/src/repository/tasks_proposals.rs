@@ -1,6 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use sqlx::{Executor, Postgres};
+use crate::repository::proposal::ProposalStatus;
 
 #[derive(sqlx::FromRow, Serialize, Debug)]
 pub struct RawTaskProposal {
@@ -14,7 +15,7 @@ pub struct RawTaskProposal {
     status: String,
     created_at: DateTime<Utc>,
     skills: Vec<String>,
-    application_submitted: Option<bool>,
+    proposal_status: Option<ProposalStatus>,
 }
 
 pub async fn read_tasks_with_submission_by_project_id(
@@ -25,7 +26,7 @@ pub async fn read_tasks_with_submission_by_project_id(
     sqlx::query_as!(RawTaskProposal,
         "SELECT \
             tasks.id, tasks.project_id, tasks.title, tasks.content, tasks.deadline, tasks.assignee_id, tasks.budget, tasks.status, tasks.created_at, tasks.skills, \
-            COALESCE(proposals.task_id IS NOT NULL, False) AS application_submitted \
+            proposals.status as \"proposal_status: Option<ProposalStatus>\" \
         FROM \
             tasks LEFT JOIN proposals \
                 ON tasks.id = proposals.task_id AND proposals.user_id = $2 \
