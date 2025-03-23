@@ -191,7 +191,7 @@ textarea:focus {
     background-color: var(--orange);
 }
 
-.status[data-type='rejected'] {
+.status[data-type='declined'] {
     background-color: var(--red);
 }
 
