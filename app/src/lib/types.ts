@@ -5,7 +5,7 @@ export interface User {
     email: string,
     role: string
 }
-export type NotificationType = "message" | "proposal";
+export type NotificationType = "message" | "proposal" | "new_proposal";
 
 export type ProposalStatus = "declined" | "approved" | "pending" | "cancelled";
 
@@ -31,6 +31,28 @@ export interface ProposalNotification extends BaseNotification {
         trigger_user_id: string
     },
     user_id: string,
+}
+
+export interface NewProposalNotification extends BaseNotification {
+    id: number,
+    content: {
+        task_id: number,
+        trigger_user_id: string
+        proposal_id: string,
+        project_id: number
+    },
+    user_id: string,
+}
+
+export class NewProposalNotification {
+    static getHref(notif: NewProposalNotification) {
+        // reroute to project and scroll to the task
+        return `/project/${notif.content.project_id}/task/${notif.content.task_id}#${notif.content.proposal_id}`;
+    }
+
+    static getContent(notif: NewProposalNotification) {
+        return `${notif.content.trigger_user_id} submitted his application!`;
+    }
 }
 
 export class ProposalNotification {

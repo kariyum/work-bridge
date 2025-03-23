@@ -7,9 +7,10 @@ use sqlx::{Executor, Postgres};
 #[derive(Serialize, sqlx::Type, Debug, Clone, Message)]
 #[rtype(result = "()")]
 #[serde(rename_all(serialize = "snake_case"))]
-#[sqlx(type_name = "notification_type", rename_all = "lowercase")]
+#[sqlx(type_name = "notification_type", rename_all = "snake_case")]
 pub enum NotificationType {
-    Proposal,
+    Proposal, // renamed to ProposalStatusChange
+    NewProposal,
     Message,
 }
 

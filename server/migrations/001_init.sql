@@ -77,7 +77,7 @@ CREATE TABLE
         FOREIGN KEY (discussion_id) REFERENCES discussions (id)
     ); -- ordered by created_at most recent first
 
-CREATE TYPE notification_type AS ENUM ('proposal', 'message');
+CREATE TYPE notification_type AS ENUM ('proposal', 'message', 'new_proposal');
 
 CREATE TABLE
     IF NOT EXISTS notifications (
