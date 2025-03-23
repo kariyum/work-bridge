@@ -37,7 +37,7 @@
 	{#if projectIn.tasks?.length !== 0}
 		<div class="tasks-container">
 			{#each projectIn.tasks?.sort((a, b) => a.id - b.id) ?? [] as task}
-				<div class="task">
+				<div class="task" id="{task.id.toString()}">
 					<h3>
 						#{task.id}
 						{task.title}

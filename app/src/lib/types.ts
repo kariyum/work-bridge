@@ -24,17 +24,21 @@ export interface ProposalNotification extends BaseNotification {
     content: {
         proposal_id: string,
         proposal_status: string,
+        task_id: number,
+        project_id: number,
+        trigger_user_id: string
     },
     user_id: string,
 }
 
 export class ProposalNotification {
     static getHref(notif: ProposalNotification) {
-        return `${notif.content.proposal_id}`;
+        // reroute to project and scroll to the task
+        return `/project/${notif.content.project_id}#${notif.content.task_id}`;
     }
 
     static getContent(notif: ProposalNotification) {
-        return `Your proposal ${notif.content.proposal_id} was ${notif.content.proposal_status}`;
+        return `${notif.content.trigger_user_id} ${notif.content.proposal_status} your application.`;
     }
 }
 

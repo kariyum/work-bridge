@@ -13,7 +13,7 @@
 	let realtimeNotifications: BaseNotification[] = $state([]);
 	let finalNotifications = $derived.by(() => {
 		return realtimeNotifications.concat(notifications);
-	})
+	});
 
 	onMount(() => {
 		if (browser) {
@@ -41,13 +41,15 @@
 	let toastsQueue: ToastInterface[] = $state([]);
 	function showToast() {
 		const id = Date.now();
-		toastsQueue.push({
+		const notif: ToastInterface = {
 			id,
 			notification: {
 				notification_type: 'proposal',
 				content: {
 					proposal_id: 'Proposal #1',
-					proposal_status: 'approved'
+					proposal_status: 'approved',
+					project_id: 1,
+					trigger_user_id: 'That user'
 				},
 				created_at: new Date(Date.now()),
 				id: 2013,
@@ -56,7 +58,8 @@
 			remove: () => {
 				toastsQueue = toastsQueue.filter((p) => p.id !== id);
 			}
-		});
+		};
+		toastsQueue.push(notif);
 	}
 
 	async function logout() {
@@ -71,9 +74,9 @@
 	let showNotifications = $state(false);
 
 	function notificationClickHandler(event: MouseEvent) {
-		if ((event.target as Element)?.closest('.notification-container')) {
-			return;
-		}
+		// if ((event.target as Element)?.closest('.notification-container')) {
+		// 	return;
+		// }
 		if ((event.target as Element)?.closest('.notifications')) {
 			showNotifications = !showNotifications;
 		} else {
