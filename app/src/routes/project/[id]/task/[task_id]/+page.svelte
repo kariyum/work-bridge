@@ -14,7 +14,7 @@
 		if (proposals) {
 			return {
 				accepted: filterProposalsOnStatus(proposals, 'accepted').length,
-				rejected: filterProposalsOnStatus(proposals, 'rejected').length,
+				declined: filterProposalsOnStatus(proposals, 'declined').length,
 				pending: filterProposalsOnStatus(proposals, 'pending').length,
 			};
 		}
@@ -73,7 +73,7 @@
 				<a href="/messages?user_id={proposal.user_id}">Open discussion</a>
 				<button
 					class="muted-btn"
-					onclick={() => patchProposalStatus(task.project_id, task.id, proposal.id, 'reject')}
+					onclick={() => patchProposalStatus(task.project_id, task.id, proposal.id, 'decline')}
 					>Not Interested</button
 				>
 				<button onclick={() => patchProposalStatus(task.project_id, task.id, proposal.id, 'accept')}
@@ -130,8 +130,8 @@
 				<button data-active={filterStatus == 'accepted'} onclick={() => (filterStatus = 'accepted')}
 					>{proposalsCount?.accepted ?? ''} Accepted</button
 				>
-				<button data-active={filterStatus == 'rejected'} onclick={() => (filterStatus = 'rejected')}
-					>{proposalsCount?.rejected ?? ''} Rejected</button
+				<button data-active={filterStatus == 'declined'} onclick={() => (filterStatus = 'declined')}
+					>{proposalsCount?.declined ?? ''} Declined</button
 				>
 			</div>
 			<div class="proposals">

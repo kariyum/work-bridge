@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, invalidateAll } from '$app/navigation';
+	import { goto, invalidate, invalidateAll } from '$app/navigation';
 	import { WebSocketService } from '$lib/realtime';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
@@ -29,8 +29,14 @@
 					}
 				});
 			};
-			webSocketService.subscribeToProposalNotifications(handler);
-			webSocketService.subscribeToNewProposalNotifications(handler);
+			webSocketService.subscribeToProposalNotifications(async (notif) => {
+				handler(notif);
+				await invalidate(`/api/projects/${notif.content.project_id}`);
+			});
+			webSocketService.subscribeToNewProposalNotifications(async (notif) => {
+				handler(notif);
+				await invalidate(`/api/projects/${notif.content.project_id}/${notif.content.task_id}`);
+			});
 		}
 	});
 
