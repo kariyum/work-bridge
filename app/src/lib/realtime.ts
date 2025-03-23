@@ -1,10 +1,11 @@
-import type { MessagesJsonResponse, ProposalNotification, NotificationType } from "./types";
+import type { MessagesJsonResponse, ProposalNotification, NotificationType, NewProposalNotification } from "./types";
 
 export class WebSocketService {
     private static instance: WebSocketService;
     private socket: WebSocket;
     private onMessage: ((data: MessagesJsonResponse) => void)[] = [];
     private onProposalNotificationHandlers: ((data: ProposalNotification) => void)[] = [];
+    private onNewProposalsNotificationHandlers: ((data: NewProposalNotification) => void)[] = [];
 
     private constructor(url: string) {
         this.socket = new WebSocket(url);
@@ -31,6 +32,15 @@ export class WebSocketService {
                         created_at: new Date(wsMessage.created_at)
                     };
                     this.onProposalNotificationHandlers.forEach(handler => handler(proposalNotification));
+                    break;
+
+                case "new_proposal":
+                    const newProposalNotification: NewProposalNotification = {
+                        ...wsMessage,
+                        created_at: new Date(wsMessage.created_at)
+                    };
+                    this.onNewProposalsNotificationHandlers.forEach(handler => handler(newProposalNotification));
+                    break;
                 default:
                     break;
             }
@@ -67,6 +77,13 @@ export class WebSocketService {
         this.onProposalNotificationHandlers.push(handler)
         return () => {
             this.onProposalNotificationHandlers = this.onProposalNotificationHandlers.filter((h) => h != handler);
+        }
+    }
+
+    public subscribeToNewProposalNotifications(handler: (data: NewProposalNotification) => void) {
+        this.onNewProposalsNotificationHandlers.push(handler)
+        return () => {
+            this.onNewProposalsNotificationHandlers = this.onNewProposalsNotificationHandlers.filter((h) => h != handler);
         }
     }
 

@@ -111,6 +111,7 @@ pub async fn insert_tasks_concurrently(
 
 pub struct TaskCreator {
     pub user_id: String,
+    pub project_id: i32
 }
 
 pub async fn read_task_creator_by_id(
@@ -119,7 +120,7 @@ pub async fn read_task_creator_by_id(
 ) -> Result<Option<TaskCreator>, sqlx::Error> {
     sqlx::query_as!(
         TaskCreator,
-        "SELECT projects.user_id AS user_id FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.id = $1",
+        "SELECT projects.user_id AS user_id, projects.id AS project_id FROM tasks JOIN projects ON tasks.project_id = projects.id WHERE tasks.id = $1",
         task_id
     )
         .fetch_optional(conn)

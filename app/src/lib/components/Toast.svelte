@@ -2,7 +2,7 @@
 	import { fly } from 'svelte/transition';
 	import type { ToastInterface } from './Navbar.svelte';
 	import { untrack } from 'svelte';
-	import { ProposalNotification } from '$lib/types';
+	import { NewProposalNotification, ProposalNotification } from '$lib/types';
 	import Progress from './Progress.svelte';
 	import { X } from 'lucide-svelte';
 	import { SvelteMap } from 'svelte/reactivity';
@@ -62,11 +62,45 @@
 </script>
 
 {#snippet renderProposalNotificationToast(notif: ProposalNotification, toast: ToastInterface)}
-	<a href={ProposalNotification.getHref(notif)} onclick={() => removeToast(toast)} class="proposal-notif">
+	<a
+		href={ProposalNotification.getHref(notif)}
+		onclick={() => removeToast(toast)}
+		class="proposal-notif"
+	>
 		<div class="link-container">
 			<div class="content-container">
 				<p>
 					{ProposalNotification.getContent(notif)}
+				</p>
+				<button
+					class="close-btn"
+					onclick={(event) => {
+						event.preventDefault();
+						removeToast(toast);
+					}}
+				>
+					<X size="16" />
+				</button>
+			</div>
+			<div class="progress-container">
+				<div class="progress">
+					<Progress {isPaused} duration={TIMEOUT} />
+				</div>
+			</div>
+		</div>
+	</a>
+{/snippet}
+
+{#snippet renderNewProposalNotificationToast(notif: NewProposalNotification, toast: ToastInterface)}
+	<a
+		href={NewProposalNotification.getHref(notif)}
+		onclick={() => removeToast(toast)}
+		class="proposal-notif"
+	>
+		<div class="link-container">
+			<div class="content-container">
+				<p>
+					{NewProposalNotification.getContent(notif)}
 				</p>
 				<button
 					class="close-btn"
@@ -122,6 +156,11 @@
 		>
 			{#if toast.notification.notification_type === 'proposal'}
 				{@render renderProposalNotificationToast(toast.notification as ProposalNotification, toast)}
+			{:else if toast.notification.notification_type === 'new_proposal'}
+				{@render renderNewProposalNotificationToast(
+					toast.notification as NewProposalNotification,
+					toast
+				)}
 			{:else}
 				<div>Which notification to render?</div>
 			{/if}

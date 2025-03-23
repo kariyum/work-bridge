@@ -45,6 +45,7 @@ pub async fn read_proposals(
         .await
 }
 
+#[allow(dead_code)]
 pub async fn read_proposal(
     proposal_id: i32,
     conn: impl Executor<'_, Database = Postgres>,
@@ -55,7 +56,6 @@ pub async fn read_proposal(
         proposal_id
     ).fetch_optional(conn).await
 }
-
 
 #[derive(Serialize, Debug)]
 pub struct RawProposalForNotification {
@@ -83,15 +83,17 @@ pub async fn read_proposal_for_notification(
 pub async fn insert_proposal(
     insert_proposal: CreateProposal,
     conn: impl Executor<'_, Database = Postgres>,
-) -> Result<(), sqlx::Error> {
-    sqlx::query!(
-        "INSERT INTO proposals (user_id, task_id, status, budget, content) VALUES ($1, $2, $3, $4, $5)",
+) -> Result<RawProposal, sqlx::Error> {
+    sqlx::query_as!(
+        RawProposal,
+        "INSERT INTO proposals (user_id, task_id, status, budget, content) VALUES ($1, $2, $3, $4, $5) \
+         RETURNING id, user_id, task_id, status as \"status: ProposalStatus\", budget, content, created_at",
         insert_proposal.user_id,
         insert_proposal.task_id,
         insert_proposal.status as ProposalStatus,
         insert_proposal.budget,
         insert_proposal.content
-    ).execute(conn).await.map(|_| ())
+    ).fetch_one(conn).await
 }
 
 pub async fn update_proposal_status(

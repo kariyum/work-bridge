@@ -3,7 +3,7 @@
 	import { WebSocketService } from '$lib/realtime';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import type { BaseNotification, ProposalNotification, User } from '$lib/types';
+	import type { BaseNotification, NewProposalNotification, ProposalNotification, User } from '$lib/types';
 	import ThemeToggler from './ThemeToggler.svelte';
 	import NotificationMenu from './NotificationMenu.svelte';
 	import Toast from './Toast.svelte';
@@ -18,7 +18,7 @@
 	onMount(() => {
 		if (browser) {
 			webSocketService = WebSocketService.getInstance();
-			webSocketService.subscribeToProposalNotifications((notif) => {
+			const handler = (notif: ProposalNotification | NewProposalNotification) => {
 				realtimeNotifications = [notif, ...realtimeNotifications];
 				const id = Date.now();
 				toastsQueue.push({
@@ -28,7 +28,9 @@
 						toastsQueue = toastsQueue.filter((p) => p.id !== id);
 					}
 				});
-			});
+			};
+			webSocketService.subscribeToProposalNotifications(handler);
+			webSocketService.subscribeToNewProposalNotifications(handler);
 		}
 	});
 
