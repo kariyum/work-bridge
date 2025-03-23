@@ -56,6 +56,30 @@ pub async fn read_proposal(
     ).fetch_optional(conn).await
 }
 
+
+#[derive(Serialize, Debug)]
+pub struct RawProposalForNotification {
+    pub id: i32,
+    pub user_id: String,
+    pub task_id: i32,
+    pub status: ProposalStatus,
+    pub budget: Option<BigDecimal>,
+    pub content: Option<String>,
+    pub created_at: DateTime<Utc>,
+    pub project_id: i32,
+}
+
+pub async fn read_proposal_for_notification(
+    proposal_id: i32,
+    conn: impl Executor<'_, Database = Postgres>,
+) -> Result<Option<RawProposalForNotification>, sqlx::Error> {
+    sqlx::query_as!(
+        RawProposalForNotification,
+        "SELECT p.id, p.user_id, task_id, p.status as \"status: ProposalStatus\", p.budget, p.content, p.created_at, t.project_id FROM proposals AS p JOIN tasks AS t ON p.task_id = t.id WHERE p.id = $1",
+        proposal_id
+    ).fetch_optional(conn).await
+}
+
 pub async fn insert_proposal(
     insert_proposal: CreateProposal,
     conn: impl Executor<'_, Database = Postgres>,

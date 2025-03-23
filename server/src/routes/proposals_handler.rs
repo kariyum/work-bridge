@@ -1,8 +1,5 @@
 use crate::repository::notifications::{insert_notification, CreateNotification, NotificationType};
-use crate::repository::proposal::{
-    insert_proposal, read_proposal, read_proposals, update_proposal_status, CreateProposal,
-    ProposalStatus,
-};
+use crate::repository::proposal::{insert_proposal, read_proposal, read_proposal_for_notification, read_proposals, update_proposal_status, CreateProposal, ProposalStatus};
 use crate::repository::tasks::{read_task_creator_by_id, TaskCreator};
 use crate::services::token::Claims;
 use crate::websocket::lobby::Lobby;
@@ -141,7 +138,7 @@ enum ProposalActions {
 }
 
 async fn update_proposal_status_handler(
-    _: Claims,
+    claims: Claims,
     lobby: web::Data<Addr<Lobby>>,
     path: Path<i32>,
     Json(ProposalAction { action }): Json<ProposalAction>,
@@ -156,7 +153,7 @@ async fn update_proposal_status_handler(
     update_proposal_status(proposal_id, target_status.clone(), pgpool.as_ref())
         .await
         .expect("Failed to update Proposal status");
-    let proposal = read_proposal(proposal_id, pgpool.as_ref())
+    let proposal = read_proposal_for_notification(proposal_id, pgpool.as_ref())
         .await
         .expect("Failed to read proposal");
     if let Some(proposal) = proposal {
@@ -164,7 +161,10 @@ async fn update_proposal_status_handler(
             user_id: proposal.user_id.clone(),
             content: json!({
                 "proposal_id": proposal.id,
-                "proposal_status": target_status
+                "proposal_status": target_status,
+                "task_id": proposal.task_id,
+                "project_id": proposal.project_id,
+                "trigger_user_id": claims.sub
             }),
             notification_type: NotificationType::Proposal,
         };
