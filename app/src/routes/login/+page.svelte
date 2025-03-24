@@ -50,7 +50,7 @@
 					error_message = 'Wrong combination';
 				}
 			},
-			(reason) => console.log('Connection issues, retry later')
+			(reason) => console.log('Connection issues, retry later', reason)
 		);
 
 		final_error_message = error_message;
