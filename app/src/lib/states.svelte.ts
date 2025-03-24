@@ -80,37 +80,3 @@ export class TaskClass {
         this.skills.splice(index, 1);
     }
 }
-
-
-export class TasksGlobalState {
-    tasks: Array<TaskClass> = $state([]);
-    selected: number = $state(-1);
-
-    constructor(tasks: Array<TaskClass> = [], selected: number = -1) {
-        this.tasks = tasks;
-        this.selected = selected;
-    }
-
-    copy(): TasksGlobalState {
-        return new TasksGlobalState(
-            this.tasks.map((task) => task.copy()),
-            this.selected
-        );
-    }
-
-    addTask(task: TaskClass): void {
-        this.tasks.push(task);
-    }
-
-    removeTask(index: number): void {
-        this.tasks.splice(index, 1);
-    }
-
-    selectTask(index: number): void {
-        this.selected = index;
-    }
-
-    getSelectedTask(): TaskClass | undefined {
-        return this.tasks[this.selected];
-    }
-}
