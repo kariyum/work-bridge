@@ -46,7 +46,6 @@ export class WebSocketService {
             }
 
         };
-        console.log("Socket?", this.socket.readyState);
         this.socket.onopen = (event: Event) => {
             console.log("Socket is open", event);
         };
@@ -57,7 +56,6 @@ export class WebSocketService {
     }
 
     public static getInstance(): WebSocketService {
-        console.log(WebSocketService.instance);
         if (!WebSocketService.instance) {
             WebSocketService.instance = new WebSocketService("/api/push_events");
         }
@@ -66,9 +64,7 @@ export class WebSocketService {
 
     public subscribeToChatMessages(handler: (data: MessagesJsonResponse) => void) {
         this.onMessage.push(handler);
-        console.log("component subscribed", this.onMessage.length);
         return () => {
-            console.log("Socket unsubscribed.");
             this.onMessage = this.onMessage.filter((h) => h != handler);
         };
     }

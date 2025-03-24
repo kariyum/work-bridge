@@ -27,7 +27,6 @@
 		}
 		formData.entries().forEach(([key, value]) => {
 			invalid = invalid || !value;
-			console.log(key);
 			if (!value) {
 				let element = document.getElementById(key);
 				if (element) {
@@ -90,7 +89,6 @@
 			...allData,
 			...entries
 		};
-		console.log('Entries', entries);
 	}
 </script>
 

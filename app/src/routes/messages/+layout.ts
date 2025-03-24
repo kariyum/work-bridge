@@ -17,7 +17,6 @@ export const load = async ({ fetch, url, params, parent }) => {
                     discussion.user_ids.length === 2
                 )?.id;
             if (maybeDiscussionId) {
-                console.log("Redirecting to ", `/messages/${maybeDiscussionId}`);
                 redirect(303, `/messages/${maybeDiscussionId}`);
             }
         }

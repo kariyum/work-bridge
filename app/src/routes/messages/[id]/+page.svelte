@@ -30,12 +30,11 @@
 		return result;
 	});
 	let messages: Array<MessagesJsonResponse> = $derived(data.messages.concat(localMessages));
-	
+
 	onMount(() => {
 		if (browser) {
 			webSocketService = WebSocketService.getInstance();
 			unsubscribe = webSocketService.subscribeToChatMessages((msg) => {
-				console.log(`msg from user id: ${msg.from_user_id}, data.user.email ${data.user?.email}, from_user_id != data.user?.email ${msg.from_user_id != data.user?.email}`);
 				if (parseInt(data.discussion_id) == msg.discussion_id) {
 					localMessages.push(msg);
 				}
@@ -66,7 +65,7 @@
 		try {
 			webSocketService.send(toClientMessage(message));
 		} catch (err) {
-			console.error("Failed to push message upstream...");
+			console.error('Failed to push message upstream...');
 		}
 		if (data.user?.email == undefined) {
 			console.log('Email is undefined');
@@ -74,10 +73,11 @@
 		}
 		const msg: MessagesJsonResponse = {
 			id: Math.random(),
+			notification_type: 'message',
 			from_user_id: data.user?.email,
 			content: message,
 			discussion_id: parseInt(data.discussion_id),
-			created_at: new Date().toISOString()
+			created_at: new Date()
 		};
 		localMessages.push(msg);
 		message = '';
@@ -94,7 +94,7 @@
 	$effect.pre(() => {
 		messages;
 		const autoscroll = viewport && Math.abs(viewport.scrollTop) < 100;
-		if (viewport && (autoscroll ||  justSwitched)) {
+		if (viewport && (autoscroll || justSwitched)) {
 			if (viewport.scrollTop == 0) {
 				viewport.scrollTo({
 					left: 0,

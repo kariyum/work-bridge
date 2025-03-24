@@ -28,7 +28,6 @@
 			if (taksIndex === -1) {
 				console.error('Something went wrong, task index is -1. Unexpected.');
 			} else {
-				console.log(taksIndex);
 				tasks[taksIndex] = task;
 			}
 		} else {
