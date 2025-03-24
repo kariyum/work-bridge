@@ -7,7 +7,7 @@
 	import Tasks from './Tasks.svelte';
 
 	let {
-		projectIn,
+		projectIn
 	}: {
 		projectIn?: ProjectGET;
 	} = $props();
@@ -25,9 +25,11 @@
 
 	$effect(() => {
 		tasks = projectIn?.tasks?.map((task) => TaskClass.fromGET(task)) ?? ([] as TaskClass[]);
-	})
-	
-	let tasks = $state(projectIn?.tasks?.map((task) => TaskClass.fromGET(task)) ?? ([] as TaskClass[]));
+	});
+
+	let tasks = $state(
+		projectIn?.tasks?.map((task) => TaskClass.fromGET(task)) ?? ([] as TaskClass[])
+	);
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
@@ -140,7 +142,7 @@
 			</div> -->
 
 			<div style="width: 100%;">
-				<Tasks projectId={projectIn?.id} bind:tasks={tasks}></Tasks>
+				<Tasks projectId={projectIn?.id} bind:tasks></Tasks>
 			</div>
 			<hr />
 			<div class="action-buttons">

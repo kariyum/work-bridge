@@ -1,12 +1,10 @@
 <script lang="ts">
-	import { goto, pushState } from '$app/navigation';
+	import { pushState } from '$app/navigation';
 	import { Plus } from 'lucide-svelte';
 
-	import Task from '$lib/components/Task.svelte';
-	import TaskForm from './TaskForm.svelte';
-	import type { TaskGET } from '$lib/types/task';
 	import { page } from '$app/state';
 	import { TaskClass } from '$lib/states.svelte';
+	import TaskForm from './TaskForm.svelte';
 
 	let {
 		projectId,
@@ -44,15 +42,18 @@
 
 <div class="headline">
 	<h2>Tasks</h2>
-	<button onclick={addNewTask} class="add-task"><Plus /></button>
+	<button onclick={addNewTask} class="add-task"
+		><Plus size="18" />
+		<p>Add Task</p></button
+	>
 </div>
 <div class="tasks-container">
 	{#if tasks.length === 0}
 		<p>Add tasks by clicking on the plus (+) button.</p>
 	{:else}
 		{#each tasks as task, i}
-			<Task
-				taskObject={task}
+			<button
+				class="single-task"
 				onclick={() => {
 					selectedTask = i;
 					pushState('', {
@@ -60,7 +61,9 @@
 						showTaskPopup: true
 					});
 				}}
-			></Task>
+			>
+				{task.title}
+			</button>
 		{/each}
 	{/if}
 </div>
@@ -71,7 +74,10 @@
 
 <style>
 	.add-task {
-		padding: 0.2rem;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+		padding: 0.5rem;
 		cursor: pointer;
 		line-height: 0;
 	}
@@ -79,6 +85,7 @@
 		display: flex;
 		flex-wrap: nowrap;
 		flex-direction: column;
+		margin-top: 0.5rem;
 		gap: 0.5rem;
 	}
 	.headline {
@@ -86,5 +93,14 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+	}
+	.single-task {
+		width: 100%;
+		text-align: left;
+		background-color: transparent;
+
+		&:hover {
+			background-color: var(--hover-color);
+		}
 	}
 </style>

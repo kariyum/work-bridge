@@ -86,8 +86,9 @@
 		position: absolute;
 		top: 10%;
 		left: 50%;
-		width: 50%;
+		width: 100%;
 		max-width: 1000px;
+		margin: auto 1rem auto 1rem;
 		transform: translate(-50%, 0);
 		padding: 1rem;
 		border: 2px solid var(--border);
