@@ -2,21 +2,19 @@ import { error } from '@sveltejs/kit';
 import { processProjectJson, type ProjectJSON } from '$lib/types/project';
 
 import type { LayoutLoad } from './$types';
-import { TaskClass, TasksGlobalState } from '$lib/states.svelte';
+import { TaskClass } from '$lib/states.svelte';
 export const ssr = false;
 export const load: LayoutLoad = async ({ fetch, params }) => {
     if (!params.id) {
         return {
             status: 404,
             project: undefined,
-            tasksGlobalState: new TasksGlobalState()
         }
     }
     const request = await fetch(`/api/projects/${params.id}`);
     if (!request.ok) return {
         status: request.status,
         error: new Error('Failed to fetch data'),
-        tasksGlobalState: new TasksGlobalState()
     }
     try {
         const response = await request.json();
@@ -25,13 +23,11 @@ export const load: LayoutLoad = async ({ fetch, params }) => {
         return {
             status: request.status,
             project: project,
-            tasksGlobalState: new TasksGlobalState(tasksClass || [])
         }
     } catch (error) {
         return {
             status: request.status,
             error: new Error('Failed to parse data'),
-            tasksGlobalState: new TasksGlobalState()
         }
     }
 };
