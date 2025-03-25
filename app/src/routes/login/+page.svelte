@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { goto, invalidate, invalidateAll } from '$app/navigation';
+	import { goto } from '$app/navigation';
 	import AlreadyLoggedIn from '$lib/components/AlreadyLoggedIn.svelte';
 	import { cyrb53, validateEmail } from '$lib/utils.js';
 	import { MoveLeft } from 'lucide-svelte';
-	import { onMount } from 'svelte';
 	let { data } = $props();
 
 	function login(email: string, password: string): Promise<Response> {
@@ -19,41 +18,43 @@
 		});
 	}
 
-	let form_element: HTMLFormElement;
-	let email_element: HTMLInputElement;
-	let password_element: HTMLInputElement;
+	let form_element: HTMLFormElement | undefined = $state();
+	let email_element: HTMLInputElement | undefined = $state();
+	let password_element: HTMLInputElement | undefined = $state();
 	let error_message = '';
 	let final_error_message = $state('');
 
 	async function handleSubmit() {
-		error_message = '';
-		form_element.reportValidity();
-		const email = email_element.value;
-		const password = password_element.value;
-		if (!email || !validateEmail(email)) {
-			email_element.style.border = '2px solid red';
-			return;
-		} else {
-			email_element.style.border = '';
-		}
-		if (!password) {
-			password_element.style.border = '2px solid red';
-			return;
-		} else {
-			password_element.style.border = '';
-		}
-		await login(email, cyrb53(password).toString()).then(
-			async (response) => {
-				if (response.ok) {
-					await goto(data.redirectionUrl, { invalidateAll: true });
-				} else {
-					error_message = 'Wrong combination';
-				}
-			},
-			(reason) => console.log('Connection issues, retry later', reason)
-		);
+		if (email_element && password_element) {
+			error_message = '';
+			form_element?.reportValidity();
+			const email = email_element.value;
+			const password = password_element.value;
+			if (!email || !validateEmail(email)) {
+				email_element.style.border = '2px solid red';
+				return;
+			} else {
+				email_element.style.border = '';
+			}
+			if (!password) {
+				password_element.style.border = '2px solid red';
+				return;
+			} else {
+				password_element.style.border = '';
+			}
+			await login(email, cyrb53(password).toString()).then(
+				async (response) => {
+					if (response.ok) {
+						await goto(data.redirectionUrl, { invalidateAll: true });
+					} else {
+						error_message = 'Wrong combination';
+					}
+				},
+				(reason) => console.log('Connection issues, retry later', reason)
+			);
 
-		final_error_message = error_message;
+			final_error_message = error_message;
+		}
 	}
 </script>
 
@@ -63,7 +64,7 @@
 	<div class="container">
 		<div class="sub-container">
 			<a href="/">
-				<MoveLeft size="3rem"/>
+				<MoveLeft size="3rem" />
 			</a>
 			<h1>Welcome</h1>
 			<form
@@ -101,12 +102,6 @@
 		align-items: center;
 		gap: 0.5rem;
 		width: 100%;
-	}
-	.forgot-password {
-		background-color: transparent;
-		border: none;
-		color: #666;
-		cursor: pointer;
 	}
 
 	.buttons {
