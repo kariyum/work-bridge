@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { TaskClass } from '$lib/states.svelte';
 	import Tag from './Tag.svelte';
 
 	let {

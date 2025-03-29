@@ -1,9 +1,7 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import RichTextEditor from '$lib/components/RichTextEditor.svelte';
 	import Skills from '$lib/components/Skills.svelte';
 	import { TaskClass } from '$lib/states.svelte';
-	import { untrack } from 'svelte';
 	interface props {
 		taskInput?: TaskClass;
 		onSubmit: (x: TaskClass) => void;
@@ -28,8 +26,7 @@
 			{/if}
 			<form class="input-container" onsubmit={(event) => event.preventDefault()}>
 				<input type="text" placeholder="Title" bind:value={taskClass.title} />
-				<RichTextEditor contentIn={(() => taskClass.content)()} bind:x={taskClass.content}
-				></RichTextEditor>
+				<RichTextEditor bind:x={taskClass.content}></RichTextEditor>
 				<input type="text" placeholder="Assignee" bind:value={taskClass.assignee_id} />
 				<!-- <input type="text" placeholder="Skills" bind:value={taskClass.skills} /> -->
 				<div class="skills-input">
