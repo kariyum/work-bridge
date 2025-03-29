@@ -2,7 +2,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { TaskClass } from '$lib/states.svelte';
 	import type { ProjectForm, ProjectGET, ProjectPOST } from '$lib/types/project';
-	import type { TaskGET, TaskPOST } from '$lib/types/task';
+	import type { TaskPOST } from '$lib/types/task';
 	import RichTextEditor from './RichTextEditor.svelte';
 	import Tasks from './Tasks.svelte';
 
@@ -112,8 +112,7 @@
 			</div>
 			<div class="input">
 				<label for="">Project Description</label>
-				<RichTextEditor contentIn={projectIn?.content ?? ''} bind:x={projectFormInput.content}
-				></RichTextEditor>
+				<RichTextEditor bind:x={projectFormInput.content}></RichTextEditor>
 				<!-- <textarea name="content" id="content" placeholder="The project is about designing and implementing..." bind:value={content}></textarea> -->
 			</div>
 

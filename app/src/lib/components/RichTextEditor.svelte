@@ -8,13 +8,7 @@
 	let element: HTMLDivElement;
 	let myEditor: Editor | undefined = $state();
 
-	let { contentIn, x = $bindable() }: { x: string; contentIn: string } = $props();
-	$effect.pre(() => {
-		contentIn;
-		untrack(() => {
-			myEditor?.commands.setContent(contentIn);
-		});
-	});
+	let { x = $bindable() }: { x: string } = $props();
 	onMount(() => {
 		myEditor = new Editor({
 			editorProps: {
