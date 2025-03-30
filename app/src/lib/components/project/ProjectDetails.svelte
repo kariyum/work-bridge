@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
-	import { page } from '$app/state';
-	import type { Tab } from '$lib/types';
 	import type { ProjectGET } from '$lib/types/project';
 	import { formatDate, snakeToCapital } from '$lib/utils';
-	import Tabs from '../utility/Tabs.svelte';
 	interface props {
 		projectIn: ProjectGET;
 		role: string;
@@ -129,21 +126,12 @@
 			margin-left: auto;
 		}
 	}
-	.applied-btn {
-		background-color: rgb(65, 65, 65);
-	}
+
 	.header {
 		display: flex;
 		justify-content: space-between;
 	}
-	.edit-btn {
-		padding: 0.3rem 1rem;
-		text-decoration: none;
-		color: inherit;
-		line-height: 2rem;
-		border-radius: 5px;
-		background-color: var(--btn-bg);
-	}
+
 	.apply-btn {
 		background-color: var(--blue);
 	}
@@ -180,22 +168,6 @@
 		width: fit-content;
 		line-height: 1rem;
 	}
-	hr {
-		border: none;
-		border-top: 2px solid var(--border);
-		margin: 1rem 0 1rem 0;
-	}
-	.emoji {
-		margin: 0;
-		padding: 0.3rem;
-		background-color: transparent;
-		border: none;
-	}
-
-	.actions-container {
-		display: flex;
-		justify-content: space-between;
-	}
 
 	.container {
 		margin-top: 1rem;
@@ -205,7 +177,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		max-width: 1100px;
+		max-width: var(--page-width);
 		margin: auto;
 	}
 
@@ -213,58 +185,6 @@
 		min-height: 5rem;
 		margin-top: 0.5rem;
 		border-radius: 5px;
-	}
-
-	.actions {
-		display: flex;
-		width: fit-content;
-	}
-
-	.left-chip {
-		padding: 0.5rem 1rem 0.5rem 0.7rem;
-		border-radius: 2rem 0 0 2rem;
-	}
-
-	.right-chip {
-		padding: 0.5rem 1rem 0.5rem 0.7rem;
-		border-radius: 0 2rem 2rem 0;
-	}
-
-	.vote {
-		background-color: var(--btn-bg);
-		display: flex;
-		align-items: center;
-		gap: 0.5rem;
-		margin: 0;
-		border: none;
-		font-size: 1rem;
-	}
-
-	.vote:hover {
-		background-color: var(--blue);
-	}
-
-	.vertical-line {
-		background-color: var(--grey);
-		width: 1px;
-	}
-
-	.comments {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.comment-input {
-		width: 100%;
-		display: flex;
-		gap: 1rem;
-		align-items: center;
-		margin-top: 1rem;
-	}
-
-	.comment-input > input {
-		width: 100%;
 	}
 
 	.proposal-status {

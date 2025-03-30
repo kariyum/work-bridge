@@ -1,14 +1,20 @@
 <script lang="ts">
-	import { NewProposalNotification, ProposalNotification, type BaseNotification } from '$lib/types';
+	import {
+		type NewProposalNotification,
+		NewProposalNotificationImpl,
+		type ProposalNotification,
+		ProposalNotificationImpl,
+		type BaseNotification
+	} from '$lib/types';
 	import { computeTimeAgo } from '$lib/utils';
 
 	let { notifications }: { notifications: BaseNotification[] } = $props();
 </script>
 
 {#snippet renderProposalNotification(notif: ProposalNotification)}
-	<a class="notif-container proposal" href={ProposalNotification.getHref(notif)}>
+	<a class="notif-container proposal" href={ProposalNotificationImpl.getHref(notif)}>
 		<p>
-			{ProposalNotification.getContent(notif)}
+			{ProposalNotificationImpl.getContent(notif)}
 		</p>
 		<div class="timeago">
 			{computeTimeAgo(notif.created_at)}
@@ -17,9 +23,9 @@
 {/snippet}
 
 {#snippet renderNewProposalNotification(notif: NewProposalNotification)}
-	<a class="notif-container proposal" href={NewProposalNotification.getHref(notif)}>
+	<a class="notif-container proposal" href={NewProposalNotificationImpl.getHref(notif)}>
 		<p>
-			{NewProposalNotification.getContent(notif)}
+			{NewProposalNotificationImpl.getContent(notif)}
 		</p>
 		<div class="timeago">
 			{computeTimeAgo(notif.created_at)}

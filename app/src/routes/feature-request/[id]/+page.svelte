@@ -66,7 +66,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		max-width: 1100px;
+		max-width: var(--page-width);
 		margin: auto;
 	}
 

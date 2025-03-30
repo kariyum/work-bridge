@@ -1,9 +1,6 @@
-import { error } from '@sveltejs/kit';
-import { processProjectJson, type ProjectJSON } from '$lib/types/project';
-
+import { processProjectJson } from '$lib/types/project';
 import type { LayoutLoad } from './$types';
-import { TaskClass } from '$lib/components/task/states.svelte';
-export const ssr = false;
+
 export const load: LayoutLoad = async ({ fetch, params }) => {
     if (!params.id) {
         return {
@@ -19,7 +16,6 @@ export const load: LayoutLoad = async ({ fetch, params }) => {
     try {
         const response = await request.json();
         const project = processProjectJson(response);
-        const tasksClass = project.tasks?.map(TaskClass.fromGET);
         return {
             status: request.status,
             project: project,
