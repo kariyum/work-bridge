@@ -171,7 +171,7 @@
 	}
 
 	.container {
-		max-width: 1100px;
+		max-width: var(--page-width);
 		margin: 1rem auto auto auto;
 	}
 

@@ -44,7 +44,7 @@ export interface NewProposalNotification extends BaseNotification {
     user_id: string,
 }
 
-export class NewProposalNotification {
+export class NewProposalNotificationImpl {
     static getHref(notif: NewProposalNotification) {
         // reroute to project and scroll to the task
         return `/project/${notif.content.project_id}/task/${notif.content.task_id}#${notif.content.proposal_id}`;
@@ -55,7 +55,7 @@ export class NewProposalNotification {
     }
 }
 
-export class ProposalNotification {
+export class ProposalNotificationImpl {
     static getHref(notif: ProposalNotification) {
         // reroute to project and scroll to the task
         return `/project/${notif.content.project_id}#${notif.content.task_id}`;

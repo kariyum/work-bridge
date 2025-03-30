@@ -29,7 +29,7 @@ export interface TaskGET {
 }
 
 export function processTaskJson(json: TaskJSON) {
-    let result: TaskGET = {
+    const result: TaskGET = {
         id: json.id,
         project_id: json.project_id,
         title: json.title,

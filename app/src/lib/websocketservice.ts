@@ -14,7 +14,7 @@ export class WebSocketService {
             const notificationType: NotificationType = wsMessage.notification_type;
 
             switch (notificationType) {
-                case "message":
+                case "message": {
                     const message: MessagesJsonResponse = {
                         id: Math.random(),
                         from_user_id: wsMessage.sender_id,
@@ -25,22 +25,25 @@ export class WebSocketService {
                     };
                     this.onMessage.forEach(handler => handler(message))
                     break;
+                }
 
-                case "proposal":
+                case "proposal": {
                     const proposalNotification: ProposalNotification = {
                         ...wsMessage,
                         created_at: new Date(wsMessage.created_at)
                     };
                     this.onProposalNotificationHandlers.forEach(handler => handler(proposalNotification));
                     break;
+                }
 
-                case "new_proposal":
+                case "new_proposal": {
                     const newProposalNotification: NewProposalNotification = {
                         ...wsMessage,
                         created_at: new Date(wsMessage.created_at)
                     };
                     this.onNewProposalsNotificationHandlers.forEach(handler => handler(newProposalNotification));
                     break;
+                }
                 default:
                     break;
             }
@@ -51,7 +54,7 @@ export class WebSocketService {
         };
 
         this.socket.onerror = (event: Event) => {
-            console.error("Socket encountered an error");
+            console.error("Socket encountered an error", event);
         }
     }
 

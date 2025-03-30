@@ -140,15 +140,6 @@
 					bind:value={projectFormInput.deadline}
 				/>
 			</div>
-			<!-- <div class="input">
-				<label for="">Project Categories</label>
-				<select name="" id="">
-					<option value="" disabled selected>Select your option</option>
-					<option value="kk">Web developer</option>
-					<option value="kk">UI/UX designer</option>
-					<option value="kk">Architect</option>
-				</select>
-			</div> -->
 
 			<div style="width: 100%;">
 				<Tasks projectId={projectIn?.id} bind:tasks></Tasks>
@@ -187,19 +178,6 @@
 		width: 100%;
 	}
 
-	select {
-		border-color: var(--border);
-		border-radius: 5px;
-		height: 2rem;
-		padding: 0 0.3rem;
-	}
-
-	.header {
-		display: flex;
-		justify-content: space-between;
-		margin: 1rem 0 1rem 0;
-	}
-
 	.outer-container {
 		display: flex;
 		flex-direction: column;
@@ -220,8 +198,7 @@
 		gap: 0.3rem;
 	}
 
-	input,
-	textarea {
+	input {
 		padding: 0;
 		padding: 1%;
 		border: 2px solid var(--border);

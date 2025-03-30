@@ -173,10 +173,6 @@
 		}
 	}
 
-	.showNotifications {
-		display: block !important;
-	}
-
 	.notifications {
 		position: relative;
 	}

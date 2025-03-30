@@ -34,7 +34,7 @@ export interface TaskProposalsGET {
     proposals: ProposalGET[]
 }
 
-export async function load({ url, fetch, params, parent }) {
+export async function load({ fetch, params, parent }) {
     const response = await fetchIntoResult<ProposalJSON[]>(() => fetch(`/api/projects/${params.id}/task/${params.task_id}/proposals`, { method: "GET" }));
     const praseProposalJSON = (jsonData: ProposalJSON[]) => jsonData.map((json) => processProposalJSON(json));
     const maybeProposals = response.map((value: ProposalJSON[]) => praseProposalJSON(value))

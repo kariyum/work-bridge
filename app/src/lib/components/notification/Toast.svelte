@@ -2,7 +2,12 @@
 	import { fly } from 'svelte/transition';
 	import type { ToastInterface } from '../navbar/Navbar.svelte';
 	import { untrack } from 'svelte';
-	import { NewProposalNotification, ProposalNotification } from '$lib/types';
+	import {
+		type NewProposalNotification,
+		NewProposalNotificationImpl,
+		type ProposalNotification,
+		ProposalNotificationImpl
+	} from '$lib/types';
 	import Progress from './Progress.svelte';
 	import { X } from 'lucide-svelte';
 	import { SvelteMap } from 'svelte/reactivity';
@@ -63,14 +68,14 @@
 
 {#snippet renderProposalNotificationToast(notif: ProposalNotification, toast: ToastInterface)}
 	<a
-		href={ProposalNotification.getHref(notif)}
+		href={ProposalNotificationImpl.getHref(notif)}
 		onclick={() => removeToast(toast)}
 		class="proposal-notif"
 	>
 		<div class="link-container">
 			<div class="content-container">
 				<p>
-					{ProposalNotification.getContent(notif)}
+					{ProposalNotificationImpl.getContent(notif)}
 				</p>
 				<button
 					class="close-btn"
@@ -93,14 +98,14 @@
 
 {#snippet renderNewProposalNotificationToast(notif: NewProposalNotification, toast: ToastInterface)}
 	<a
-		href={NewProposalNotification.getHref(notif)}
+		href={NewProposalNotificationImpl.getHref(notif)}
 		onclick={() => removeToast(toast)}
 		class="proposal-notif"
 	>
 		<div class="link-container">
 			<div class="content-container">
 				<p>
-					{NewProposalNotification.getContent(notif)}
+					{NewProposalNotificationImpl.getContent(notif)}
 				</p>
 				<button
 					class="close-btn"

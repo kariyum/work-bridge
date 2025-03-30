@@ -2,7 +2,7 @@
 	import { Settings, User } from 'lucide-svelte';
 
 	let { children, data } = $props();
-    const onPage = $derived(data.url);
+    let onPage = $derived(data.url);
     const pageToHeader = new Map([
         ["profile", "Public profile"],
         ["account", "Account settings"]
@@ -34,7 +34,7 @@
         border-color: var(--border);
     }
 	.outer-container {
-		max-width: 1100px;
+		max-width: var(--page-width);
 		margin: 0.5rem auto;
 	}
 

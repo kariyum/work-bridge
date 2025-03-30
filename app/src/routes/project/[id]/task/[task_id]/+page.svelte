@@ -230,7 +230,7 @@
 	}
 
 	.container {
-		max-width: 1100px;
+		max-width: var(--page-width);
 		margin: auto;
 	}
 </style>
