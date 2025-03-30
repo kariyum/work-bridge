@@ -33,30 +33,37 @@
 	<div class="container">
 		<form bind:this={form} onsubmit={saveProfile}>
 			<div class="input-group">
-				<label for="name">Name</label>
-				<input type="text" id="name" name="name" />
+				<label for="first_name">First Name</label>
+				<input type="text" id="first_name" name="first_name" />
+			</div>
+			<div class="input-group">
+				<label for="last_name">Last Name</label>
+				<input type="text" id="last_name" name="last_name" />
 			</div>
 
 			<div class="input-group">
 				<label for="description">Tell us about yourself</label>
-				<textarea id="description" name="description"
-				></textarea>
+				<textarea id="description" name="description"></textarea>
 			</div>
-			<div class="input-group">
-				<label for="skills">Skills</label>
-				<div class="skills">
-					<Skills skillsIn={skills} {addSkill} {removeSkillAtIndex}></Skills>
+			{#if data.user?.role == 'freelancer'}
+				<div class="input-group">
+					<label for="linkedin_profile">LinkedIn Profile</label>
+					<input type="text" id="linkedin_profile" name="linkedin_link">
 				</div>
+				<div class="input-group">
+					<label for="portfolio">Personal Website</label>
+					<input type="text" id="portfolio" name="portfolio">
+				</div>
+				<div class="input-group">
+					<label for="skills">Skills</label>
+					<div class="skills">
+						<Skills skillsIn={skills} {addSkill} {removeSkillAtIndex}></Skills>
+					</div>
+				</div>
+			{/if}
+			<div>
+				<input type="submit" value="Save" />
 			</div>
-			<div class="input-group">
-				<label for="dob">Date of Birth</label>
-				<input type="date" id="dob" name="birthdate" />
-			</div>
-			<div class="input-group">
-				<label for="phone_number">Phone Number</label>
-				<input type="tel" name="phone" id="phone_number" />
-			</div>
-			<input type="submit" value="Save" />
 		</form>
 	</div>
 </div>
@@ -91,10 +98,17 @@
 		border: 2px solid var(--border);
 	}
 
-	input[type="submit"] {
+	input[type='submit'] {
+		display: block;
 		cursor: pointer;
+		margin-left: auto;
+		background-color: var(--btn-bg);
+
+		&:hover {
+			background-color: var(--hover-color);
+		}
 	}
-	
+
 	.skills:focus {
 		outline: 2px solid var(--blue);
 		outline-offset: -2px;

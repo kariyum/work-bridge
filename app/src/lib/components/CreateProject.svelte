@@ -100,7 +100,18 @@
 			<h1>Create a project</h1>
 		{/if}
 
-		<form action="" onsubmit={(event) => event.preventDefault()}>
+		<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+		<form
+			onsubmit={(event) => {
+				event.preventDefault();
+				event.stopImmediatePropagation();
+			}}
+			onkeypress={(event) => {
+				if (event.key === 'Enter') {
+					event.preventDefault();
+				}
+			}}
+		>
 			<div class="input">
 				<label for="title">Project Title</label>
 				<input
@@ -146,7 +157,7 @@
 			<hr />
 			<div class="action-buttons">
 				<button class="cancel-btn" onclick={() => history.back()}>Cancel</button>
-				<button onclick={handleSubmit}>{projectIn ? 'Update Project' : 'Save Project'}</button>
+				<button type="submit" onclick={(event) => handleSubmit(event)}>{projectIn ? 'Update Project' : 'Save Project'}</button>
 			</div>
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->
 		</form>

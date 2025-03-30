@@ -50,7 +50,7 @@ pub fn generate_cookie<'a>(
             .path("/")
             .secure(true)
             .http_only(true)
-            .max_age(Duration::hours(24))
+            .max_age(Duration::days(24))
             .finish()
     })
 }

@@ -21,7 +21,6 @@
 		}
 	}
 	let isFocused = $state(false);
-	$inspect(isFocused);
 </script>
 
 <div class="container" class:blue-outline={isFocused} >
