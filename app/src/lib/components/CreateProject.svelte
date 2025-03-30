@@ -124,7 +124,6 @@
 			<div class="input">
 				<label for="">Project Description</label>
 				<RichTextEditor bind:x={projectFormInput.content}></RichTextEditor>
-				<!-- <textarea name="content" id="content" placeholder="The project is about designing and implementing..." bind:value={content}></textarea> -->
 			</div>
 
 			<div class="input">

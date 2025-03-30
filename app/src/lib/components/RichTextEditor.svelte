@@ -7,6 +7,7 @@
 
 	let element: HTMLDivElement;
 	let myEditor: Editor | undefined = $state();
+	let focused: boolean = $state(false);
 
 	let { x = $bindable() }: { x: string } = $props();
 	onMount(() => {
@@ -44,7 +45,7 @@
 	});
 </script>
 
-<div>
+<div class="doc" class:focused>
 	<div class="outer-button-container">
 		<div class="button-container">
 			<div class="button-group">
@@ -114,7 +115,7 @@
 			</div>
 		</div>
 	</div>
-	<div bind:this={element} class="editor-content"></div>
+	<div bind:this={element} class="editor-content" onfocusin={() => focused = true} onfocusout={() => focused = false}></div>
 </div>
 
 <style>
@@ -142,11 +143,6 @@
 		width: 2px;
 		align-self: stretch;
 		background-color: var(--border);
-	}
-	.outer-button-container {
-		border: 2px solid var(--border);
-		border-radius: 5px 5px 0 0;
-		border-bottom: 0;
 	}
 
 	.button-container {
@@ -179,14 +175,22 @@
 
 	:global(.editor) {
 		padding: 0.5rem;
-		border: 2px solid var(--border);
+		/* border: 2px solid var(--border); */
 		border-top: 0;
 		border-radius: 0 0 5px 5px;
-		min-height: 30vh;
+		min-height: 20vh;
 	}
 
 	:global(.editor:focus) {
 		outline: none;
 	}
 
+	.doc {
+		border: 2px solid var(--border);
+		border-radius: 5px;
+		overflow: hidden;
+	}
+	.focused {
+		border-color: var(--blue);
+	}	
 </style>

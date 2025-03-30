@@ -69,9 +69,7 @@
 </div>
 
 <style>
-	.container {
-		width: fit-content;
-	}
+
 	.top-container {
 		width: 100%;
 	}

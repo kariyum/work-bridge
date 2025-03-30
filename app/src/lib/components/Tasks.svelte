@@ -97,6 +97,7 @@
 		width: 100%;
 		text-align: left;
 		background-color: transparent;
+		border: 2px solid var(--border);
 
 		&:hover {
 			background-color: var(--hover-color);

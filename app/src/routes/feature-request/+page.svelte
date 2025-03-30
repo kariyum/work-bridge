@@ -226,10 +226,6 @@
 		cursor: pointer;
 	}
 
-	form textarea {
-		resize: none;
-	}
-
 	textarea:invalid {
 		border: 2px solid red;
 	}
