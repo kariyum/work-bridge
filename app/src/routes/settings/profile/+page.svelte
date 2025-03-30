@@ -2,6 +2,7 @@
 	import Skills from '$lib/components/Skills.svelte';
 
 	let { data } = $props();
+	
 	let skills: string[] = $state([]);
 	const addSkill = (skill: string) => skills.push(skill);
 	const removeSkillAtIndex = (index: number) => skills.splice(index, 1);
@@ -107,8 +108,13 @@
 		}
 	}
 
-	.skills:focus {
-		outline: 2px solid var(--blue);
-		outline-offset: -2px;
+	.skills {
+		width: 100%;
+		
+		&:focus {
+			outline: 2px solid var(--blue);
+			outline-offset: -2px;
+		}
 	}
+
 </style>
