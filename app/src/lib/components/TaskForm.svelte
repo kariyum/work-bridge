@@ -64,6 +64,7 @@
 	select {
 		padding: 0.5rem;
 		border-radius: 5px;
+		border: 2px solid var(--border);
 	}
 	.act-task {
 		margin-left: auto;

@@ -3,7 +3,7 @@ import type { NetworkError, TimeoutError, ClientError, ServerError, ParsingError
 
 export interface User {
     email: string,
-    role: string
+    role: "freelancer" | "recruiter"
 }
 export type NotificationType = "message" | "proposal" | "new_proposal";
 
