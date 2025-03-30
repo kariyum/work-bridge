@@ -1,7 +1,7 @@
 <script lang="ts">
-	import RichTextEditor from '$lib/components/RichTextEditor.svelte';
-	import Skills from '$lib/components/Skills.svelte';
-	import { TaskClass } from '$lib/states.svelte';
+	import RichTextEditor from '$lib/components/texteditor/RichTextEditor.svelte';
+	import Skills from '$lib/components/skills/Skills.svelte';
+	import { TaskClass } from '$lib/components/task/states.svelte';
 	interface props {
 		taskInput?: TaskClass;
 		onSubmit: (x: TaskClass) => void;

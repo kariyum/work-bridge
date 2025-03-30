@@ -1,4 +1,5 @@
 import type { FetchErrors } from "./types";
+import { writable, get } from 'svelte/store'
 
 export const cyrb53 = (str: string, seed = 0) => {
     let h1 = 0xdeadbeef ^ seed,
@@ -206,4 +207,29 @@ export function computeTimeAgo(date: Date): string {
     if (months < 12) return `${months} m`;
     const years = Math.floor(months / 12);
     return `${years} y`;
+}
+
+export const storage = (key: string, initValue: any) => {
+    const store = writable(initValue);
+
+    const storedValueStr = localStorage.getItem(key);
+    if (storedValueStr != null) store.set(JSON.parse(storedValueStr));
+
+    store.subscribe((val) => {
+        if ([null, undefined].includes(val)) {
+            localStorage.removeItem(key)
+        } else {
+            localStorage.setItem(key, JSON.stringify(val))
+        }
+    })
+
+    window.addEventListener('storage', () => {
+        const storedValueStr = localStorage.getItem(key);
+        if (storedValueStr == null) return;
+
+        const localValue = JSON.parse(storedValueStr)
+        if (localValue !== get(store)) store.set(localValue);
+    });
+
+    return store;
 }

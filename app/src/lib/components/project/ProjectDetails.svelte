@@ -4,7 +4,7 @@
 	import type { Tab } from '$lib/types';
 	import type { ProjectGET } from '$lib/types/project';
 	import { formatDate, snakeToCapital } from '$lib/utils';
-	import Tabs from './Tabs.svelte';
+	import Tabs from '../utility/Tabs.svelte';
 	interface props {
 		projectIn: ProjectGET;
 		role: string;

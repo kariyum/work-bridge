@@ -3,7 +3,7 @@
 	import { Plus } from 'lucide-svelte';
 
 	import { page } from '$app/state';
-	import { TaskClass } from '$lib/states.svelte';
+	import { TaskClass } from '$lib/components/task/states.svelte';
 	import TaskForm from './TaskForm.svelte';
 
 	let {

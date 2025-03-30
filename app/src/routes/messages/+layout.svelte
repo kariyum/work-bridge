@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment';
-	import { WebSocketService } from '$lib/realtime.js';
+	import { WebSocketService } from '$lib/websocketservice.js';
 	import type { MessagesJsonResponse } from '$lib/types.js';
 	import { CircleUserRound } from 'lucide-svelte';
 	import { onDestroy, onMount, untrack } from 'svelte';

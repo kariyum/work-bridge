@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Project from '$lib/freelancer/components/Project.svelte';
+	import Project from '$lib/components/project/freelancer/Project.svelte';
 	import type { ProjectGET } from '$lib/types/project';
 	let { projects }: { projects: ProjectGET[] } = $props();
 </script>

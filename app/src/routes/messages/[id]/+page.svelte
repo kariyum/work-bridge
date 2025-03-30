@@ -2,7 +2,7 @@
 	import { onDestroy, untrack } from 'svelte';
 	import { tick } from 'svelte';
 	import { SendHorizontal } from 'lucide-svelte';
-	import { WebSocketService } from '$lib/realtime';
+	import { WebSocketService } from '$lib/websocketservice.js';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import type { ClientMessage, MessagesJsonResponse } from '$lib/types.js';

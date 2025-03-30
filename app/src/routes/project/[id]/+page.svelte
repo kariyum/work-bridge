@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { pushState } from '$app/navigation';
 	import { page } from '$app/state';
-	import CreateProject from '$lib/components/CreateProject.svelte';
-	import ProjectDetails from '$lib/components/ProjectDetails.svelte';
+	import CreateProject from '$lib/components/project/CreateProject.svelte';
+	import ProjectDetails from '$lib/components/project/ProjectDetails.svelte';
 
 	const { data } = $props();
 </script>

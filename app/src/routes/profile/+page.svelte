@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Skills from '$lib/components/Skills.svelte';
+	import Skills from '$lib/components/skills/Skills.svelte';
 
 	let { data } = $props();
 	let skills: string[] = $state([]);
