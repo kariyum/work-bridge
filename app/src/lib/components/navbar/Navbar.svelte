@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { goto, invalidate, invalidateAll } from '$app/navigation';
-	import { WebSocketService } from '$lib/realtime';
+	import { WebSocketService } from '$lib/websocketservice';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
 	import type { BaseNotification, NewProposalNotification, ProposalNotification, User } from '$lib/types';
-	import ThemeToggler from './ThemeToggler.svelte';
-	import NotificationMenu from './NotificationMenu.svelte';
-	import Toast from './Toast.svelte';
+	import ThemeToggler from '../utility/ThemeToggler.svelte';
+	import NotificationMenu from '../notification/NotificationMenu.svelte';
+	import Toast from '../notification/Toast.svelte';
 
 	let { user, notifications }: { user: User; notifications: BaseNotification[] } = $props();
 	let webSocketService: WebSocketService;

@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 import { processProjectJson, type ProjectJSON } from '$lib/types/project';
 
 import type { LayoutLoad } from './$types';
-import { TaskClass } from '$lib/states.svelte';
+import { TaskClass } from '$lib/components/task/states.svelte';
 export const ssr = false;
 export const load: LayoutLoad = async ({ fetch, params }) => {
     if (!params.id) {

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	import type { ToastInterface } from './Navbar.svelte';
+	import type { ToastInterface } from '../navbar/Navbar.svelte';
 	import { untrack } from 'svelte';
 	import { NewProposalNotification, ProposalNotification } from '$lib/types';
 	import Progress from './Progress.svelte';

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import AlreadyLoggedIn from '$lib/components/AlreadyLoggedIn.svelte';
+	import AlreadyLoggedIn from '$lib/pages/AlreadyLoggedIn.svelte';
 	import { cyrb53, validateEmail } from '$lib/utils.js';
 	import { MoveLeft } from 'lucide-svelte';
 	let { data } = $props();

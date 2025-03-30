@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
-	import { TaskClass } from '$lib/states.svelte';
+	import { TaskClass } from '$lib/components/task/states.svelte';
 	import type { ProjectForm, ProjectGET, ProjectPOST } from '$lib/types/project';
 	import type { TaskPOST } from '$lib/types/task';
-	import RichTextEditor from './RichTextEditor.svelte';
-	import Tasks from './Tasks.svelte';
+	import RichTextEditor from '../texteditor/RichTextEditor.svelte';
+	import Tasks from '../task/Tasks.svelte';
 
 	let {
 		projectIn
