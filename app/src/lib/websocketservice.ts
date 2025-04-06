@@ -50,7 +50,7 @@ export class WebSocketService {
 
         };
         this.socket.onopen = (event: Event) => {
-            console.log("Socket is open", event);
+            // console.log("Socket is open", event);
         };
 
         this.socket.onerror = (event: Event) => {

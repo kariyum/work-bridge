@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT id, user_id, task_id, status as \"status: ProposalStatus\", budget, content, created_at FROM proposals WHERE id = $1",
+  "query": "INSERT INTO proposals (user_id, task_id, status, budget, content) VALUES ($1, $2, $3, $4, $5) RETURNING id, user_id, task_id, status as \"status: ProposalStatus\", budget, content, created_at",
   "describe": {
     "columns": [
       {
@@ -53,7 +53,23 @@
     ],
     "parameters": {
       "Left": [
-        "Int4"
+        "Varchar",
+        "Int4",
+        {
+          "Custom": {
+            "name": "proposal_status",
+            "kind": {
+              "Enum": [
+                "pending",
+                "accepted",
+                "declined",
+                "cancelled"
+              ]
+            }
+          }
+        },
+        "Numeric",
+        "Text"
       ]
     },
     "nullable": [
@@ -66,5 +82,5 @@
       false
     ]
   },
-  "hash": "9d06c51ca767087ce8d344b04f44bc51c7e1c5032d3b4ff48e911fcd0e0ec061"
+  "hash": "4576d8f902924fbb49b66ead214584d0ff7e56106c632ee6b7c8f8e9925d482d"
 }

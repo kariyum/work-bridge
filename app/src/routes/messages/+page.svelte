@@ -16,7 +16,6 @@
 		flex: 3;
 		display: flex;
 		flex-direction: column;
-		z-index: -1;
 	}
 
 </style>

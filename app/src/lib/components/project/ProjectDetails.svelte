@@ -100,13 +100,13 @@
 			<span style="font-weight: 500;">Client's email:</span>
 			<span>{projectIn.user_id}</span>
 		</div>
-		<p class="content rich-content">
+		<div class="content rich-content">
 			{#if projectIn.content.length === 0}
 				<span>No content for this project</span>
 			{:else}
 				{@html projectIn.content}
 			{/if}
-		</p>
+		</div>
 		<div>
 			<span style="font-weight: 500;">Posted on: </span>
 			{formatDate(projectIn.created_at)}
@@ -182,8 +182,7 @@
 	}
 
 	.content {
-		min-height: 5rem;
-		margin-top: 0.5rem;
+		margin: 0.5rem 0 0.5rem 0;
 		border-radius: 5px;
 	}
 

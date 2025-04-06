@@ -27,7 +27,8 @@
             "kind": {
               "Enum": [
                 "proposal",
-                "message"
+                "message",
+                "new_proposal"
               ]
             }
           }
@@ -49,7 +50,8 @@
             "kind": {
               "Enum": [
                 "proposal",
-                "message"
+                "message",
+                "new_proposal"
               ]
             }
           }

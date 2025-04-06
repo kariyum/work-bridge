@@ -28,7 +28,7 @@
               "Enum": [
                 "pending",
                 "accepted",
-                "rejected",
+                "declined",
                 "cancelled"
               ]
             }
