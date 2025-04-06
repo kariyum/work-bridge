@@ -23,6 +23,23 @@ pub async fn get_user(email: String, password: String, conn: impl Executor<'_, D
     user
 }
 
+pub struct UserInfoUpdate {
+    pub first_name: String,
+    pub last_name: String,
+}
+
+pub async fn update_user(email: String, user_info_update: UserInfoUpdate, conn: impl Executor<'_, Database=Postgres>) -> Result<(), Error> {
+    sqlx::query!(
+        r#"UPDATE users SET first_name = $1, last_name = $2 WHERE email = $3"#,
+        user_info_update.first_name,
+        user_info_update.last_name,
+        email
+    )
+        .execute(conn)
+        .await
+        .map(|_| ())
+}
+
 #[derive(Deserialize, Debug)]
 pub struct RegisterRequest {
     pub email: String,

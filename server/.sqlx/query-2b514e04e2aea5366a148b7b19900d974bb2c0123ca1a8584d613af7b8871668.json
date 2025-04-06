@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT tasks.id, tasks.project_id, tasks.title, tasks.content, tasks.deadline, tasks.assignee_id, tasks.budget, tasks.status, tasks.created_at, tasks.skills, COALESCE(proposals.task_id IS NOT NULL, False) AS application_submitted FROM tasks LEFT JOIN proposals ON tasks.id = proposals.task_id AND proposals.user_id = $2 WHERE tasks.project_id = $1;",
+  "query": "SELECT tasks.id, tasks.project_id, tasks.title, tasks.content, tasks.deadline, tasks.assignee_id, tasks.budget, tasks.status, tasks.created_at, tasks.skills, proposals.status as \"proposal_status: Option<ProposalStatus>\" FROM tasks LEFT JOIN proposals ON tasks.id = proposals.task_id AND proposals.user_id = $2 WHERE tasks.project_id = $1;",
   "describe": {
     "columns": [
       {
@@ -55,8 +55,20 @@
       },
       {
         "ordinal": 10,
-        "name": "application_submitted",
-        "type_info": "Bool"
+        "name": "proposal_status: Option<ProposalStatus>",
+        "type_info": {
+          "Custom": {
+            "name": "proposal_status",
+            "kind": {
+              "Enum": [
+                "pending",
+                "accepted",
+                "declined",
+                "cancelled"
+              ]
+            }
+          }
+        }
       }
     ],
     "parameters": {
@@ -76,8 +88,8 @@
       false,
       false,
       false,
-      null
+      false
     ]
   },
-  "hash": "e6062002144e0c110e4bdf053dd16983243f700fe900833bfb61cf5f161dfce1"
+  "hash": "2b514e04e2aea5366a148b7b19900d974bb2c0123ca1a8584d613af7b8871668"
 }

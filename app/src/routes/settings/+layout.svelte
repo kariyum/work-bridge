@@ -1,8 +1,9 @@
 <script lang="ts">
+	import { page } from '$app/state';
 	import { Settings, User } from 'lucide-svelte';
 
 	let { children, data } = $props();
-    let onPage = $derived(data.url);
+    let onPage = $derived(page.url.pathname.slice(1).split("/")[1]);
     const pageToHeader = new Map([
         ["profile", "Public profile"],
         ["account", "Account settings"]
@@ -13,7 +14,6 @@
 	<div>
 		{#if data.user}
 			<h2>{data.user.email}</h2>
-			<p>Your personal account</p>
 		{/if}
 	</div>
 	<div class="container">

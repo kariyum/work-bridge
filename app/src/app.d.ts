@@ -6,8 +6,9 @@ declare global {
 		// interface Locals {}
 		// interface PageData {}
 		interface PageState {
-			projectEditMode: boolean = false;
-			showTaskPopup: boolean = false;
+			projectEditMode: boolean;
+			showTaskPopup: boolean;
+			profileEditMode: boolean;
 		}
 		// interface Platform {}
 	}

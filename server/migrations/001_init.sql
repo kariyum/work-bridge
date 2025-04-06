@@ -13,11 +13,16 @@ CREATE TYPE skill AS ENUM ('developer', 'engineer', 'designer', 'manager', 'anal
 CREATE TABLE
     IF NOT EXISTS profiles (
         user_id VARCHAR(255) PRIMARY KEY,
-        skills text[], -- array of skill
-        birthdate DATE NOT NULL,
-        phone VARCHAR(255) NOT NULL,
+        skills text[] NOT NULL, -- array of skills
+        linkedin_link text,
+        github_link text,
+        portfolio_link text,
+        bio text,
+        -- birthdate DATE NOT NULL,
+        -- phone VARCHAR(255) NOT NULL,
         -- country VARCHAR(255) NOT NULL,
         -- availability BOOLEAN NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP NOT NULL,
         FOREIGN KEY (user_id) REFERENCES users (email)
     );
 

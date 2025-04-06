@@ -18,7 +18,8 @@
 		selectedTask = -1;
 		pushState('', {
 			projectEditMode: true,
-			showTaskPopup: true
+			showTaskPopup: true,
+			profileEditMode: false
 		});
 	}
 
@@ -57,7 +58,8 @@
 					selectedTask = i;
 					pushState('', {
 						projectEditMode: true,
-						showTaskPopup: true
+						showTaskPopup: true,
+						profileEditMode: false
 					});
 				}}
 			>
