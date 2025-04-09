@@ -45,7 +45,7 @@ export class WebSocketService {
                     break;
                 }
                 default:
-                    break;
+                    throw new Error(`Did not match on ${notificationType}]`);
             }
 
         };
