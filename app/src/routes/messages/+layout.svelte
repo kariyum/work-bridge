@@ -5,10 +5,11 @@
 	import { CircleUserRound } from 'lucide-svelte';
 	import { onDestroy, onMount, untrack } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
+	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
 
 	let { data, children } = $props();
-	const selectedDiscussion: string | undefined = $derived(data.discussion_id);
-
+	const selectedDiscussion: string | undefined = $derived(page.url.pathname.split('/').pop());
 	let titles = $derived.by(() => {
 		const result = new Map<number, string>();
 		data.discussions?.map((discussion) => {
@@ -31,7 +32,7 @@
 	});
 	let unsubscribe: () => void;
 
-	onMount(() => {
+	onMount(async () => {
 		if (browser) {
 			const websocketInstance = WebSocketService.getInstance();
 			unsubscribe = websocketInstance.subscribeToChatMessages((message: MessagesJsonResponse) => {
@@ -43,6 +44,22 @@
 					discussionNotif.set(message.discussion_id.toString(), (oldCount ?? 0) + 1);
 				}
 			});
+		}
+		if (data.discussions) {
+			const discussions = data.discussions;
+			const targetDiscussionUserId = untrack(() => page.url.searchParams.get('user_id'));
+			const currentUserId = data.user?.email;
+			if (targetDiscussionUserId && currentUserId) {
+				const maybeDiscussionId = discussions.find(
+					(discussion) =>
+						discussion.user_ids.includes(targetDiscussionUserId) &&
+						discussion.user_ids.includes(currentUserId) &&
+						discussion.user_ids.length === 2
+				)?.id;
+				if (maybeDiscussionId) {
+					await goto(`/messages/${maybeDiscussionId}`, { replaceState: true });
+				}
+			}
 		}
 	});
 

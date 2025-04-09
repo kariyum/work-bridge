@@ -58,6 +58,13 @@ export class UnauthorizedError extends Error {
     }
 }
 
+export class NotFound extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'NotFound';
+    }
+}
+
 export class NetworkError extends Error {
     constructor(message: string) {
         super(message);
@@ -165,6 +172,9 @@ export async function fetchIntoResult<T>(fetch: () => Promise<Response>): Promis
                 if (response.status === 401) {
                     return Result.err<T, FetchErrors>({ unauthorizedError: new UnauthorizedError('Unauthorized') });
                 }
+                else if (response.status === 404) {
+                    return Result.err<T, FetchErrors>({ notFound: new NotFound('Not found') })
+                }
                 else if (400 <= response.status && response.status < 500) {
                     return Result.err<T, FetchErrors>({ clientError: new ClientError(response.status, 'Client error') });
                 } else if (500 <= response.status) {
@@ -172,6 +182,7 @@ export async function fetchIntoResult<T>(fetch: () => Promise<Response>): Promis
                 }
                 return Result.err<T, FetchErrors>({ networkError: new NetworkError(`Fetch error ${response.status}`) });
             }
+            // TODO add check on the content type and handle text and json cases
             return response.json().then(data => Result.ok<T, FetchErrors>(data)).catch(() => Result.err<T, FetchErrors>({ parsingError: new ParsingError('Parsing error') }));
         })
         .catch(error => {

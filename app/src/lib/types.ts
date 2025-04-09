@@ -1,5 +1,5 @@
 import type { Snippet } from "svelte";
-import type { NetworkError, TimeoutError, ClientError, ServerError, ParsingError, UnauthorizedError } from "./utils";
+import type { NetworkError, TimeoutError, ClientError, ServerError, ParsingError, UnauthorizedError, NotFound } from "./utils";
 
 export interface User {
     email: string,
@@ -87,6 +87,7 @@ export type FetchErrors = {
     serverError?: ServerError;
     parsingError?: ParsingError;
     unauthorizedError?: UnauthorizedError;
+    notFound?: NotFound;
 }
 
 export interface TaskForm {
