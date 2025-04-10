@@ -111,7 +111,7 @@ pub async fn insert_tasks_concurrently(
 
 pub struct TaskCreator {
     pub user_id: String,
-    pub project_id: i32
+    pub project_id: i32,
 }
 
 pub async fn read_task_creator_by_id(
@@ -125,6 +125,21 @@ pub async fn read_task_creator_by_id(
     )
         .fetch_optional(conn)
         .await
+}
+
+pub async fn delete_tasks_not_in(
+    tasks_to_keep: Vec<i32>,
+    conn: impl Executor<'_, Database = Postgres>,
+) -> Result<(), sqlx::Error> {
+    sqlx::query!(
+        r#"
+        DELETE FROM tasks
+        WHERE NOT (id = ANY($1))"#,
+        &tasks_to_keep
+    )
+    .execute(conn)
+    .await
+    .map(|_| {})
 }
 
 #[cfg(test)]

@@ -1,6 +1,6 @@
 use crate::repository;
 use crate::repository::project::{delete_project, insert_project, put_project, ProjectInsert, ProjectRaw};
-use crate::repository::tasks::{insert_tasks_sequentially, update_task, CreateTask};
+use crate::repository::tasks::{delete_tasks_not_in, insert_tasks_sequentially, update_task, CreateTask};
 use crate::repository::tasks_proposals::RawTaskProposal;
 use crate::routes::proposals_handler::get_proposals;
 use crate::services::token::Claims;
@@ -189,10 +189,16 @@ async fn put_project_handler(
         .expect(&format!("Failed to put project {}", project_id))
         .into();
 
-
     let (tasks_to_update, tasks_to_insert): (Vec<TaskPost>, Vec<TaskPost>) = project_post.tasks.into_iter().partition(|task| {
         task.id.is_some()
     });
+
+    let ids_to_keep = tasks_to_update.iter().map(|task| task.id.unwrap()).collect::<Vec<i32>>();
+
+    delete_tasks_not_in(ids_to_keep, pgpool.as_ref())
+        .await
+        .expect("Failed to delete tasks to delete");
+
     let tasks = tasks_to_insert.into_iter()
         .map(|task| {
             CreateTask {
