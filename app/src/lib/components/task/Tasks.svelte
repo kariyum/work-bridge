@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { pushState } from '$app/navigation';
-	import { Plus } from 'lucide-svelte';
+	import { Plus, Trash } from 'lucide-svelte';
 
 	import { page } from '$app/state';
 	import { TaskClass } from '$lib/components/task/states.svelte';
@@ -24,17 +24,17 @@
 	}
 
 	function onSubmit(task: TaskClass) {
-		if (task.id) {
+		if (task.id || selectedTask !== -1) {
 			const taksIndex = tasks.findIndex((t) => t.id === task.id);
-			if (taksIndex === -1) {
-				console.error('Something went wrong, task index is -1. Unexpected.');
-			} else {
-				tasks[taksIndex] = task;
-			}
+			tasks[taksIndex] = task;
 		} else {
 			tasks.push(task);
 		}
 		history.back();
+	}
+
+	function removeTask(index: number) {
+		tasks.splice(index, 1);
 	}
 
 	let selectedTask = $state(0);
@@ -52,19 +52,22 @@
 		<p>Add tasks by clicking on the plus (+) button.</p>
 	{:else}
 		{#each tasks as task, i}
-			<button
-				class="single-task"
-				onclick={() => {
-					selectedTask = i;
-					pushState('', {
-						projectEditMode: true,
-						showTaskPopup: true,
-						profileEditMode: false
-					});
-				}}
-			>
-				{task.title}
-			</button>
+			<div class="task-container">
+				<button
+					class="single-task"
+					onclick={() => {
+						selectedTask = i;
+						pushState('', {
+							projectEditMode: true,
+							showTaskPopup: true,
+							profileEditMode: false
+						});
+					}}
+				>
+					{task.title}
+				</button>
+				<button aria-label="delete" onclick={() => removeTask(i)}><Trash size="18" /></button>
+			</div>
 		{/each}
 	{/if}
 </div>
@@ -96,13 +99,34 @@
 		align-items: center;
 	}
 	.single-task {
+		display: inline;
 		width: 100%;
 		text-align: left;
 		background-color: transparent;
-		border: 2px solid var(--border);
-
+		border-radius: 0;
+		border: none;
 		&:hover {
 			background-color: var(--hover-color);
+		}
+	}
+	.task-container {
+		display: flex;
+		flex-direction: row nowrap;
+		border: 2px solid var(--border);
+		border-radius: 5px;
+		overflow: hidden;
+
+		button[aria-label='delete'] {
+			border: none;
+			border-radius: 0;
+			display: inline;
+			margin: 0;
+			padding: 0.5rem;
+			line-height: 0;
+		}
+
+		button {
+			align-self: stretch;
 		}
 	}
 </style>
