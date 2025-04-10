@@ -18,7 +18,8 @@
 			onEdit={() => {
 				pushState('', {
 					projectEditMode: true,
-					showTaskPopup: false
+					showTaskPopup: false,
+					profileEditMode: false
 				});
 			}}
 		/>

@@ -2,6 +2,7 @@
 	import RichTextEditor from '$lib/components/texteditor/RichTextEditor.svelte';
 	import Skills from '$lib/components/skills/Skills.svelte';
 	import { TaskClass } from '$lib/components/task/states.svelte';
+	import { onMount } from 'svelte';
 	interface props {
 		taskInput?: TaskClass;
 		onSubmit: (x: TaskClass) => void;
@@ -14,6 +15,15 @@
 
 	let taskClass = $derived(taskInput?.copy() ?? new TaskClass());
 	const isEditingMode = taskInput !== undefined;
+	onMount(() => {
+		if (document) {
+			const previousSetup = document.body.style.overflow;
+			document.body.style.overflow = 'hidden';
+			return () => {
+				document.body.style.overflow = previousSetup;
+			};
+		}
+	});
 </script>
 
 <div class="blur">
@@ -79,29 +89,28 @@
 		flex-direction: column;
 		gap: 0.5rem;
 	}
-
-	.popover {
-		position: absolute;
-		top: 10%;
-		left: 50%;
-		width: 100%;
-		max-width: 1000px;
-		margin: auto 1rem auto 1rem;
-		transform: translate(-50%, 0);
-		padding: 1rem;
-		border: 2px solid var(--border);
-		border-radius: 5px;
-		background-color: var(--background-color);
-	}
-
 	.blur {
-		position: absolute;
+		position: fixed;
 		top: 0;
 		left: 0;
 		width: 100%;
 		height: 100%;
 		backdrop-filter: blur(2px);
 		background-color: rgba(0, 0, 0, 0.5);
+		padding: 4%;
+		box-sizing: border-box;
+	}
+
+	.popover {
+		width: 100%;
+		max-width: 1000px;
+		max-height: 100%;
+		padding: 1rem;
+		border: 2px solid var(--border);
+		border-radius: 5px;
+		background-color: var(--background-color);
+		overflow: auto;
+		margin: 2% auto 2% auto;
 	}
 
 	.skills-input {

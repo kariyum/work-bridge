@@ -13,13 +13,13 @@ pub struct Claims {
 
 pub fn generate_jwt(user_id: &str, role: &str) -> Result<String, jsonwebtoken::errors::Error> {
     let expiration = Utc::now()
-        .checked_add_signed(chrono::Duration::hours(24))
+        .checked_add_signed(chrono::Duration::days(24))
         .expect("valid timestamp")
         .timestamp() as usize;
 
     let my_claims = Claims {
         sub: user_id.to_owned(),
-        exp: expiration, // 24 hours
+        exp: expiration,
         role: role.to_owned(),
     };
     let secret = env::var("SECRET_KEY").unwrap_or("secret".to_string());
