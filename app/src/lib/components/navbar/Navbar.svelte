@@ -136,10 +136,6 @@
 <Toast bind:toasts={toastsQueue} />
 
 <style>
-	:global(.theme-icons) {
-		width: 1.2rem;
-	}
-
 	.lh-0 {
 		line-height: 0;
 	}

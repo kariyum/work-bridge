@@ -1,6 +1,14 @@
 # copy paste from https://hub.docker.com/_/postgres
 # Use postgres/example user/password credentials
 services:
+  sveltekit:
+    image: sveltekit
+    build:
+      context: app/
+    ports:
+      - 3000:3000
+    networks:
+      - local
   postgres:
     image: postgres #:alpine
     restart: always
@@ -20,3 +28,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+networks:
+  local:
+    driver: bridge
