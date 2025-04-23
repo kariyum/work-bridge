@@ -1,7 +1,17 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
-	return resolve(event);
+	if (event.request.url.includes('/api/old-endpoint')) {
+        // Redirect to a new endpoint
+        const newUrl = event.request.url.replace(`\/http.*/api\/http://server:80`, '');
+        console.log(newUrl)
+        // Forward the request to the new URL
+        const response = await fetch(newUrl, event.request);
+        return response;
+    }
+
+    // If no redirection is needed, proceed with the original request
+    return fetch(event.request);
 	const pathInclusionEqualityCheck = ["/"]
 	const pathStartsWithCheck = ["/register", "/login", "/api"]
 	const isPathPublic = pathInclusionEqualityCheck.includes(event.url.pathname) ||
