@@ -49,7 +49,7 @@ pub async fn register(
 async fn logout() -> impl Responder {
     let cookie = Cookie::build("Authorization", "")
         .path("/")
-        .secure(true)
+        .secure(false) // TODO update
         .http_only(true)
         .max_age(Duration::seconds(0))
         .finish();
