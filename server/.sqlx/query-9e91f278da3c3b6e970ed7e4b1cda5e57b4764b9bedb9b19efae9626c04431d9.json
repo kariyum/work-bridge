@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        DELETE FROM tasks\n        WHERE NOT (id = ANY($1))",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4Array"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "9e91f278da3c3b6e970ed7e4b1cda5e57b4764b9bedb9b19efae9626c04431d9"
+}
