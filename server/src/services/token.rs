@@ -48,7 +48,7 @@ pub fn generate_cookie<'a>(
     generate_jwt(user_id, role).map(|jwt| {
         Cookie::build("Authorization", jwt)
             .path("/")
-            .secure(true)
+            .secure(false) // TODO update
             .http_only(true)
             .max_age(Duration::days(24))
             .finish()
