@@ -47,29 +47,6 @@
 	}
 
 	let toastsQueue: ToastInterface[] = $state([]);
-	function showToast() {
-		const id = Date.now();
-		const notif: ToastInterface = {
-			id,
-			notification: {
-				notification_type: 'proposal',
-				content: {
-					proposal_id: 'Proposal #1',
-					proposal_status: 'approved',
-					project_id: 1,
-					trigger_user_id: 'That user'
-				},
-				created_at: new Date(Date.now()),
-				id: 2013,
-				user_id: 'this user'
-			} as ProposalNotification,
-			remove: () => {
-				toastsQueue = toastsQueue.filter((p) => p.id !== id);
-			}
-		};
-		toastsQueue.push(notif);
-	}
-
 	async function logout() {
 		const response = await fetch('/api/auth/logout');
 
@@ -105,9 +82,6 @@
 		</h1>
 		<nav>
 			<ul>
-				<button onclick={() => showToast()}>Show Toast</button>
-				<button onclick={() => invalidateAll()}>Refresh</button>
-
 				{#if user.role === 'recruiter'}
 					<li><a href="/project">Create a project</a></li>
 				{/if}
