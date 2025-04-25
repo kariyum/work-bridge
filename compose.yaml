@@ -1,10 +1,6 @@
 services:
   rusteu:
-    build:
-      context: server
-      target: final
-    # ports:
-    #   - 8080:8080
+    image: karim3219/work-bridge_rusteu:e8ec989
     environment:
       - HOST=0.0.0.0
       - PORT=80
@@ -46,9 +42,7 @@ services:
     networks:
       - server-side
   sveltekit:
-    image: sveltekit
-    build:
-      context: app/
+    image: karim3219/work-bridge_sveltekit:e8ec989
     ports:
       - 3000:3000
     networks:
