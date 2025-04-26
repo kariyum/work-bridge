@@ -103,4 +103,4 @@ jobs:
             mkdir -p db && echo ${{ secrets.DB_SECRET }} > db/password.txt
             echo "${{ steps.render_template.outputs.result }}" > compose.yaml
             docker-compose pull
-            docker-compose up -d
+            docker compose up -d
