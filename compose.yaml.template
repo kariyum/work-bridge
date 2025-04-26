@@ -1,6 +1,6 @@
 services:
   rusteu:
-    image: {{ .sveltekit_image }}
+    image: {{ .rusteu_image }}
     environment:
       - HOST=0.0.0.0
       - PORT=80
@@ -42,7 +42,7 @@ services:
     networks:
       - server-side
   sveltekit:
-    image: {{ .rusteu_image }}
+    image: {{ .sveltekit_image }}
     ports:
       - 3000:3000
     networks:
