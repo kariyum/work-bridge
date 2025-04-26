@@ -92,7 +92,6 @@
 	}
 </script>
 
-<div class="outer-container">
 	<div class="container">
 		{#if projectIn}
 			<h1>Update your project</h1>
@@ -152,7 +151,6 @@
 			<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->
 		</form>
 	</div>
-</div>
 
 <style>
 	.action-buttons {
@@ -186,7 +184,6 @@
 	}
 	.container {
 		max-width: 1200px;
-		padding: 0% 5% 0% 5%;
 		margin: auto;
 		width: 100%;
 	}
@@ -200,7 +197,7 @@
 
 	input {
 		padding: 0;
-		padding: 1%;
+		padding: 0.7rem;
 		border: 2px solid var(--border);
 	}
 </style>
