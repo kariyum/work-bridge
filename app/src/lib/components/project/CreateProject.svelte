@@ -176,12 +176,6 @@
 		width: 100%;
 	}
 
-	.outer-container {
-		display: flex;
-		flex-direction: column;
-		margin: auto;
-		width: 100%;
-	}
 	.container {
 		max-width: 1200px;
 		margin: auto;
