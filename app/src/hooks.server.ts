@@ -1,7 +1,14 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
-  return resolve(event);
+  console.log("Handling", event);
+  try {
+    return resolve(event);
+  } catch (error) {
+    console.log("Failed to fetch", event);
+    throw error;
+  }
+  // return resolve(event);
   if (event.request.url.includes('/api/old-endpoint')) {
     // Redirect to a new endpoint
     const newUrl = event.request.url.replace(`\/http.*/api\/http://server:80`, '');
