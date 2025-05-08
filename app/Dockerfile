@@ -15,5 +15,6 @@ COPY --from=builder /app/build build/
 COPY package.json .
 EXPOSE 3000
 ENV NODE_ENV=production
-CMD [ "npm", "run", "preview"]
-# CMD [ "node", "build" ]
+ENV PROTOCOL_HEADER=x-forwarded-proto
+ENV HOST_HEADER=x-forwarded-host
+CMD [ "node", "build" ]
