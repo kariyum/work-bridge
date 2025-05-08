@@ -15,6 +15,5 @@ COPY --from=builder /app/build build/
 COPY package.json .
 EXPOSE 3000
 ENV NODE_ENV=production
-ENV PROTOCOL_HEADER=x-forwarded-proto
-ENV HOST_HEADER=x-forwarded-host
+ENV ORIGIN=http://localhost:3000
 CMD [ "node", "build" ]
