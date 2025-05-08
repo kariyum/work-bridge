@@ -45,13 +45,15 @@ services:
     image: {{ .sveltekit_image }}
     ports:
       - 3000:3000
+    environment:
+      - ORIGIN=http://146.59.232.58
     networks:
       - client-side
   nginx:
     image: nginx:alpine
     ports:
       - "80:80"
-      # - "443:443"  # for add HTTPS later
+      - "443:443"  # for add HTTPS later
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
