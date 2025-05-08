@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - karim/dev
 
 jobs:
   build-rusteu:
