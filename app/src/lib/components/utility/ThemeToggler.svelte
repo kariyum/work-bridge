@@ -27,6 +27,10 @@
 	});
 </script>
 
+<svelte:head>
+	<meta name="color-scheme" content={theme} />
+</svelte:head>
+
 <button
 	onclick={toggleTheme}
 	class="lh-0 outline-none"
