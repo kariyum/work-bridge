@@ -68,6 +68,13 @@
 		border: 2px solid var(--border);
 		border-radius: calc(10px + 0.5rem);
 		min-height: 20rem;
+		width: 20rem;
+	}
+
+	@media (width < 45rem) {
+		.outer-container {
+			width: 100%;
+		}
 	}
 
 	.content {

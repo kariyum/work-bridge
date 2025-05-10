@@ -25,8 +25,8 @@
 	}
 	.container {
 		margin-top: 1rem;
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
+		display: flex;
+		flex-wrap: wrap;
 		gap: 1rem;
 	}
 </style>
