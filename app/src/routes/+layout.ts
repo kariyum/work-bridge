@@ -23,8 +23,6 @@ export async function load({ fetch }) {
       role: whoami.role
     } as User;
     const notifications = notificationsResponse.getOrThrow().map(processNotifications);
-    console.log("notifications", notifications);
-    console.log("user", user);
     return {
       user: user,
       notifications: notifications.toSorted((a, b) => b.created_at.getTime() - a.created_at.getTime())
