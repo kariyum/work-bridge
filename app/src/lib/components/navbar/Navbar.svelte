@@ -82,10 +82,16 @@
 			openMenu: () => {
 				menuDialog.showModal();
 				showMenu = true;
+				if (browser && document) {
+					document.body.style.overflow = "hidden";
+				}
 			},
 			closeMenu: () => {
 				menuDialog.close();
 				showMenu = false;
+				if (browser && document) {
+					document.body.style.overflow = "auto";
+				}
 			},
 			showMenu: () => showMenu
 		};
@@ -184,7 +190,7 @@
 			z-index: 1;
 			min-width: 17rem;
 			border: none;
-			transition-duration: 0.4s;
+			transition-duration: 0.3s;
 			transition-timing-function: ease-out;
 			transition-property: display overlay;
 			transition-behavior: allow-discrete;
@@ -193,11 +199,11 @@
 
 		dialog::backdrop {
 			background-color: black;
-			animation: 0.4s fadeIn forwards;
+			animation: 0.3s fadeIn forwards;
 		}
 
 		dialog:not([open])::backdrop {
-			animation: 0.4s fadeOut forwards;
+			animation: 0.3s fadeOut forwards;
 		}
 
 		dialog:modal {
@@ -262,7 +268,6 @@
 	}
 
 	@media (width >= 600px) {
-
 		.mobile {
 			display: none;
 		}
