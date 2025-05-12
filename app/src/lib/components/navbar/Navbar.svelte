@@ -108,12 +108,16 @@
 
 {#snippet menu()}
 	<ul>
+		<div class="mobile">
+			<li>Work Bridge</li>
+			<hr>
+		</div>
 		<li class="mobile"><a href="/">Home</a></li>
 		{#if user.role === 'recruiter'}
 			<li><a href="/project">Create a project</a></li>
 		{/if}
 		<li><a href="/messages">Discussions</a></li>
-		<li class="notifications">
+		<li class="desktop notifications">
 			<button> Notifications </button>
 			{#if showNotifications}
 				<div class="notification-container">
@@ -121,6 +125,7 @@
 				</div>
 			{/if}
 		</li>
+		<li class="mobile"><a href="/notifications">Notifications</a></li>
 		<li><a href="/settings">Settings</a></li>
 		<li><a href="/feature-request">Feature Requests</a></li>
 		<li>
@@ -131,6 +136,7 @@
 		</li>
 	</ul>
 {/snippet}
+
 <section>
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<div class="container">
@@ -223,6 +229,15 @@
 			text-decoration: none;
 			font-weight: 600;
 			font-size: larger;
+			a {
+				width: 100%;
+				height: 100%;
+				padding: 0.3rem 0;
+			}
+
+			button:hover {
+				background-color: transparent;
+			}
 		}
 
 		button {
@@ -231,9 +246,11 @@
 			border: none;
 			font-weight: inherit;
 			font-size: inherit;
+			padding: 0.3rem 0;
 		}
 
 		a {
+			display: block;
 			text-decoration: none;
 			color: var(--font-color);
 		}
