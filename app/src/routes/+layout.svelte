@@ -24,6 +24,6 @@
 	.container {
 		margin: auto;
 		max-width: var(--max-width);
-		padding: 0rem var(--page-padding);
+		margin: 0rem var(--page-padding);
 	}
 </style>
