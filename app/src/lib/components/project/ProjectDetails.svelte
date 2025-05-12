@@ -111,6 +111,7 @@
 			<span style="font-weight: 500;">Posted on: </span>
 			{formatDate(projectIn.created_at)}
 		</div>
+		<hr style="margin: 0.5rem 0; color: black;">
 		<h2>Tasks</h2>
 		{@render tasksSnippet()}
 	</div>
