@@ -72,6 +72,7 @@ textarea {
 
 .light {
     color-scheme: light;
+    -webkit-tap-highlight-color: hsla(0, 0%, 51%, 0.283);
     --font-color: #000;
     --background-color: #fff;
     --canvas-color: #fff;
@@ -109,6 +110,7 @@ textarea {
     color-scheme: dark;
     color: #bfbfbf;
 
+    -webkit-tap-highlight-color: hsla(0, 0%, 51%, 0.283);
     --font-color: #bfbfbf;
 
     --background-color: #212121;
