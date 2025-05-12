@@ -189,14 +189,15 @@
 		dialog {
 			position: absolute;
 			top: 0;
-			left: -100%;
+			left: 0;
+			transform: translateX(-100%);
 			border-radius: 0 20px 20px 0;
 			background-color: transparent;
 			height: 100vh;
 			z-index: 1;
 			min-width: 17rem;
 			border: none;
-			transition-duration: 0.3s;
+			transition-duration: 0.4s;
 			transition-timing-function: ease-out;
 			transition-property: display overlay;
 			transition-behavior: allow-discrete;
@@ -205,11 +206,11 @@
 
 		dialog::backdrop {
 			background-color: black;
-			animation: 0.3s fadeIn forwards;
+			animation: 0.4s fadeIn forwards;
 		}
 
 		dialog:not([open])::backdrop {
-			animation: 0.3s fadeOut forwards;
+			animation: 0.4s fadeOut forwards;
 		}
 
 		dialog:modal {
@@ -218,10 +219,10 @@
 
 		dialog[open] {
 			display: block;
-			left: 0;
+			transform: translateX(0);
 
 			@starting-style {
-				left: -100%;
+				transform: translateX(-100%);
 			}
 		}
 

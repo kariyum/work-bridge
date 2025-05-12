@@ -34,6 +34,7 @@ export async function load({ fetch }) {
   //     return redirect(302, getRedirectionUrl(untrack(() => url.pathname)));
   // }
   return {
-    error: whoamiResponse.error
+    error: whoamiResponse.error,
+    notifications: [] as BaseNotification[],
   }
 }
