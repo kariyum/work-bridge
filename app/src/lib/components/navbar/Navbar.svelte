@@ -12,7 +12,16 @@
 	import ThemeToggler from '../utility/ThemeToggler.svelte';
 	import NotificationMenu from '../notification/NotificationMenu.svelte';
 	import Toast from '../notification/Toast.svelte';
-	import { Menu } from 'lucide-svelte';
+	import {
+		Bell,
+		CirclePlus,
+		Home,
+		LogOut,
+		Menu,
+		MessageCircle,
+		PackagePlus,
+		Settings
+	} from 'lucide-svelte';
 
 	let { user, notifications }: { user: User; notifications: BaseNotification[] } = $props();
 	let webSocketService: WebSocketService;
@@ -83,14 +92,14 @@
 				menuDialog.showModal();
 				showMenu = true;
 				if (browser && document) {
-					document.body.style.overflow = "hidden";
+					document.body.style.overflow = 'hidden';
 				}
 			},
 			closeMenu: () => {
 				menuDialog.close();
 				showMenu = false;
 				if (browser && document) {
-					document.body.style.overflow = "auto";
+					document.body.style.overflow = 'auto';
 				}
 			},
 			showMenu: () => showMenu
@@ -106,13 +115,69 @@
 	}}
 />
 
-{#snippet menu()}
+{#snippet menuMobile()}
 	<ul>
-		<div class="mobile">
-			<li>Work Bridge</li>
-			<hr>
+		<div class="title mobile">
+			<li>
+				<div>Work Bridge</div>
+				<ThemeToggler />
+			</li>
+			<hr />
 		</div>
-		<li class="mobile"><a href="/">Home</a></li>
+		<li class="mobile">
+			<a href="/"
+				><Home />
+				<div>Home</div></a
+			>
+		</li>
+		{#if user.role === 'recruiter'}
+			<li>
+				<a href="/project"
+					><CirclePlus />
+					<div>Create a project</div></a
+				>
+			</li>
+		{/if}
+		<li>
+			<a href="/messages"
+				><MessageCircle />
+				<div>Discussions</div></a
+			>
+		</li>
+		<li class="mobile">
+			<a href="/notifications"
+				><Bell />
+				<div>Notifications</div></a
+			>
+		</li>
+		<li>
+			<a href="/settings"
+				><Settings />
+				<div>Settings</div></a
+			>
+		</li>
+		<li>
+			<a href="/feature-request"
+				><PackagePlus />
+				<div>Feature Requests</div></a
+			>
+		</li>
+		<li>
+			<button onclick={logout}
+				><LogOut />
+				<div>Logout</div>
+			</button>
+		</li>
+	</ul>
+{/snippet}
+
+{#snippet menuDesktop()}
+	<ul>
+		<div class="title mobile">
+			<li>Work Bridge</li>
+			<hr />
+		</div>
+		<li class="mobile"><a href="/"><Home /> Home</a></li>
 		{#if user.role === 'recruiter'}
 			<li><a href="/project">Create a project</a></li>
 		{/if}
@@ -131,9 +196,6 @@
 		<li>
 			<button onclick={logout}> Logout </button>
 		</li>
-		<li class="lh-0">
-			<ThemeToggler />
-		</li>
 	</ul>
 {/snippet}
 
@@ -149,11 +211,11 @@
 			</a>
 		</h1>
 		<nav class="desktop">
-			{@render menu()}
+			{@render menuDesktop()}
 		</nav>
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
 		<dialog bind:this={menuDialog} class="mobile" onclick={() => mobileState.closeMenu()}>
-			{@render menu()}
+			{@render menuMobile()}
 		</dialog>
 	</div>
 </section>
@@ -186,6 +248,23 @@
 			}
 		}
 
+		.title {
+			color: var(--font-color);
+			li {
+				padding: 1rem;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+			}
+
+			hr {
+				border: none;
+				border-top: solid;
+				border-color: var(--orange);
+				border-width: 2px;
+			}
+		}
+
 		dialog {
 			position: absolute;
 			top: 0;
@@ -197,7 +276,7 @@
 			z-index: 1;
 			min-width: 17rem;
 			border: none;
-			transition-duration: 0.4s;
+			transition-duration: 0.3s;
 			transition-timing-function: ease-out;
 			transition-property: display overlay;
 			transition-behavior: allow-discrete;
@@ -206,11 +285,11 @@
 
 		dialog::backdrop {
 			background-color: black;
-			animation: 0.4s fadeIn forwards;
+			animation: 0.3s fadeIn forwards;
 		}
 
 		dialog:not([open])::backdrop {
-			animation: 0.4s fadeOut forwards;
+			animation: 0.3s fadeOut forwards;
 		}
 
 		dialog:modal {
@@ -230,7 +309,20 @@
 			text-decoration: none;
 			font-weight: 600;
 			font-size: larger;
+
 			a {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
+				width: 100%;
+				height: 100%;
+				padding: 0.3rem 0;
+			}
+
+			button {
+				display: flex;
+				align-items: center;
+				gap: 1rem;
 				width: 100%;
 				height: 100%;
 				padding: 0.3rem 0;
@@ -264,8 +356,11 @@
 			gap: 0.5rem;
 			overflow: auto;
 			height: 100%;
-			padding: 1rem;
 			background-color: var(--navbar-color);
+
+			li {
+				padding: 0 1rem;
+			}
 		}
 
 		.header {
