@@ -9,7 +9,7 @@
 	import { goto } from '$app/navigation';
 
 	let { data, children } = $props();
-	const selectedDiscussion: string | undefined = $derived(page.url.pathname.split('/').pop());
+	const selectedDiscussion: string | undefined = $derived(page.params.id);
 	let titles = $derived.by(() => {
 		const result = new Map<number, string>();
 		data.discussions?.map((discussion) => {
@@ -68,12 +68,13 @@
 			unsubscribe();
 		}
 	});
+	let clientHeight = $state(browser ? window.innerHeight.toString() + 'px' : '100vh');
 </script>
 
 {#if data.discussions}
-	<div class="component">
+	<div class="component" style:--client-height={clientHeight}>
 		<div class="container">
-			<div class="menu">
+			<div class="menu" data-selected={selectedDiscussion != undefined}>
 				<div class="header">
 					<div>Discussions</div>
 				</div>
@@ -98,18 +99,33 @@
 					{/each}
 				</div>
 			</div>
-			<div class="messages-col">
+			<div class="messages-col" data-selected={selectedDiscussion != undefined}>
 				{@render children()}
 			</div>
 		</div>
 	</div>
 {:else}
-	<div>Error</div>
+	<div>Could not fetch discussions</div>
 {/if}
 
+<svelte:window
+	onresize={() => (clientHeight = browser ? window.innerHeight.toString() + 'px' : '100vh')}
+/>
+
 <style>
+	@media (width < 600px) {
+		.messages-col[data-selected='false'] {
+			display: none !important;
+		}
+
+		.menu[data-selected='true'] {
+			display: none !important;
+		}
+	}
+
 	.component {
-		height: calc(100vh - 4rem);
+		display: block;
+		height: calc(var(--client-height) - 4rem);
 	}
 
 	.discussion-container {

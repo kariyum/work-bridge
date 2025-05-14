@@ -238,3 +238,23 @@ textarea:focus {
         min-height: 1rem;
     }
 }
+
+@media (width >= 600px) {
+    .mobile {
+        display: none;
+    }
+
+    .desktop {
+        display: contents;
+    }
+}
+
+@media (width < 600px) {
+    .mobile {
+        display: contents;
+    }
+
+    .desktop {
+        display: none;
+    }
+}
