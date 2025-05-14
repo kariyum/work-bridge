@@ -24,6 +24,5 @@
 	.container {
 		margin: auto;
 		max-width: var(--max-width);
-		margin: 0rem var(--page-padding) 3rem var(--page-padding);
 	}
 </style>

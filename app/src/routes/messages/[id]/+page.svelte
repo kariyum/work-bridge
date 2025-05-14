@@ -15,6 +15,7 @@
 	let smoothScroll: boolean = false;
 	let justSwitched: boolean = true;
 	let viewport: HTMLDivElement;
+	let messageInputBox: HTMLInputElement;
 	let receivers: string[] = $derived.by(() => {
 		data.discussion_id;
 		data.discussions;
@@ -37,6 +38,14 @@
 			unsubscribe = webSocketService.subscribeToChatMessages((msg) => {
 				if (parseInt(data.discussion_id) == msg.discussion_id) {
 					localMessages.push(msg);
+				}
+			});
+		}
+
+		if (window && window.visualViewport) {
+			window.visualViewport.addEventListener('resize', () => {
+				if (window.visualViewport && window.visualViewport.height < window.innerHeight) {
+					messageInputBox.scrollIntoView({ behavior: 'instant' });
 				}
 			});
 		}
@@ -130,7 +139,12 @@
 
 <div class="input">
 	<form onsubmit={onClick} class="input-form">
-		<input type="text" bind:value={message} placeholder="Type a message... as {data.user?.email}" />
+		<input
+			type="text"
+			bind:this={messageInputBox}
+			bind:value={message}
+			placeholder="Type a message... as {data.user?.email}"
+		/>
 		<button type="submit" class="icon">
 			<SendHorizontal />
 		</button>
@@ -157,7 +171,7 @@
 		width: 100%;
 		flex-grow: 1;
 		flex: 1;
-		background-color: canvas;
+		background-color: var(--canvas-color);
 	}
 
 	.message {

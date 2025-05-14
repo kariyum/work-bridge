@@ -117,19 +117,23 @@
 
 {#snippet menuMobile()}
 	<ul>
-		<div class="title mobile">
-			<li>
-				<div>Work Bridge</div>
-				<ThemeToggler />
-			</li>
-			<hr />
+		<div class="mobile">
+			<div class="title">
+				<li>
+					<div>Work Bridge</div>
+					<ThemeToggler />
+				</li>
+				<hr />
+			</div>
 		</div>
-		<li class="mobile">
-			<a href="/"
-				><Home />
-				<div>Home</div></a
-			>
-		</li>
+		<div class="mobile">
+			<li>
+				<a href="/"
+					><Home />
+					<div>Home</div></a
+				>
+			</li>
+		</div>
 		{#if user.role === 'recruiter'}
 			<li>
 				<a href="/project"
@@ -144,12 +148,14 @@
 				<div>Discussions</div></a
 			>
 		</li>
-		<li class="mobile">
-			<a href="/notifications"
-				><Bell />
-				<div>Notifications</div></a
-			>
-		</li>
+		<div class="mobile">
+			<li>
+				<a href="/notifications"
+					><Bell />
+					<div>Notifications</div></a
+				>
+			</li>
+		</div>
 		<li>
 			<a href="/settings"
 				><Settings />
@@ -173,24 +179,32 @@
 
 {#snippet menuDesktop()}
 	<ul>
-		<div class="title mobile">
-			<li>Work Bridge</li>
-			<hr />
+		<div class="mobile">
+			<div class="title">
+				<li>Work Bridge</li>
+				<hr />
+			</div>
 		</div>
-		<li class="mobile"><a href="/"><Home /> Home</a></li>
+		<div class="mobile">
+			<li><a href="/"><Home /> Home</a></li>
+		</div>
 		{#if user.role === 'recruiter'}
 			<li><a href="/project">Create a project</a></li>
 		{/if}
 		<li><a href="/messages">Discussions</a></li>
-		<li class="desktop notifications">
-			<button> Notifications </button>
-			{#if showNotifications}
-				<div class="notification-container">
-					<NotificationMenu notifications={finalNotifications} />
-				</div>
-			{/if}
-		</li>
-		<li class="mobile"><a href="/notifications">Notifications</a></li>
+		<div class="desktop">
+			<li class="notifications">
+				<button> Notifications </button>
+				{#if showNotifications}
+					<div class="notification-container">
+						<NotificationMenu notifications={finalNotifications} />
+					</div>
+				{/if}
+			</li>
+		</div>
+		<div class="mobile">
+			<li><a href="/notifications">Notifications</a></li>
+		</div>
 		<li><a href="/settings">Settings</a></li>
 		<li><a href="/feature-request">Feature Requests</a></li>
 		<li>
@@ -203,20 +217,26 @@
 	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 	<div class="container">
 		<h1 class="header">
-			<button class="mobile menu-icon" onclick={() => mobileState.openMenu()}>
-				<Menu size="28" />
-			</button>
+			<div class="mobile">
+				<button class="menu-icon" onclick={() => mobileState.openMenu()}>
+					<Menu size="28" />
+				</button>
+			</div>
 			<a class="home" href="/">
 				{user.role.toUpperCase()}
 			</a>
 		</h1>
-		<nav class="desktop">
-			{@render menuDesktop()}
-		</nav>
+		<div class="desktop">
+			<nav>
+				{@render menuDesktop()}
+			</nav>
+		</div>
 		<!-- svelte-ignore a11y_click_events_have_key_events -->
-		<dialog bind:this={menuDialog} class="mobile" onclick={() => mobileState.closeMenu()}>
-			{@render menuMobile()}
-		</dialog>
+		<div class="mobile">
+			<dialog bind:this={menuDialog} onclick={() => mobileState.closeMenu()}>
+				{@render menuMobile()}
+			</dialog>
+		</div>
 	</div>
 </section>
 
@@ -466,6 +486,7 @@
 			margin: auto;
 			padding: 0.5rem var(--page-padding);
 			border-radius: 7px;
+			justify-content: space-between;
 		}
 
 		ul {
