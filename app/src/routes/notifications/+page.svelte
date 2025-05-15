@@ -4,4 +4,6 @@
 	let { data } = $props();
 </script>
 
-<NotificationMenu notifications={data.notifications} />
+<div class="page-container">
+	<NotificationMenu notifications={data.notifications} />
+</div>

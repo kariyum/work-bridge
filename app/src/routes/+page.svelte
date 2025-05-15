@@ -11,7 +11,7 @@
 	<h1>You seem to be offline...</h1>
 {:else}
 	{@const projects = data.projects}
-	<div class="container">
+	<div class="page-container">
 		{#if data.user?.role === 'recruiter'}
 			<LandingPageRecruiter {projects}></LandingPageRecruiter>
 		{:else if data.user?.role === 'freelancer'}
@@ -19,10 +19,3 @@
 		{/if}
 	</div>
 {/if}
-
-
-<style>
-	.container {
-		margin-top: 1rem;
-	}
-</style>
