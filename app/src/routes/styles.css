@@ -258,3 +258,7 @@ textarea:focus {
         display: none;
     }
 }
+
+.page-container {
+    padding: var(--page-padding);
+}

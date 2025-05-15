@@ -74,7 +74,7 @@
 {#if data.discussions}
 	<div class="component" style:--client-height={clientHeight}>
 		<div class="container">
-			<div class="menu" data-selected={selectedDiscussion != undefined}>
+			<div class="page-container menu" data-selected={selectedDiscussion != undefined}>
 				<div class="header">
 					<div>Discussions</div>
 				</div>
@@ -121,6 +121,15 @@
 		.menu[data-selected='true'] {
 			display: none !important;
 		}
+
+		.menu {
+			height: fit-content;
+			width: 100%;
+		}
+
+		.discussion-container {
+			margin-left: 0 !important;
+		}
 	}
 
 	.component {
@@ -144,7 +153,6 @@
 	.container {
 		display: flex;
 		width: 100%;
-		margin: auto;
 		height: 100%;
 	}
 
@@ -154,8 +162,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
-		margin-top: 1rem;
-		/* border-right: 2px solid var(--blue); */
 	}
 
 	.messages-col {
