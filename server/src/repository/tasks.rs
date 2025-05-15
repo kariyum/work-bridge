@@ -133,7 +133,7 @@ pub async fn delete_tasks_not_in(
 ) -> Result<(), sqlx::Error> {
     sqlx::query!(
         r#"
-        DELETE FROM tasks
+        DELETE FROM tasks CASCADE
         WHERE NOT (id = ANY($1))"#,
         &tasks_to_keep
     )
