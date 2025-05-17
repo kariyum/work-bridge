@@ -33,9 +33,6 @@
 	);
 
 	async function handleSubmit(event: Event) {
-		await new Promise((resolve, reject) => {
-			setTimeout(() => resolve(''), 3000);
-		});
 		event.preventDefault();
 		const projectPost: ProjectPOST = {
 			title: projectFormInput.title,
@@ -153,9 +150,6 @@
 			{#snippet submitButton()}
 				<div>{projectIn ? 'Update Project' : 'Save Project'}</div>
 			{/snippet}
-			<!-- <button type="submit" onclick={(event) => handleSubmit(event)}
-				>{projectIn ? 'Update Project' : 'Save Project'}</button
-			> -->
 			{#snippet endView()}
 				<button>Done!</button>
 			{/snippet}

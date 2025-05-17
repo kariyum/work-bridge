@@ -40,13 +40,13 @@
 		width: 8rem;
 	}
 	.loader {
-		width: 1rem;
-		height: 1rem;
+		width: 0.9rem;
+		height: 0.9rem;
 		border: 5px dotted #fff;
 		display: inline-block;
 		position: relative;
 		box-sizing: border-box;
-		animation: rotation 2s linear infinite;
+		animation: rotation 1.5s linear infinite;
 	}
 
 	@keyframes rotation {
