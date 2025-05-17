@@ -1,6 +1,10 @@
 use crate::repository;
-use crate::repository::project::{delete_project, insert_project, put_project, ProjectInsert, ProjectRaw};
-use crate::repository::tasks::{delete_tasks_not_in, insert_tasks_sequentially, update_task, CreateTask};
+use crate::repository::project::{
+    delete_project, insert_project, put_project, ProjectInsert, ProjectRaw,
+};
+use crate::repository::tasks::{
+    delete_tasks, insert_tasks_sequentially, read_tasks_by_project_id, update_task, CreateTask,
+};
 use crate::repository::tasks_proposals::RawTaskProposal;
 use crate::routes::proposals_handler::get_proposals;
 use crate::services::token::Claims;
@@ -10,6 +14,7 @@ use actix_web::{web, HttpResponse, Responder};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::PgPool;
+use std::collections::HashSet;
 
 #[derive(Serialize)]
 struct ProjectResponse {
@@ -52,11 +57,7 @@ async fn get_projects(_: Claims, pgpool: web::Data<PgPool>) -> impl Responder {
 }
 
 #[allow(dead_code)]
-async fn get_project(
-    _: Claims,
-    path: Path<i32>,
-    pgpool: web::Data<PgPool>,
-) -> impl Responder {
+async fn get_project(_: Claims, path: Path<i32>, pgpool: web::Data<PgPool>) -> impl Responder {
     let project_id = path.into_inner();
     let project_option = repository::project::get_project_by_id(project_id, pgpool.as_ref())
         .await
@@ -80,9 +81,13 @@ async fn get_project_with_tasks(
         .expect(&format!("Failed to get project by id {}", project_id))
         .map(ProjectResponse::from);
 
-    let tasks = repository::tasks_proposals::read_tasks_with_submission_by_project_id(project_id, claims.sub, pgpool.as_ref())
-        .await
-        .expect(&format!("Failed to read tasks {}", project_id));
+    let tasks = repository::tasks_proposals::read_tasks_with_submission_by_project_id(
+        project_id,
+        claims.sub,
+        pgpool.as_ref(),
+    )
+    .await
+    .expect(&format!("Failed to read tasks {}", project_id));
 
     if let Some(project) = project_option {
         let response = ProjectResponse {
@@ -136,23 +141,24 @@ async fn create_project_handler(
         .await
         .expect("Failed to insert project");
 
-    let tasks_insert = project_post.tasks.into_iter()
-        .map(|task| {
-            CreateTask {
-                project_id: project_raw.id,
-                title: task.title,
-                content: task.content,
-                deadline: task.deadline,
-                assignee_id: task.assignee_id,
-                budget: task.budget,
-                status: task.status,
-                skills: task.skills
-            }
+    let tasks_insert = project_post
+        .tasks
+        .into_iter()
+        .map(|task| CreateTask {
+            project_id: project_raw.id,
+            title: task.title,
+            content: task.content,
+            deadline: task.deadline,
+            assignee_id: task.assignee_id,
+            budget: task.budget,
+            status: task.status,
+            skills: task.skills,
         })
         .collect::<Vec<CreateTask>>();
 
     insert_tasks_sequentially(tasks_insert, pgpool.as_ref())
-        .await.expect("Failed to insert tasks");
+        .await
+        .expect("Failed to insert tasks");
 
     HttpResponse::Created().finish()
 }
@@ -189,33 +195,50 @@ async fn put_project_handler(
         .expect(&format!("Failed to put project {}", project_id))
         .into();
 
-    let (tasks_to_update, tasks_to_insert): (Vec<TaskPost>, Vec<TaskPost>) = project_post.tasks.into_iter().partition(|task| {
-        task.id.is_some()
-    });
+    let (tasks_to_update, tasks_to_insert): (Vec<TaskPost>, Vec<TaskPost>) = project_post
+        .tasks
+        .into_iter()
+        .partition(|task| task.id.is_some());
 
-    let ids_to_keep = tasks_to_update.iter().map(|task| task.id.unwrap()).collect::<Vec<i32>>();
-
-    delete_tasks_not_in(ids_to_keep, pgpool.as_ref())
+    let persisted_task_ids = read_tasks_by_project_id(project_id, pgpool.as_ref())
         .await
-        .expect("Failed to delete tasks to delete");
+        .expect("Failed to read tasks")
+        .into_iter()
+        .map(|task| task.id)
+        .collect::<HashSet<i32>>();
 
-    let tasks = tasks_to_insert.into_iter()
-        .map(|task| {
-            CreateTask {
-                project_id: response.id,
-                title: task.title,
-                content: task.content,
-                deadline: task.deadline,
-                assignee_id: task.assignee_id,
-                budget: task.budget,
-                status: task.status,
-                skills: task.skills
-            }
+    let task_ids_to_update = tasks_to_update
+        .iter()
+        .filter(|task| task.id.is_some())
+        .map(|task| task.id.unwrap())
+        .collect::<HashSet<i32>>();
+
+    let tasks_to_delete = persisted_task_ids
+        .difference(&task_ids_to_update)
+        .map(|i| i.clone())
+        .collect::<Vec<i32>>();
+
+    delete_tasks(tasks_to_delete, pgpool.as_ref())
+        .await
+        .expect("Failed to delete tasks");
+
+    let tasks = tasks_to_insert
+        .into_iter()
+        .map(|task| CreateTask {
+            project_id: response.id,
+            title: task.title,
+            content: task.content,
+            deadline: task.deadline,
+            assignee_id: task.assignee_id,
+            budget: task.budget,
+            status: task.status,
+            skills: task.skills,
         })
         .collect::<Vec<CreateTask>>();
 
     insert_tasks_sequentially(tasks, pgpool.as_ref())
-        .await.expect("Failed to insert tasks");
+        .await
+        .expect("Failed to insert tasks");
 
     for task in tasks_to_update {
         let pl = CreateTask {
@@ -226,9 +249,11 @@ async fn put_project_handler(
             assignee_id: task.assignee_id,
             budget: task.budget,
             status: task.status,
-            skills: task.skills
+            skills: task.skills,
         };
-        update_task(task.id.unwrap(), pl, pgpool.as_ref()).await.expect("Failed to update task");
+        update_task(task.id.unwrap(), pl, pgpool.as_ref())
+            .await
+            .expect("Failed to update task");
     }
 
     HttpResponse::Ok().json(response)
@@ -241,5 +266,8 @@ pub fn routes() -> impl HttpServiceFactory {
         .route("/{id}", web::get().to(get_project_with_tasks))
         .route("/{id}", web::delete().to(delete_project_handler))
         .route("/{id}", web::put().to(put_project_handler))
-        .route("/{id}/task/{task_id}/proposals", web::get().to(get_proposals))
+        .route(
+            "/{id}/task/{task_id}/proposals",
+            web::get().to(get_proposals),
+        )
 }
