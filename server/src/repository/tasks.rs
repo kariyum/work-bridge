@@ -5,16 +5,16 @@ use sqlx::{Executor, PgPool, Postgres};
 
 #[derive(sqlx::FromRow, Serialize)]
 pub struct RawTask {
-    id: i32,
-    project_id: i32,
-    title: String,
-    content: String,
-    deadline: DateTime<Utc>,
-    assignee_id: String,
-    budget: f32,
-    status: String,
-    created_at: DateTime<Utc>,
-    skills: Vec<String>,
+    pub id: i32,
+    pub project_id: i32,
+    pub title: String,
+    pub content: String,
+    pub deadline: DateTime<Utc>,
+    pub assignee_id: String,
+    pub budget: f32,
+    pub status: String,
+    pub created_at: DateTime<Utc>,
+    pub skills: Vec<String>,
 }
 
 #[allow(dead_code)]
@@ -127,15 +127,15 @@ pub async fn read_task_creator_by_id(
         .await
 }
 
-pub async fn delete_tasks_not_in(
-    tasks_to_keep: Vec<i32>,
+pub async fn delete_tasks(
+    tasks_to_delete: Vec<i32>,
     conn: impl Executor<'_, Database = Postgres>,
 ) -> Result<(), sqlx::Error> {
     sqlx::query!(
         r#"
-        DELETE FROM tasks CASCADE
-        WHERE NOT (id = ANY($1))"#,
-        &tasks_to_keep
+        DELETE FROM tasks
+        WHERE (id = ANY($1))"#,
+        &tasks_to_delete
     )
     .execute(conn)
     .await
