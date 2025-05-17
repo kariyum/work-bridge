@@ -151,6 +151,8 @@
 
 <style>
 	.applications {
+		margin: 1rem 0;
+		
 		h1 {
 			margin-bottom: 1rem;
 		}
@@ -231,6 +233,6 @@
 
 	.container {
 		max-width: var(--page-width);
-		margin: auto;
+		margin: 1rem auto;
 	}
 </style>
