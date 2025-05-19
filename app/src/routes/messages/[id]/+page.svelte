@@ -54,6 +54,7 @@
 	onDestroy(() => {
 		if (browser) {
 			unsubscribe();
+			// return this in the onMount since it returns synchronously
 		}
 	});
 
@@ -90,7 +91,6 @@
 		};
 		localMessages.push(msg);
 		message = '';
-		messageInputBox.focus();
 	}
 
 	// $effect is used here to clear localMessages when data.messages changes;
@@ -104,30 +104,26 @@
 	$effect.pre(() => {
 		messages;
 		const autoscroll = viewport && Math.abs(viewport.scrollTop) < 100;
-		if (viewport && (autoscroll || justSwitched)) {
-			if (viewport.scrollTop == 0) {
-				viewport.scrollTo({
-					left: 0,
-					top: -1,
-					behavior: 'instant'
-				});
-			}
+		if (viewport && autoscroll) {
+			viewport.scrollBy({
+				left: 0,
+				top: 10,
+				behavior: 'instant'
+			});
 			tick().then(() => {
-				viewport.scrollTo({
+				viewport.scrollBy({
 					left: 0,
 					top: 0,
-					behavior: smoothScroll ? 'smooth' : 'instant'
+					behavior: 'smooth'
 				});
-				smoothScroll = true;
-				justSwitched = false;
 			});
 		}
 	});
 </script>
 
-<div class="outer-container" bind:this={viewport}>
-	<div class="messages">
-		{#each messages as message}
+<div class="outer-container">
+	<div class="messages" bind:this={viewport}>
+		{#each messages.reverse() as message}
 			<div
 				class="message"
 				data-sender={message.from_user_id == data.user?.email ? 'me' : message.from_user_id}
@@ -139,20 +135,55 @@
 </div>
 
 <div class="input">
-	<form onsubmit={onClick} class="input-form">
+	<form class="input-form" onsubmit={onClick}>
 		<input
 			type="text"
 			bind:this={messageInputBox}
 			bind:value={message}
+			class="test"
 			placeholder="Type a message... as {data.user?.email}"
 		/>
-		<button type="submit" class="icon">
+		<button tabindex="-1" class="icon" onmousedown={onClick} type="submit">
 			<SendHorizontal />
 		</button>
 	</form>
 </div>
 
 <style>
+	@media (width < 600px) {
+		.input {
+			position: fixed;
+			bottom: 0rem;
+		}
+
+		.messages {
+			height: 100%;
+			display: flex;
+			flex-direction: column-reverse;
+			overflow-y: scroll;
+			padding-bottom: 3rem;
+		}
+
+		.outer-container {
+			margin-bottom: 2rem;
+			height: 100%;
+		}
+	}
+
+	@media (width > 600px) {
+
+		.messages {
+			height: 100%;
+			display: flex;
+			flex-direction: column-reverse;
+			overflow-y: scroll;
+		}
+
+		.outer-container {
+			height: calc(100% - 3rem);
+		}
+	}
+
 	.icon {
 		background-color: transparent;
 		border: none;
@@ -161,14 +192,11 @@
 
 	.outer-container {
 		display: flex;
-		overflow-y: auto;
-		flex-direction: column-reverse;
 		scroll-behavior: smooth;
 		flex: 1;
 	}
 
 	.messages {
-		padding: 1rem;
 		width: 100%;
 		flex-grow: 1;
 		flex: 1;
