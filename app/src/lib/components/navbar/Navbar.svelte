@@ -210,6 +210,10 @@
 		<li>
 			<button onclick={logout}> Logout </button>
 		</li>
+
+		<li class="lh-0">
+			<ThemeToggler />
+		</li>
 	</ul>
 {/snippet}
 
