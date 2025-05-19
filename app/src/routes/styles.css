@@ -97,7 +97,7 @@ textarea {
     --grey: #3d3d3d;
     --red: rgb(212, 166, 166);
 
-    --vibrant-red: rgb(248, 82, 82);
+    --vibrant-red: hsl(0, 92%, 75%);
 
     --blue-bg: #e2eafb;
     --pink-bg: #fbe2f4;
@@ -136,7 +136,7 @@ textarea {
     --grey: #c2c2c2;
     --red: rgb(121, 84, 84);
 
-    --vibrant-red: rgb(168, 49, 49);
+    --vibrant-red: hsl(0, 45%, 30%);
 
     --blue-bg: #596380;
     --pink-bg: #704e66;
