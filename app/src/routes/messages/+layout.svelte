@@ -166,8 +166,6 @@
 
 	.messages-col {
 		flex: 5;
-		display: flex;
-		flex-direction: column;
 	}
 
 	.header {
