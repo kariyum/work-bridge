@@ -37,8 +37,14 @@
 
 <style>
 	button {
-		width: 8rem;
+		width: var(--width, 8rem);
+		background-color: var(--color, var(--btn-bg));
 	}
+
+	button:hover {
+		background-color: var(--hover-color);
+	}
+
 	.loader {
 		width: 0.9rem;
 		height: 0.9rem;

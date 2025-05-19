@@ -91,6 +91,17 @@
 			}
 		}
 	}
+
+	async function deleteProject() {
+		if (projectIn?.id) {
+			const response = await fetch(`/api/projects/${projectIn.id}`, {
+				method: 'DELETE'
+			});
+			if (response.ok) {
+				await invalidate('/api/projects');
+			}
+		}
+	}
 </script>
 
 <div class="container">
@@ -147,6 +158,18 @@
 		<hr />
 		<div class="action-buttons">
 			<button class="cancel-btn" onclick={() => history.back()}>Cancel</button>
+			{#snippet deleteButton()}
+				<div>Delete</div>
+			{/snippet}
+			{#if projectIn?.id}
+				<AsyncButton
+					--color="var(--vibrant-red)"
+					--width="fit-content"
+					idleView={deleteButton}
+					{endView}
+					onclick={(event) => deleteProject()}
+				/>
+			{/if}
 			{#snippet submitButton()}
 				<div>{projectIn ? 'Update Project' : 'Save Project'}</div>
 			{/snippet}

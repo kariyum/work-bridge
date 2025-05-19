@@ -4,15 +4,6 @@
 	import { formDateSentence } from '$lib/utils';
 	let { project }: { project: ProjectGET } = $props();
 
-	async function deleteProject() {
-		const response = await fetch(`/api/projects/${project.id}`, {
-			method: 'DELETE'
-		});
-		if (response.ok) {
-			await invalidate('/api/projects');
-		}
-	}
-
 	function getRandomBgClass(id: number) {
 		const classes = ['blue-bg', 'pink-bg', 'violet-bg', 'beige-bg'];
 		return classes[id % classes.length];
