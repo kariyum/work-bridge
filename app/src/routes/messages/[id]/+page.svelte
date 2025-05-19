@@ -90,6 +90,7 @@
 		};
 		localMessages.push(msg);
 		message = '';
+		messageInputBox.focus();
 	}
 
 	// $effect is used here to clear localMessages when data.messages changes;
