@@ -1,14 +1,12 @@
 mod repository;
 
-use std::fs;
 use actix_cors::Cors;
 use actix_web::{middleware::Logger, App, HttpServer};
-use sqlx::postgres::PgPoolOptions;
 
 pub mod websocket {
+    pub mod client;
     pub mod lobby;
     pub mod messages;
-    pub mod client;
 }
 
 pub mod services {
@@ -22,33 +20,13 @@ use crate::websocket::lobby::Lobby;
 use actix::Actor;
 use actix_web::web::Data;
 use dotenv::dotenv;
-
-fn get_db_password() -> String {
-    let password_file = std::env::var("PG_PASSWORD_FILE").expect("PG_PASSWORD_FILE env var not set");
-    fs::read_to_string(password_file)
-        .expect("Failed to read password file")
-        .trim()
-        .to_string()
-}
+use server::services::database::get_db_pool;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug")); // "info"
-    let connection_string = format!(
-        "postgres://{}:{}@{}/{}",
-        std::env::var("PG_USER").expect("PG_USER env var not set"),
-        get_db_password(),
-        std::env::var("PG_HOST").expect("PG_HOST env var not set"),
-        std::env::var("PG_DBNAME").expect("PG_DBNAME env var not set")
-    );
-    println!("connection string is {}", connection_string);
-    let pool = PgPoolOptions::new()
-        .max_connections(5)
-        .connect(&connection_string)
-        .await
-        .map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
-
+    let pool = get_db_pool().await?;
     sqlx::migrate!()
         .run(&pool)
         .await

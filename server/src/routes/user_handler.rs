@@ -1,3 +1,5 @@
+use std::hash::{DefaultHasher, Hash, Hasher};
+
 use crate::repository::user::{get_user_by_credentials, insert_user, RegisterRequest};
 use crate::services::token::{generate_cookie, Claims};
 use actix_web::cookie::time::Duration;
@@ -18,8 +20,12 @@ async fn login(
     Form(form): Form<LoginRequest>,
     pg_pool: web::Data<Pool<Postgres>>,
 ) -> impl Responder {
-    let maybe_user_row = get_user_by_credentials(form.email.clone(), form.password.clone(), pg_pool.as_ref())
-        .await;
+    let maybe_user_row = get_user_by_credentials(
+        form.email.clone(),
+        hash_password(&form.password.clone()),
+        pg_pool.as_ref(),
+    )
+    .await;
     match maybe_user_row {
         Ok(Some(user_row)) => {
             let cookie = generate_cookie(form.email.as_str(), user_row.role.as_str()).unwrap();
@@ -27,24 +33,37 @@ async fn login(
             response.add_cookie(&cookie).unwrap();
             response
         }
-        _ => HttpResponse::Unauthorized().finish()
+        _ => HttpResponse::Unauthorized().finish(),
     }
+}
+
+fn hash_password(password: &String) -> String {
+    let mut hasher = DefaultHasher::new();
+    password.hash(&mut hasher);
+    hasher.finish().to_string()
 }
 
 pub async fn register(
     Form(register_request): Form<RegisterRequest>,
     data: web::Data<Pool<Postgres>>,
 ) -> impl Responder {
-    let _ = insert_user(&register_request, data.as_ref())
+    let hashed_password = hash_password(&register_request.password);
+    let hashed_register_request = RegisterRequest {
+        password: hashed_password,
+        ..register_request
+    };
+    insert_user(&hashed_register_request, data.as_ref())
         .await
         .expect("Failed to insert user");
 
-    let cookie = generate_cookie(&register_request.email, &register_request.role)
-        .expect("Failed to generate cookie");
+    let cookie = generate_cookie(
+        &hashed_register_request.email,
+        &hashed_register_request.role,
+    )
+    .expect("Failed to generate cookie");
 
     HttpResponse::Ok().cookie(cookie).finish()
 }
-
 
 async fn logout() -> impl Responder {
     let cookie = Cookie::build("Authorization", "")
