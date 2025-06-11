@@ -13,8 +13,10 @@ use actix_web::web::{Json, Path};
 use actix_web::{web, HttpResponse, Responder};
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use sqlx::PgPool;
+use sqlx::{PgPool, Pool, Postgres};
 use std::collections::HashSet;
+use fake::{Dummy, Fake, Faker, Rng};
+use fake::faker::lorem::en::{Sentence, Words};
 
 #[derive(Serialize)]
 struct ProjectResponse {
@@ -101,7 +103,7 @@ async fn get_project_with_tasks(
     }
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 struct ProjectPost {
     title: String,
     content: String,
@@ -111,7 +113,7 @@ struct ProjectPost {
     tasks: Vec<TaskPost>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 struct TaskPost {
     id: Option<i32>,
     title: String,
@@ -123,44 +125,92 @@ struct TaskPost {
     skills: Vec<String>,
 }
 
+impl Dummy<Faker> for TaskPost {
+    fn dummy_with_rng<R: Rng + ?Sized>(_: &Faker, rng: &mut R) -> Self {
+        let title = Sentence(1..10).fake_with_rng(rng);
+        let content = Sentence(1..100).fake_with_rng(rng);
+        let deadline = Faker.fake();
+        let assignee_id = "".to_string();
+        let budget = Faker.fake();
+        let status = "".to_string();
+        let skills = Words(2..10).fake_with_rng(rng);
+        TaskPost {
+            id: None,
+            title,
+            content,
+            deadline,
+            assignee_id,
+            budget,
+            status,
+            skills
+        }
+    }
+}
+
 async fn create_project_handler(
     Json(project_post): Json<ProjectPost>,
     pgpool: web::Data<PgPool>,
     claims: Claims,
 ) -> impl Responder {
-    let project_create = ProjectInsert {
-        user_id: claims.sub,
-        title: project_post.title,
-        content: project_post.content,
-        deadline: project_post.deadline,
-        budget: project_post.budget,
-        currency_code: project_post.currency_code,
-    };
+    if claims.role == "freelancer" {
+        HttpResponse::Forbidden().finish()
+    } else {
+        let project_create = ProjectInsert {
+            user_id: claims.sub,
+            title: project_post.title,
+            content: project_post.content,
+            deadline: project_post.deadline,
+            budget: project_post.budget,
+            currency_code: project_post.currency_code,
+        };
 
-    let project_raw = insert_project(project_create, pgpool.as_ref())
-        .await
-        .expect("Failed to insert project");
+        let project_raw = insert_project(project_create, pgpool.as_ref())
+            .await
+            .expect("Failed to insert project");
 
-    let tasks_insert = project_post
-        .tasks
-        .into_iter()
-        .map(|task| CreateTask {
-            project_id: project_raw.id,
-            title: task.title,
-            content: task.content,
-            deadline: task.deadline,
-            assignee_id: task.assignee_id,
-            budget: task.budget,
-            status: task.status,
-            skills: task.skills,
-        })
-        .collect::<Vec<CreateTask>>();
+        let tasks_insert = project_post
+            .tasks
+            .into_iter()
+            .map(|task| CreateTask {
+                project_id: project_raw.id,
+                title: task.title,
+                content: task.content,
+                deadline: task.deadline,
+                assignee_id: task.assignee_id,
+                budget: task.budget,
+                status: task.status,
+                skills: task.skills,
+            })
+            .collect::<Vec<CreateTask>>();
 
-    insert_tasks_sequentially(tasks_insert, pgpool.as_ref())
-        .await
-        .expect("Failed to insert tasks");
+        insert_tasks_sequentially(tasks_insert, pgpool.as_ref())
+            .await
+            .expect("Failed to insert tasks");
 
-    HttpResponse::Created().finish()
+        HttpResponse::Created().finish()
+    }
+}
+
+impl Dummy<Faker> for ProjectPost {
+    fn dummy_with_rng<R: Rng + ?Sized>(_: &Faker, rng: &mut R) -> Self {
+        ProjectPost {
+            title: Sentence(1..10).fake_with_rng(rng),
+            content: Sentence(1..100).fake_with_rng(rng),
+            currency_code: "".to_string(),
+            budget: Faker.fake::<f32>(),
+            tasks: (1..10).map(|_| Faker.fake::<TaskPost>()).collect(),
+            deadline: Faker.fake_with_rng(rng),
+        }
+    }
+}
+
+pub async fn seed_projects_handler(claims: Claims, pool: Pool<Postgres>) {
+    let payload = Faker.fake();
+    create_project_handler(
+        Json(payload),
+        web::Data::new(pool),
+        claims
+    ).await;
 }
 
 async fn delete_project_handler(

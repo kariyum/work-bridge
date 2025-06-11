@@ -1,6 +1,7 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 
 export const handle: Handle = async ({ event, resolve }) => {
+  return resolve(event)
   console.log("Handling", event.url);
   try {
     return resolve(event);

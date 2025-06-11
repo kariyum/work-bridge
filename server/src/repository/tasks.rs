@@ -1,4 +1,13 @@
 use chrono::{DateTime, Utc};
+use fake::{
+    faker::{
+        chrono::en::DateTime,
+        lorem::en::{Sentence, Word, Words},
+        name::en::Name,
+    },
+    rand::seq::IndexedRandom,
+    Dummy, Fake, Faker,
+};
 use futures_util::{stream, StreamExt};
 use serde::Serialize;
 use sqlx::{Executor, PgPool, Postgres};
@@ -28,6 +37,7 @@ pub async fn read_tasks_by_project_id(
         .await
 }
 
+#[derive(Debug)]
 pub struct CreateTask {
     pub project_id: i32,
     pub title: String,
@@ -37,6 +47,33 @@ pub struct CreateTask {
     pub budget: f32,
     pub status: String,
     pub skills: Vec<String>,
+}
+
+pub struct CreateTaskConfig {
+    pub project_ids: Vec<i32>,
+}
+
+impl Dummy<CreateTaskConfig> for CreateTask {
+    fn dummy_with_rng<R: fake::Rng + ?Sized>(config: &CreateTaskConfig, rng: &mut R) -> Self {
+        let project_id = config.project_ids.choose(rng).unwrap().clone();
+        let title = Name().fake_with_rng(rng);
+        let content = Sentence(1..100).fake_with_rng(rng);
+        let deadline = DateTime().fake_with_rng(rng);
+        let assignee_id = "None".to_string();
+        let budget: f32 = Faker.fake_with_rng(rng);
+        let status = Word().fake_with_rng(rng);
+        let skills = Words(1..10).fake_with_rng(rng);
+        CreateTask {
+            project_id,
+            title,
+            content,
+            deadline,
+            assignee_id,
+            budget,
+            status,
+            skills,
+        }
+    }
 }
 
 pub async fn insert_task(
