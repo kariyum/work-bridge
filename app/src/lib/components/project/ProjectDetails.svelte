@@ -25,7 +25,7 @@
 		if (response.ok) {
 			await invalidate(`/api/projects/${projectIn.id}`);
 		} else {
-			alert('Failed for submit to task!');
+			alert('Failed to submit proposal!');
 		}
 	}
 </script>
@@ -67,15 +67,13 @@
 					</div>
 
 					{#if role === 'freelancer'}
-						{#if task.proposal_status}
-							<div class="proposal-status">
-								<p>Application {snakeToCapital(task.proposal_status)}</p>
-							</div>
-						{:else}
-							<button class="apply-btn" onclick={() => submitApplication(task.id)}
-								>Submit Application</button
-							>
-						{/if}
+						<button class="apply-btn" disabled={task.proposal_status != undefined} data-status={task.proposal_status} onclick={() => submitApplication(task.id)}>
+							{#if task.proposal_status}
+								Application {snakeToCapital(task.proposal_status)}
+							{:else}
+								Submit Application
+							{/if}
+						</button>
 					{:else if role === 'recruiter'}
 						<div class="view-link">
 							<a href={`/project/${projectIn.id}/task/${task.id}`}> View </a>
@@ -138,6 +136,19 @@
 		background-color: var(--blue);
 	}
 
+	.apply-btn[data-status="pending"] {
+		background-color: var(--orange);
+	}
+	.apply-btn[data-status="declined"] {
+		background-color: unset;
+	}
+	.apply-btn[data-status="approved"] {
+		background-color: var(--green);
+	}
+	.apply-btn[data-status="cancelled"] {
+		background-color: var(--grey);
+	}
+
 	.task-content {
 		margin: 1rem 0;
 	}
@@ -186,9 +197,5 @@
 	.content {
 		margin: 0.5rem 0 0.5rem 0;
 		border-radius: 5px;
-	}
-
-	.proposal-status {
-		margin-left: auto;
 	}
 </style>

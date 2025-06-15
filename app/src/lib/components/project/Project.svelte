@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
 	import type { ProjectGET } from '$lib/types/project';
-	import { formDateSentence } from '$lib/utils';
+	import { capitalize, formatDateSentence } from '$lib/utils';
 	let { project }: { project: ProjectGET } = $props();
 
 	function getRandomBgClass(id: number) {
@@ -18,9 +18,9 @@
 		)}"
 	>
 		<div class="project-top">
-			<div class="date">{formDateSentence(project.created_at)}</div>
+			<div class="date">{formatDateSentence(project.created_at)}</div>
 		</div>
-		<div class="title">{project.title}</div>
+		<div class="title">{capitalize(project.title)}</div>
 		<div class="content rich-content">
 			{@html project.content}
 		</div>
@@ -59,7 +59,6 @@
 		border: 2px solid var(--border);
 		border-radius: calc(10px + 0.5rem);
 		min-height: 20rem;
-		width: 20rem;
 	}
 
 	@media (width < 45rem) {

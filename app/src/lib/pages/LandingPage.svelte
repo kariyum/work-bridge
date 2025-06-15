@@ -1,42 +1,61 @@
+<div class="logo">
+	<svg width="100" height="50" viewBox="0 0 100 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<circle cx="15" cy="25" r="5" class="dot" />
+		<text x="30" y="25" dominant-baseline="middle" class="main-text">bond</text>
+	</svg>
+</div>
 <div class="container">
-	<div style="margin:auto; text-align:center; font-size:48px;">
-		<h1>Recruit freelancers</h1>
-		<h1>& form teams</h1>
-	</div>
-	<p class="subtitle">Connect with thousands of Tunisian freelancers.</p>
+	<h1 class="title">
+		<p>Recruit freelancers</p>
+		<p>& form teams</p>
+	</h1>
+	<p class="subtitle">Connect with Tunisian freelancers.</p>
 	<div class="buttons">
-		<a href="/login">
-			<button>Login</button>
-		</a>
 		<a href="/register">
-			<button>Register</button>
+			<button>Join us!</button>
 		</a>
 	</div>
-	<!-- <p>
-            Please <a href="/login">login</a> or <a href="/register">create</a> an account to continue
-        </p> -->
 </div>
 
 <style>
-	.buttons {
-		padding: 4em;
+	.main-text {
+		font-family: 'Poppins', sans-serif;
+		font-weight: 600;
+		font-size: x-large;
+		fill: var(--font-color);
+		pointer-events: none;
 	}
-	.buttons > a {
-		margin-left: 0.5em;
+	.dot {
+		fill: var(--blue);
+	}
+	.logo {
+		display: flex;
+		gap: 0.5rem;
+		font-size: x-large;
+		font-weight: 500;
+		align-items: center;
+		margin: 1rem;
+	}
+	.title {
+		p {
+			text-align: center;
+		}
 	}
 	.subtitle {
-		font-size: 36px;
+		text-align: center;
+	}
+	.buttons {
+		text-align: center;
+		margin-top: 2rem;
 	}
 	.container {
+		font-size: x-large;
 		display: flex;
-		justify-content: center;
-		align-items: center;
-		flex-flow: column;
-		padding: 10%;
+		flex-direction: column;
+		padding: 1rem 1rem 0 1rem;
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		width: 80%;
-		transform: translate(-50%, -60%);
+		transform: translate(-50%, -50%);
 	}
 </style>
