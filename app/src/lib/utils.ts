@@ -29,13 +29,17 @@ export function formatDate(createdAt: Date): string {
     return `${day}/${month}/${createdAt.getFullYear()}`
 }
 
-export function formDateSentence(createdAt: Date): string {
+export function formatDateSentence(date: Date): string {
     const options: Intl.DateTimeFormatOptions = {
         day: '2-digit',
         month: 'short',
         year: 'numeric'
     };
-    return createdAt.toLocaleDateString('en-GB', options);
+    return date.toLocaleDateString('en-GB', options);
+}
+
+export function capitalize(s: string): string {
+    return s.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).reduce((w1, w2) => w1 + " " + w2)
 }
 
 export function isPathPublic(pathname: string): boolean {

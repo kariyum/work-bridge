@@ -1,7 +1,6 @@
 <script lang="ts">
 	import LandingPage from '$lib/pages/LandingPage.svelte';
-	import LandingPageFreelancer from '$lib/pages/LandingPageFreelancer.svelte';
-	import LandingPageRecruiter from '$lib/pages/LandingPageRecruiter.svelte';
+	import Projects from '$lib/components/project/Projects.svelte';
 	let { data } = $props();
 </script>
 
@@ -12,10 +11,6 @@
 {:else}
 	{@const projects = data.projects}
 	<div class="page-container">
-		{#if data.user?.role === 'recruiter'}
-			<LandingPageRecruiter {projects}></LandingPageRecruiter>
-		{:else if data.user?.role === 'freelancer'}
-			<LandingPageFreelancer {projects}></LandingPageFreelancer>
-		{/if}
+		<Projects {projects}></Projects>
 	</div>
 {/if}

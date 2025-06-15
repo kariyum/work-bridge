@@ -36,7 +36,6 @@ button {
     padding: 10px;
     border: 1px solid var(--border);
     border-radius: 5px;
-    cursor: pointer;
     align-self: flex-end;
     background-color: var(--btn-bg);
     font-size: medium;
@@ -56,6 +55,10 @@ button {
 
     &:disabled {
         background-color: transparent;
+    }
+
+    &:not(:disabled) {
+        cursor: pointer;
     }
 }
 
