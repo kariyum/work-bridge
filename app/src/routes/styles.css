@@ -2,7 +2,7 @@
     scroll-behavior: smooth;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: Inter, sans-serif, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     /* font-family: Inter, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol; */
     box-sizing: border-box !important;
 }
@@ -11,6 +11,7 @@
     --max-width: 1920px;
     --page-width: 1100px;
     --page-padding: 1rem;
+    font-size: 14px;
 }
 
 body {
@@ -38,7 +39,6 @@ button {
     border-radius: 5px;
     align-self: flex-end;
     background-color: var(--btn-bg);
-    font-size: medium;
     color: var(--font-color);
 
     &.secondary-btn {
@@ -76,14 +76,14 @@ textarea {
 .light {
     color-scheme: light;
     -webkit-tap-highlight-color: hsla(0, 0%, 51%, 0.283);
-    --font-color: #000;
+    --font-color: rgb(23, 23, 23);
     --background-color: #fff;
     --canvas-color: #fff;
     --message-bg: #e7e7e7;
     --navbar-color: #f8fbfd;
     --navbar-border: #e3e5e7;
     --selected-color: #ececec;
-    --hover-color: #CDDCEE;
+    --hover-color: #e7e7e8;
     --input-bg: #f7f7f7;
     --active-button: #e0e0e0;
     --toast-bg: #f8fbfd;
@@ -91,7 +91,7 @@ textarea {
     --bright-text: #f9fafb;
     --dark-text: #111827;
     --border: #ddd;
-    --btn-bg: #D9EAFD;
+    --btn-bg: hsl(214, 100%, 82%);
 
     --tag-bg: #e7e7e7;
 
@@ -107,16 +107,28 @@ textarea {
     --violet-bg: #e3dbfa;
     --beige-bg: #f6e2d4;
     --green-bg: rgb(184, 218, 184);
+    --card-bg: hsl(0, 0%, 90%);
+    --foreground: hsl(0, 0%, 95%);
+    --secondary: hsl(0, 0%, 100%);
+
+    --title: hsl(0, 0%, 15%);;
+    --sub-title: hsl(0, 0%, 5%, 0.5);
+    .primary-btn {
+        color: hsl(0, 0%, 99%);
+        background-color: hsl(0, 0%, 9%);
+    }
 }
 
 .dark {
     color-scheme: dark;
-    color: #bfbfbf;
+    color: rgb(234, 234, 234);
 
     -webkit-tap-highlight-color: hsla(0, 0%, 51%, 0.283);
+    --foreground: hsl(0, 0%, 95%);
+    --secondary: hsl(0, 0%, 5%);
     --font-color: #bfbfbf;
-
-    --background-color: #212121;
+    --card-bg: hsl(0, 0%, 20%);
+    --background-color: hsl(0, 0%, 9%);
     --canvas-color: rgb(18, 18, 18);
     --message-bg: #272727;
     --navbar-color: #1d1d1d;
@@ -146,6 +158,21 @@ textarea {
     --violet-bg: #645c80;
     --beige-bg: #806959;
     --green-bg: rgb(84, 121, 84);
+
+    --title: hsl(0, 0%, 85%);
+    --sub-title: hsl(0, 0%, 95%, 0.5);
+
+    .primary-btn {
+        background-color: hsl(0, 0%, 96%);
+        color: hsl(0, 0%, 5%);
+    }
+}
+
+.primary-btn {
+    font-weight: 600;
+    border: none;
+    padding: 1.3rem 1.2rem;
+    line-height: 0;
 }
 
 .blue-bg {
@@ -213,7 +240,6 @@ textarea:focus {
     background-color: var(--vibrant-red);
     border: none;
     color: var(--font-color);
-    font-size: medium;
     font-weight: 500;
 }
 
@@ -242,7 +268,7 @@ textarea:focus {
     }
 }
 
-@media (width >= 600px) {
+@media (width >=600px) {
     .mobile {
         display: none;
     }
@@ -255,6 +281,15 @@ textarea:focus {
 @media (width < 600px) {
     .mobile {
         display: contents;
+
+        .example::-webkit-scrollbar {
+            display: none;
+        }
+
+        .example {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     }
 
     .desktop {

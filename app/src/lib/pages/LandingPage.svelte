@@ -1,61 +1,75 @@
-<div class="logo">
-	<svg width="100" height="50" viewBox="0 0 100 50" fill="none" xmlns="http://www.w3.org/2000/svg">
-		<circle cx="15" cy="25" r="5" class="dot" />
-		<text x="30" y="25" dominant-baseline="middle" class="main-text">bond</text>
-	</svg>
-</div>
-<div class="container">
-	<h1 class="title">
-		<p>Recruit freelancers</p>
-		<p>& form teams</p>
-	</h1>
-	<p class="subtitle">Connect with Tunisian freelancers.</p>
-	<div class="buttons">
-		<a href="/register">
-			<button>Join us!</button>
-		</a>
-	</div>
+<script>
+	import Footer from '$lib/components/navbar/Footer.svelte';
+	import NavbarNewUser from '$lib/components/navbar/NavbarNewUser.svelte';
+</script>
+
+<NavbarNewUser></NavbarNewUser>
+<div class="can-do">
+	<h2>Features</h2>
+	<ul>
+		<li>Post projects and tasks</li>
+		<li>Invite & Work with Freelancers</li>
+		<li>Accept & decline work propoals</li>
+		<li>Real time communication</li>
+		<li>Get relevant projects to your skills</li>
+		<li>Scout for freelancers</li>
+	</ul>
 </div>
 
+<div class="body">
+	<h1>Meet the Bond Team!</h1>
+	<p>
+		Born from a passion for empowering Tunisian talent, Bond was founded by a team of young Tunisian
+		software engineers committed to building high-quality products for our community. This is our
+		first app, and we're excited to connect you with the best.
+	</p>
+</div>
+<Footer></Footer>
+
 <style>
-	.main-text {
-		font-family: 'Poppins', sans-serif;
-		font-weight: 600;
-		font-size: x-large;
-		fill: var(--font-color);
-		pointer-events: none;
-	}
-	.dot {
-		fill: var(--blue);
-	}
-	.logo {
-		display: flex;
-		gap: 0.5rem;
-		font-size: x-large;
-		font-weight: 500;
-		align-items: center;
-		margin: 1rem;
-	}
-	.title {
-		p {
-			text-align: center;
-		}
-	}
-	.subtitle {
-		text-align: center;
-	}
-	.buttons {
-		text-align: center;
+	.body {
+		padding: 1rem;
+		max-width: 50rem;
+		margin: auto;
 		margin-top: 2rem;
 	}
-	.container {
-		font-size: x-large;
+
+	.can-do {
 		display: flex;
 		flex-direction: column;
-		padding: 1rem 1rem 0 1rem;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
+		padding: 1rem;
+		gap: 0.5rem;
+		font-size: large;
+		max-width: 50rem;
+		margin: auto;
+		margin-top: 3rem;
+	}
+
+	ul {
+		list-style: none;
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 1rem;
+	}
+
+	li {
+		background-color: var(--card-bg);
+		border-radius: 10px;
+		padding: 1rem;
+		text-align: center;
+		position: relative;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	h2 {
+		letter-spacing: 0.1ch;
+	}
+
+	@media (width < 600px) {
+		ul {
+			grid-template-columns: 1fr 1fr;
+		}
 	}
 </style>
