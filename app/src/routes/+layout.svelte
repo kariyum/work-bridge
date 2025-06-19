@@ -3,6 +3,7 @@
 	import './styles.css';
 	let { data, children } = $props();
 </script>
+
 <svelte:head>
 	<script>
 		document.documentElement.classList.add(
@@ -12,7 +13,7 @@
 	</script>
 </svelte:head>
 {#if data.user}
-	<Navbar user={data.user} notifications={data.notifications}/>
+	<Navbar user={data.user} notifications={data.notifications} />
 	<div class="container">
 		{@render children()}
 	</div>

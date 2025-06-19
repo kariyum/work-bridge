@@ -1,0 +1,13 @@
+<div class="container">
+	<div>2025 Bond Team</div>
+	<div>Contact us!</div>
+</div>
+
+<style>
+	.container {
+		display: flex;
+		justify-content: space-between;
+		padding: 1rem;
+		border-top: 1px solid var(--border);
+	}
+</style>
