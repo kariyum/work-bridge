@@ -263,9 +263,7 @@
 	}
 
 	.container {
-		position: absolute;
-		top: 5%;
-		/* transform: translate(-50%, 0); */
+		margin-top: 3rem;
 		width: 100%;
 	}
 
@@ -280,5 +278,12 @@
 		padding: 0 1rem;
 		max-width: 45rem;
 		margin: auto;
+	}
+
+	@media (width < 600px) {
+		.options {
+			display: flex;
+			flex-direction: column;
+		}
 	}
 </style>

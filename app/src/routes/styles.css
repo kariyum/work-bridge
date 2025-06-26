@@ -78,6 +78,7 @@ textarea {
     -webkit-tap-highlight-color: hsla(0, 0%, 51%, 0.283);
     --font-color: rgb(23, 23, 23);
     --background-color: #fff;
+    --darker-bg: hsl(0, 0%, 99%);
     --canvas-color: #fff;
     --message-bg: #e7e7e7;
     --navbar-color: #f8fbfd;
@@ -107,12 +108,13 @@ textarea {
     --violet-bg: #e3dbfa;
     --beige-bg: #f6e2d4;
     --green-bg: rgb(184, 218, 184);
-    --card-bg: hsl(0, 0%, 90%);
+    --card-bg: hsl(0, 0%, 95%);
     --foreground: hsl(0, 0%, 95%);
     --secondary: hsl(0, 0%, 100%);
 
-    --title: hsl(0, 0%, 15%);;
+    --title: hsl(0, 0%, 15%);
     --sub-title: hsl(0, 0%, 5%, 0.5);
+
     .primary-btn {
         color: hsl(0, 0%, 99%);
         background-color: hsl(0, 0%, 9%);
@@ -127,8 +129,9 @@ textarea {
     --foreground: hsl(0, 0%, 95%);
     --secondary: hsl(0, 0%, 5%);
     --font-color: #bfbfbf;
-    --card-bg: hsl(0, 0%, 20%);
+    --card-bg: hsl(0, 0%, 13%);
     --background-color: hsl(0, 0%, 9%);
+    --darker-bg: hsl(0, 0%, 5%);
     --canvas-color: rgb(18, 18, 18);
     --message-bg: #272727;
     --navbar-color: #1d1d1d;

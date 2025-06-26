@@ -7,7 +7,7 @@
 	.container {
 		display: flex;
 		justify-content: space-between;
-		padding: 1rem;
+		padding: 2rem;
 		border-top: 1px solid var(--border);
 	}
 </style>

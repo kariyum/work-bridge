@@ -47,7 +47,7 @@ impl From<ProjectRaw> for ProjectResponse {
     }
 }
 
-async fn get_projects(_: Claims, pgpool: web::Data<PgPool>) -> impl Responder {
+async fn get_projects(pgpool: web::Data<PgPool>) -> impl Responder {
     let projects: Vec<ProjectResponse> = repository::project::get_projects(pgpool.as_ref())
         .await
         .expect("Failed to get projects")

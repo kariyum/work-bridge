@@ -9,7 +9,7 @@
 		</div>
 
 		<div class="right-group">
-			<div>View Projects</div>
+			<a href="/projects">View Projects</a>
 			<div>
 				<ThemeToggler></ThemeToggler>
 			</div>
@@ -42,6 +42,10 @@
 	.subtitle {
 		margin: 2rem 0;
 		color: var(--sub-title);
+	}
+	a {
+		text-decoration: none;
+		color: inherit;
 	}
 	.navbar {
 		display: flex;
