@@ -4,9 +4,9 @@
 	let { data } = $props();
 </script>
 
-{#if data.error && data.error?.unauthorizedError}
+{#if !data.user}
 	<LandingPage></LandingPage>
-{:else if data.error && data.error?.networkError}
+{:else if data.error}
 	<h1>You seem to be offline...</h1>
 {:else}
 	{@const projects = data.projects}
