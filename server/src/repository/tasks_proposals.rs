@@ -5,17 +5,17 @@ use crate::repository::proposal::ProposalStatus;
 
 #[derive(sqlx::FromRow, Serialize, Debug)]
 pub struct RawTaskProposal {
-    id: i32,
-    project_id: i32,
-    title: String,
-    content: String,
-    deadline: DateTime<Utc>,
-    assignee_id: String,
-    budget: f32,
-    status: String,
-    created_at: DateTime<Utc>,
-    skills: Vec<String>,
-    proposal_status: Option<ProposalStatus>,
+    pub id: i32,
+    pub project_id: i32,
+    pub title: String,
+    pub content: String,
+    pub deadline: DateTime<Utc>,
+    pub assignee_id: String,
+    pub budget: f32,
+    pub status: String,
+    pub created_at: DateTime<Utc>,
+    pub skills: Vec<String>,
+    pub proposal_status: Option<ProposalStatus>,
 }
 
 pub async fn read_tasks_with_submission_by_project_id(

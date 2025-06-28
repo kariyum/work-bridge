@@ -13,8 +13,7 @@
 	{:else}
 		<ProjectDetails
 			projectIn={data.project}
-			role={data.user?.role ?? ''}
-			userId={data.user?.email ?? ''}
+			user={data.user}
 			onEdit={() => {
 				pushState('', {
 					projectEditMode: true,
