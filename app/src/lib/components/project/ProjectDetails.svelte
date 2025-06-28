@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { invalidate } from '$app/navigation';
+	import type { User } from '$lib/types';
 	import type { ProjectGET } from '$lib/types/project';
 	import { formatDate, snakeToCapital } from '$lib/utils';
 	interface props {
 		projectIn: ProjectGET;
-		role: string;
-		userId: string;
+		user?: User;
 		onEdit: () => void;
 	}
-	let { projectIn, role, userId, onEdit }: props = $props();
-	let userIsCreator = $derived(userId == projectIn.user_id);
+	let { projectIn, user, onEdit }: props = $props();
+	let userIsCreator = $derived(user?.email == projectIn.user_id);
 
 	async function submitApplication(taskId: number) {
 		const payload = {
@@ -66,17 +66,22 @@
 						{/if}
 					</div>
 
-					{#if role === 'freelancer'}
-						<button class="apply-btn" disabled={task.proposal_status != undefined} data-status={task.proposal_status} onclick={() => submitApplication(task.id)}>
+					{#if user?.role === 'freelancer'}
+						<button
+							class="apply-btn"
+							disabled={task.proposal_status != undefined}
+							data-status={task.proposal_status}
+							onclick={() => submitApplication(task.id)}
+						>
 							{#if task.proposal_status}
 								Application {snakeToCapital(task.proposal_status)}
 							{:else}
 								Submit Application
 							{/if}
 						</button>
-					{:else if role === 'recruiter'}
+					{:else if user?.role === 'recruiter' && userIsCreator}
 						<div class="view-link">
-							<a href={`/project/${projectIn.id}/task/${task.id}`}> View </a>
+							<a href={`/project/${projectIn.id}/task/${task.id}`}>View</a>
 						</div>
 					{/if}
 				</div>
@@ -136,16 +141,16 @@
 		background-color: var(--blue);
 	}
 
-	.apply-btn[data-status="pending"] {
+	.apply-btn[data-status='pending'] {
 		background-color: var(--orange);
 	}
-	.apply-btn[data-status="declined"] {
+	.apply-btn[data-status='declined'] {
 		background-color: unset;
 	}
-	.apply-btn[data-status="approved"] {
+	.apply-btn[data-status='approved'] {
 		background-color: var(--green);
 	}
-	.apply-btn[data-status="cancelled"] {
+	.apply-btn[data-status='cancelled'] {
 		background-color: var(--grey);
 	}
 

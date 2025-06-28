@@ -62,7 +62,7 @@
 	<div class="opportunity-section">
 		<h1>Ready to Bond with Your Next Opportunity?</h1>
 		<p>Join Bond today and experience the future of freelance work. It's free to get started!</p>
-		<a href="/register">Sing-up Now</a>
+		<a href="/register" class="primary-btn">Sing-up Now</a>
 	</div>
 
 	<Footer></Footer>
@@ -92,12 +92,9 @@
 
 		a {
 			display: inline;
-			background-color: var(--primary);
 			width: fit-content;
 			margin: auto;
-			padding: 1rem;
 			text-decoration: none;
-			color: inherit;
 			border-radius: 5px;
 		}
 	}
@@ -118,7 +115,7 @@
 	.can-do {
 		display: flex;
 		flex-direction: column;
-		padding: 1rem;
+		padding: 2rem;
 		gap: 1rem;
 		font-size: large;
 		max-width: 80rem;

@@ -111,9 +111,7 @@
 	}
 
 	.container {
-		position: absolute;
-		top: 5%;
-		/* transform: translate(-50%, 0); */
+		margin-top: 3rem;
 		width: 100%;
 	}
 

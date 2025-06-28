@@ -73,7 +73,7 @@ async fn get_project(_: Claims, path: Path<i32>, pgpool: web::Data<PgPool>) -> i
 }
 
 async fn get_project_with_tasks(
-    claims: Claims,
+    claims: Option<Claims>,
     path: Path<i32>,
     pgpool: web::Data<PgPool>,
 ) -> impl Responder {
@@ -83,13 +83,35 @@ async fn get_project_with_tasks(
         .expect(&format!("Failed to get project by id {}", project_id))
         .map(ProjectResponse::from);
 
-    let tasks = repository::tasks_proposals::read_tasks_with_submission_by_project_id(
-        project_id,
-        claims.sub,
-        pgpool.as_ref(),
-    )
-    .await
-    .expect(&format!("Failed to read tasks {}", project_id));
+    let tasks = if let Some(claims) = claims  {
+        repository::tasks_proposals::read_tasks_with_submission_by_project_id(
+            project_id,
+            claims.sub,
+            pgpool.as_ref(),
+        )
+            .await
+            .expect(&format!("Failed to read tasks {}", project_id))
+    } else {
+        read_tasks_by_project_id(project_id, pgpool.as_ref())
+            .await
+            .expect(&format!("Failed to read tasks {}", project_id))
+            .into_iter()
+            .map(|task| {
+                RawTaskProposal {
+                    id: task.id,
+                    project_id: task.project_id,
+                    title: task.title,
+                    content: task.content,
+                    deadline: task.deadline,
+                    assignee_id: task.assignee_id,
+                    budget: task.budget,
+                    status: task.status,
+                    created_at: task.created_at,
+                    skills: task.skills,
+                    proposal_status: None
+                }
+            }).collect()
+    };
 
     if let Some(project) = project_option {
         let response = ProjectResponse {
