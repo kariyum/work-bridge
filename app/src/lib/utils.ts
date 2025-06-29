@@ -42,6 +42,10 @@ export function capitalize(s: string): string {
     return s.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).reduce((w1, w2) => w1 + " " + w2)
 }
 
+export function formatBudget(s: number): string {
+    return s.toFixed(3)
+}
+
 export function isPathPublic(pathname: string): boolean {
     const pathInclusionEqualityCheck = ["/"]
     const pathStartsWithCheck = ["/register", "/login"]

@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { goto, invalidate } from '$app/navigation';
 	import type { ProjectGET } from '$lib/types/project';
-	import { capitalize, formatDateSentence } from '$lib/utils';
+	import { capitalize, formatBudget, formatDateSentence } from '$lib/utils';
 	let { project }: { project: ProjectGET } = $props();
 
 	function getRandomBgClass(id: number) {
@@ -28,7 +27,7 @@
 	<div class="actions">
 		<div class="price">
 			<div class="currency"></div>
-			<div>{project.budget}</div>
+			<div>{formatBudget(project.budget)}</div>
 		</div>
 		<!-- <button>Post Job</button> -->
 	</div>

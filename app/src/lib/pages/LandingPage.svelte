@@ -36,7 +36,20 @@
 	];
 </script>
 
-<NavbarNewUser></NavbarNewUser>
+<div class="container">
+	<div>
+		<h1 class="title">
+			<p>Recruit Top Tunisian Freelancers</p>
+			<p>& Build Your Dream Team</p>
+		</h1>
+		<p class="subtitle">Effortlessly connect with skilled local talent!</p>
+	</div>
+	<div class="register-btn">
+		<a href="/register">
+			<button class="primary-btn">Get Started - It's Free!</button>
+		</a>
+	</div>
+</div>
 <div class="bg">
 	<div class="can-do">
 		<h1>Unleash Your Potential with Bond</h1>
@@ -69,6 +82,23 @@
 </div>
 
 <style>
+	.container {
+		margin-top: 8rem;
+		font-size: x-large;
+		display: flex;
+		flex-direction: column;
+		padding: 2rem 1rem 0 1rem;
+		gap: 1rem;
+		align-items: center;
+		text-align: center;
+	}
+	.title {
+		color: var(--title);
+	}
+	.subtitle {
+		margin: 2rem 0;
+		color: var(--sub-title);
+	}
 	.bg {
 		background-color: var(--darker-bg);
 		border-top: 1px solid var(--border);
