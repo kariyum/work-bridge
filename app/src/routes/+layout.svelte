@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Navbar from '$lib/components/navbar/Navbar.svelte';
+	import NavbarNewUser from '$lib/components/navbar/NavbarNewUser.svelte';
 	import './styles.css';
 	let { data, children } = $props();
 </script>
@@ -18,6 +19,7 @@
 		{@render children()}
 	</div>
 {:else}
+	<NavbarNewUser></NavbarNewUser>
 	{@render children()}
 {/if}
 

@@ -104,16 +104,16 @@
 			<span style="font-weight: 500;">Client's email:</span>
 			<span>{projectIn.user_id}</span>
 		</div>
+		<div>
+			<span style="font-weight: 500;">Posted on: </span>
+			{formatDate(projectIn.created_at)}
+		</div>
 		<div class="content rich-content">
 			{#if projectIn.content.length === 0}
 				<span>No content for this project</span>
 			{:else}
 				{@html projectIn.content}
 			{/if}
-		</div>
-		<div>
-			<span style="font-weight: 500;">Posted on: </span>
-			{formatDate(projectIn.created_at)}
 		</div>
 		<hr style="margin: 0.5rem 0; color: black;" />
 		<h2>Tasks</h2>

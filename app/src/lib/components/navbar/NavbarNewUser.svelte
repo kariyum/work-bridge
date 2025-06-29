@@ -2,47 +2,24 @@
 	import ThemeToggler from '$lib/components/utility/ThemeToggler.svelte';
 </script>
 
-<div>
-	<div class="navbar">
-		<div class="left-group">
-			<div class="logo"></div>
-		</div>
+<div class="navbar">
+	<!-- svelte-ignore a11y_consider_explicit_label -->
+	<a class="left-group" href="/">
+		<div class="logo"></div>
+	</a>
 
-		<div class="right-group">
-			<a href="/projects">View Projects</a>
-			<div>
-				<ThemeToggler></ThemeToggler>
-			</div>
-			<a href="/login">
-				<button class="primary-btn">Login</button>
-			</a>
-		</div>
-	</div>
-
-	<div class="container">
+	<div class="right-group">
+		<a href="/projects">View Projects</a>
 		<div>
-			<h1 class="title">
-				<p>Recruit Top Tunisian Freelancers</p>
-				<p>& Build Your Dream Team</p>
-			</h1>
-			<p class="subtitle">Effortlessly connect with skilled local talent!</p>
+			<ThemeToggler></ThemeToggler>
 		</div>
-		<div class="register-btn">
-			<a href="/register">
-				<button class="primary-btn">Get Started - It's Free!</button>
-			</a>
-		</div>
+		<a href="/login">
+			<button class="primary-btn">Login</button>
+		</a>
 	</div>
 </div>
 
 <style>
-	.title {
-		color: var(--title);
-	}
-	.subtitle {
-		margin: 2rem 0;
-		color: var(--sub-title);
-	}
 	a {
 		text-decoration: none;
 		color: inherit;
@@ -80,15 +57,5 @@
 		:global(.dark) & {
 			background-image: url('/logo_white.svg');
 		}
-	}
-	.container {
-		margin-top: 8rem;
-		font-size: x-large;
-		display: flex;
-		flex-direction: column;
-		padding: 2rem 1rem 0 1rem;
-		gap: 1rem;
-		align-items: center;
-		text-align: center;
 	}
 </style>
