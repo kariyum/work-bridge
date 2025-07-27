@@ -19,7 +19,9 @@
 		{@render children()}
 	</div>
 {:else}
-	<NavbarNewUser></NavbarNewUser>
+	<div class="container">
+		<NavbarNewUser></NavbarNewUser>
+	</div>
 	{@render children()}
 {/if}
 

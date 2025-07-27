@@ -1,9 +1,28 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
 	import { cyrb53, validateEmail } from '$lib/utils.js';
+	import { StringValidator, Validator } from '$lib/validator';
 	import { Home, MoveLeft } from 'lucide-svelte';
 
 	let formElement: HTMLFormElement;
+	interface RegisterSchema {
+		role: StringValidator;
+		first_name: StringValidator;
+		last_name: StringValidator;
+		email: StringValidator;
+		password: StringValidator;
+		confirm_password: StringValidator;
+	}
+	const schema = (formData: FormData) => {
+		return {
+			role: Validator.string().required().in(['freelancer', 'recruiter']),
+			first_name: Validator.string().required().nonEmpty().withMaxSize(20),
+			last_name: Validator.string().required().nonEmpty().withMaxSize(20),
+			email: Validator.string().required().nonEmpty().email().withMaxSize(20),
+			password: Validator.string().required().nonEmpty(),
+			confirm_password: Validator.string().required().nonEmpty().equal(formData.get('password')?.toString() ?? "")
+		};
+	};
 	let errorMessages: Map<string, string> = new Map([
 		['email', 'Please enter a valid email'],
 		['password', 'Please enter a valid password'],
@@ -11,50 +30,14 @@
 	]);
 	let error_message: string = $state('');
 
-	async function register() {
-		error_message = '';
-		let formData = new FormData(formElement);
-		let invalid = false;
-		// check confirm_password and password
-		const confirmPassword = formData.get('confirm_password')?.toString();
-		const password = formData.get('password')?.toString();
-		if (!password || !confirmPassword || confirmPassword !== password) {
-			invalid = true;
-		}
-		const email = formData.get('email')?.toString();
-		if (!email || !validateEmail(email)) {
-			invalid = true;
-		}
-		formData.entries().forEach(([key, value]) => {
-			invalid = invalid || !value;
-			if (!value) {
-				let element = document.getElementById(key);
-				if (element) {
-					element.style.border = '2px solid red';
-				}
-				error_message += errorMessages.get(key) + '\n';
-			} else {
-				let element = document.getElementById(key);
-				if (element) {
-					element.style.border = '';
-				}
-			}
+	function formValidation(formData: FormData, schema: RegisterSchema) {
+		const arr: [string, StringValidator][] = Object.entries(schema);
+		arr.forEach(([field_name, validator]) => {
+			const errors = validator.validate(formData.get(field_name)?.toString());
+			
 		});
-		if (invalid) return;
-		formData.delete('confirm_password');
-		const hashedPassword = cyrb53(password ?? '').toString();
-		formData.set('password', hashedPassword);
-		let data = new URLSearchParams(
-			Array.from(formData.entries()).map(([key, value]) => [key, value.toString()])
-		);
-		const response = await fetch('/api/auth/register', {
-			method: 'POST',
-			body: data
-		});
-		if (response.ok) {
-			await goto('/', { invalidateAll: true });
-		}
 	}
+
 	function processFormData() {
 		const hashedPassword = cyrb53(allData.password ?? '').toString();
 		const obj = {
@@ -63,6 +46,7 @@
 		};
 		return Object.entries(obj).filter(([key, value]) => key !== 'confirm_password');
 	}
+
 	async function sendRequest() {
 		const entries = processFormData();
 		const payload = new URLSearchParams(Array.from(entries));
@@ -76,7 +60,7 @@
 		}
 	}
 	let allData: Record<string, string> = $state({});
-	const steps = [rolePicker, form];
+	const steps = [rolePicker, userInfoForm];
 	let currentStep = $state(0);
 
 	function captureFormData() {
@@ -92,7 +76,7 @@
 	}
 </script>
 
-{#snippet form()}
+{#snippet userInfoForm()}
 	<h2>Tell us about you!</h2>
 	<div class="personal-info-container">
 		<p>
@@ -113,6 +97,7 @@
 			name="confirm_password"
 			id="confirm_password"
 			placeholder="Confirm password"
+			required
 		/>
 	</div>
 {/snippet}
@@ -173,16 +158,22 @@
 				{#if currentStep < steps.length - 1}
 					<button
 						onclick={() => {
-							captureFormData();
-							currentStep += 1;
+							if (formElement.reportValidity()) {
+								captureFormData();
+								currentStep += 1;
+							}
 						}}
 						disabled={currentStep >= steps.length - 1}>Continue</button
 					>
 				{:else}
 					<button
 						onclick={async () => {
-							captureFormData();
-							await sendRequest();
+							if (formElement.reportValidity()) {
+								captureFormData();
+								return await sendRequest();
+							} else {
+								return await Promise.resolve();
+							}
 						}}>Submit</button
 					>
 				{/if}
@@ -202,9 +193,16 @@
 		align-items: center;
 	}
 	.username {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
+		display: flex;
+		flex-wrap: wrap;
 		gap: 0.5rem;
+		width: 100%;
+		justify-content: stretch;
+		align-items: safe;
+
+		> input {
+			flex-grow: 1;
+		}
 	}
 
 	.personal-info-container {
@@ -220,7 +218,10 @@
 	}
 
 	input[type='radio'] {
-		display: none;
+		z-index: -1;
+		position: absolute;
+		left: 0;
+		bottom: 0;
 	}
 
 	.card-body {
@@ -229,7 +230,9 @@
 	}
 
 	.card {
+		position: relative;
 		border: 2px solid var(--border);
+		background-color: var(--background-color);
 		padding: 5rem 2rem;
 		border-radius: 5px;
 		height: 100%;
