@@ -162,12 +162,12 @@
 				<div>Settings</div></a
 			>
 		</li>
-		<li>
+		<!-- <li>
 			<a href="/feature-request"
 				><PackagePlus />
 				<div>Feature Requests</div></a
 			>
-		</li>
+		</li> -->
 		<li>
 			<button onclick={logout}
 				><LogOut />
@@ -206,7 +206,7 @@
 			<li><a href="/notifications">Notifications</a></li>
 		</div>
 		<li><a href="/settings">Settings</a></li>
-		<li><a href="/feature-request">Feature Requests</a></li>
+		<!-- <li><a href="/feature-request">Feature Requests</a></li> -->
 		<li>
 			<button onclick={logout}> Logout </button>
 		</li>

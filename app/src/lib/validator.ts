@@ -1,7 +1,7 @@
 import { Result } from "./utils";
 
-class Validator {
-  static string(s: string): StringValidator {
+export class Validator {
+  static string(): StringValidator {
     return new StringValidator();
   }
 
@@ -21,10 +21,13 @@ enum StringValidationError {
   InvalidEmail = "INVALID_EMAIL",
   LengthLowerThanMin = "LENGTH_LT_MIN",
   LengthGreaterThanMax = "LENGTH_GT_MAX",
+  InvalidEnum = "INVALID_ENUM",
+  NotEqual = "NOT_EQUAL",
+  NotDefined = "NOT_DEFINED"
 }
 
-type StringValidatorType = (s: string) => Result<void, StringValidationError>;
-class StringValidator {
+type StringValidatorType = (s: string | null | undefined) => Result<void, StringValidationError>;
+export class StringValidator {
   private validators: StringValidatorType[];
 
   constructor() {
@@ -32,8 +35,8 @@ class StringValidator {
   }
 
   nonEmpty(): StringValidator {
-    const nonEmptyValidator: StringValidatorType = (s: string): Result<void, StringValidationError> => {
-      if (s.length > 0) {
+    const nonEmptyValidator: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+      if (!s || s.length > 0) {
         return new Result<void, StringValidationError>();
       } else {
         return new Result<void, StringValidationError>(undefined, StringValidationError.Empty);
@@ -44,8 +47,8 @@ class StringValidator {
   }
 
   withMinSize(minSize: number): StringValidator {
-    const minSizeValidator: StringValidatorType = (s: string): Result<void, StringValidationError> => {
-      if (s.length >= minSize) {
+    const minSizeValidator: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+      if (!s || s.length >= minSize) {
         return new Result<void, StringValidationError>();
       } else {
         return new Result<void, StringValidationError>(undefined, StringValidationError.LengthLowerThanMin);
@@ -56,8 +59,8 @@ class StringValidator {
   }
 
   withMaxSize(maxSize: number): StringValidator {
-    const maxSizeValidator: StringValidatorType = (s: string): Result<void, StringValidationError> => {
-      if (s.length <= maxSize) {
+    const maxSizeValidator: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+      if (!s || s.length <= maxSize) {
         return new Result<void, StringValidationError>();
       } else {
         return new Result<void, StringValidationError>(undefined, StringValidationError.LengthGreaterThanMax)
@@ -69,7 +72,8 @@ class StringValidator {
 
   email(): StringValidator {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const emailValidator: StringValidatorType = (s: string): Result<void, StringValidationError> => {
+    const emailValidator: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+      if (!s) return new Result<void, StringValidationError>();
       if (emailRegex.test(s)) {
         return new Result<void, StringValidationError>();
       } else {
@@ -80,7 +84,41 @@ class StringValidator {
     return this;
   }
 
-  validate(s: string): StringValidationError[] {
+  in(arr: string[]): StringValidator {
+    const inValidator: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+      if (!s || arr.includes(s)) {
+        return new Result<void, StringValidationError>();
+      } else {
+        return new Result<void, StringValidationError>(undefined, StringValidationError.InvalidEnum)
+      }
+    }
+    this.validators.push(inValidator);
+    return this;
+  }
+
+  equal(other: string): StringValidator {
+    const equal: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+      if (!s || s === other) {
+        return new Result<void, StringValidationError>();
+      } else {
+        return new Result<void, StringValidationError>(undefined, StringValidationError.NotEqual)
+      }
+    }
+    this.validators.push(equal);
+    return this;
+  }
+
+  required(): StringValidator {
+    const required: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+      if (s != null && s != undefined) {
+        return new Result<void, StringValidationError>();
+      } else return new Result<void, StringValidationError>(undefined, StringValidationError.NotDefined);
+    }
+    this.validators.push(required);
+    return this;
+  }
+
+  validate(s: string | undefined | null): StringValidationError[] {
     const results = this.validators.map((validator) => validator(s));
     const errors = results
       .map((error) => error.error)

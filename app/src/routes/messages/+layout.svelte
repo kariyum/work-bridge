@@ -113,28 +113,9 @@
 />
 
 <style>
-	@media (width < 600px) {
-		.messages-col[data-selected='false'] {
-			display: none !important;
-		}
-
-		.menu[data-selected='true'] {
-			display: none !important;
-		}
-
-		.menu {
-			height: fit-content;
-			width: 100%;
-		}
-
-		.discussion-container {
-			margin-left: 0 !important;
-		}
-	}
-
 	.component {
 		display: block;
-		height: calc(var(--client-height) - 4rem);
+		height: calc(var(--client-height) - 5rem);
 	}
 
 	.discussion-container {
@@ -211,5 +192,24 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+	}
+	
+	@media (width < 600px) {
+		.messages-col[data-selected='false'] {
+			display: none !important;
+		}
+
+		.menu[data-selected='true'] {
+			display: none !important;
+		}
+
+		.menu {
+			height: fit-content;
+			width: 100%;
+		}
+
+		.discussion-container {
+			margin-left: 0 !important;
+		}
 	}
 </style>
