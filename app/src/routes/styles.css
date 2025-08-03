@@ -114,6 +114,7 @@ textarea {
 
     --title: hsl(0, 0%, 15%);
     --sub-title: hsl(0, 0%, 5%, 0.5);
+    --error-color: rgb(187, 101, 101);
 
     .primary-btn {
         color: hsl(0, 0%, 99%);
@@ -141,6 +142,7 @@ textarea {
     --input-bg: #1E1E1E;
     --active-button: #424242;
     --toast-bg: #333333;
+    --error-color: rgb(187, 101, 101);
 
     --primary: #212227;
     --dark-text: #f9fafb;

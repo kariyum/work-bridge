@@ -16,14 +16,13 @@ export class Validator {
 
 
 enum StringValidationError {
-  Empty = "EMPTY",
-  nonEmpty = "NON_EMPTY",
-  InvalidEmail = "INVALID_EMAIL",
-  LengthLowerThanMin = "LENGTH_LT_MIN",
-  LengthGreaterThanMax = "LENGTH_GT_MAX",
-  InvalidEnum = "INVALID_ENUM",
-  NotEqual = "NOT_EQUAL",
-  NotDefined = "NOT_DEFINED"
+  nonEmpty = "Field should not be empty",
+  InvalidEmail = "Invalid email",
+  LengthLowerThanMin = "Field value is too short",
+  LengthGreaterThanMax = "Field value is too long",
+  InvalidEnum = "Invalid entry",
+  NotEqual = "Invalid entry",
+  NotDefined = "Required field"
 }
 
 type StringValidatorType = (s: string | null | undefined) => Result<void, StringValidationError>;
@@ -39,7 +38,7 @@ export class StringValidator {
       if (!s || s.length > 0) {
         return new Result<void, StringValidationError>();
       } else {
-        return new Result<void, StringValidationError>(undefined, StringValidationError.Empty);
+        return new Result<void, StringValidationError>(undefined, StringValidationError.nonEmpty);
       }
     }
     this.validators.push(nonEmptyValidator);

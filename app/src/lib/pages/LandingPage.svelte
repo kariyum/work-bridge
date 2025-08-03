@@ -75,7 +75,7 @@
 	<div class="opportunity-section">
 		<h1>Ready to Bond with Your Next Opportunity?</h1>
 		<p>Join Bond today and experience the future of freelance work. It's free to get started!</p>
-		<a href="/register" class="primary-btn">Sing-up Now</a>
+		<a href="/register" class="primary-btn">Sign-up Now</a>
 	</div>
 
 	<Footer></Footer>
