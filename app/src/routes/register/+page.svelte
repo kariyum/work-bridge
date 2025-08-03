@@ -3,53 +3,53 @@
 	import { cyrb53, validateEmail } from '$lib/utils.js';
 	import { StringValidator, Validator } from '$lib/validator';
 	import { Home, MoveLeft } from 'lucide-svelte';
+	import { untrack } from 'svelte';
+	import { SvelteMap } from 'svelte/reactivity';
 
 	let formElement: HTMLFormElement;
-	interface RegisterSchema {
-		role: StringValidator;
-		first_name: StringValidator;
-		last_name: StringValidator;
-		email: StringValidator;
-		password: StringValidator;
-		confirm_password: StringValidator;
-	}
-	const schema = (formData: FormData) => {
+	const steps = [rolePicker, userInfoForm];
+	let currentStep = $state(0);
+	let allData: SvelteMap<string, string> = new SvelteMap();
+	let formErrors: SvelteMap<string, string[]> = new SvelteMap();
+	let hasFormErrors: boolean = $derived.by(() => {
+		return (
+			Array.from(formErrors.values()).some((value) => value.length > 0) ||
+			Array.from(formErrors.keys()).length == 0
+		);
+	});
+
+	const validators = () => {
 		return {
 			role: Validator.string().required().in(['freelancer', 'recruiter']),
-			first_name: Validator.string().required().nonEmpty().withMaxSize(20),
-			last_name: Validator.string().required().nonEmpty().withMaxSize(20),
-			email: Validator.string().required().nonEmpty().email().withMaxSize(20),
-			password: Validator.string().required().nonEmpty(),
-			confirm_password: Validator.string().required().nonEmpty().equal(formData.get('password')?.toString() ?? "")
+			first_name: Validator.string().required().nonEmpty().withMinSize(2).withMaxSize(20),
+			last_name: Validator.string().required().nonEmpty().withMinSize(2).withMaxSize(20),
+			email: Validator.string().required().nonEmpty().email().withMaxSize(50),
+			password: Validator.string().required().nonEmpty().withMinSize(8),
+			confirm_password: Validator.string()
+				.required()
+				.equal(allData.get('password')?.toString() ?? '')
 		};
 	};
-	let errorMessages: Map<string, string> = new Map([
-		['email', 'Please enter a valid email'],
-		['password', 'Please enter a valid password'],
-		['confirm_password', 'Passwords do not match']
-	]);
-	let error_message: string = $state('');
 
-	function formValidation(formData: FormData, schema: RegisterSchema) {
-		const arr: [string, StringValidator][] = Object.entries(schema);
+	function reportFormValidation() {
+		const arr: [string, StringValidator][] = Object.entries(validators());
 		arr.forEach(([field_name, validator]) => {
-			const errors = validator.validate(formData.get(field_name)?.toString());
-			
+			const errors = validator
+				.validate(allData.get(field_name)?.toString())
+				.map((x) => x.toString());
+			formErrors.set(field_name, errors);
 		});
 	}
 
 	function processFormData() {
-		const hashedPassword = cyrb53(allData.password ?? '').toString();
-		const obj = {
-			...allData,
-			password: hashedPassword
-		};
-		return Object.entries(obj).filter(([key, value]) => key !== 'confirm_password');
+		const hashedPassword = cyrb53(allData.get('password') ?? '').toString();
+		allData.set('password', hashedPassword);
+		allData.delete('confirm_password');
 	}
 
 	async function sendRequest() {
-		const entries = processFormData();
-		const payload = new URLSearchParams(Array.from(entries));
+		processFormData();
+		const payload = new URLSearchParams(Array.from(allData));
 		const response = await fetch('/api/auth/register', {
 			method: 'POST',
 			body: payload
@@ -59,46 +59,58 @@
 			await goto('/', { invalidateAll: true });
 		}
 	}
-	let allData: Record<string, string> = $state({});
-	const steps = [rolePicker, userInfoForm];
-	let currentStep = $state(0);
 
 	function captureFormData() {
 		let formData = new FormData(formElement);
-		let entries = Object.fromEntries(
-			formData.entries().map(([key, value]) => [key, value.toString()])
-		);
-
-		allData = {
-			...allData,
-			...entries
-		};
+		formData.entries().forEach(([key, value]) => allData.set(key, value.toString()));
 	}
 </script>
+
+{#snippet errors(errors: string[])}
+	{#if errors.length > 0}
+		<div class="error-message">
+			{#each errors as err}
+				<div class="form-reason">{err}</div>
+			{/each}
+		</div>
+	{/if}
+{/snippet}
 
 {#snippet userInfoForm()}
 	<h2>Tell us about you!</h2>
 	<div class="personal-info-container">
-		<p>
-			{error_message}
-		</p>
 		<div class="username">
-			<input type="text" name="first_name" id="first_name" placeholder="Name" required />
-			<input type="text" name="last_name" id="last_name" placeholder="Last Name" required />
+			<div>
+				<input type="text" name="first_name" id="first_name" placeholder="Name" required />
+				{@render errors(formErrors.get('first_name') ?? [])}
+			</div>
+			<div>
+				<input type="text" name="last_name" id="last_name" placeholder="Last Name" required />
+				{@render errors(formErrors.get('last_name') ?? [])}
+			</div>
 		</div>
 		<p class="input-info">
 			We use your name and last name to display them throughout the app, (e.g. on your posts,
 			discussions and profile)
 		</p>
-		<input type="email" name="email" id="email" placeholder="Email" required />
-		<input type="password" name="password" id="password" placeholder="Password" required />
-		<input
-			type="password"
-			name="confirm_password"
-			id="confirm_password"
-			placeholder="Confirm password"
-			required
-		/>
+		<div>
+			<input type="email" name="email" id="email" placeholder="Email" required />
+			{@render errors(formErrors.get('email') ?? [])}
+		</div>
+		<div>
+			<input type="password" name="password" id="password" placeholder="Password" required />
+			{@render errors(formErrors.get('password') ?? [])}
+		</div>
+		<div>
+			<input
+				type="password"
+				name="confirm_password"
+				id="confirm_password"
+				placeholder="Confirm password"
+				required
+			/>
+			{@render errors(formErrors.get('confirm_password') ?? [])}
+		</div>
 	</div>
 {/snippet}
 
@@ -113,7 +125,7 @@
 					name="role"
 					value="recruiter"
 					required
-					checked={allData.role === 'recruiter'}
+					checked={allData.get('role') === 'recruiter'}
 				/>
 				<div class="card-body">
 					<h1>Recruiter</h1>
@@ -127,7 +139,7 @@
 					name="role"
 					value="freelancer"
 					required
-					checked={allData.role === 'freelancer'}
+					checked={allData.get('role') === 'freelancer'}
 				/>
 				<div class="card-body">
 					<h1>Freelancer</h1>
@@ -170,7 +182,10 @@
 						onclick={async () => {
 							if (formElement.reportValidity()) {
 								captureFormData();
-								return await sendRequest();
+								reportFormValidation();
+								if (!hasFormErrors) {
+									return await sendRequest();
+								}
 							} else {
 								return await Promise.resolve();
 							}
@@ -200,8 +215,11 @@
 		justify-content: stretch;
 		align-items: safe;
 
-		> input {
+		> div {
 			flex-grow: 1;
+			> input {
+				width: 100%;
+			}
 		}
 	}
 
@@ -209,6 +227,13 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
+		margin-top: 0.5rem;
+		> div {
+			flex-grow: 1;
+			> input {
+				width: 100%;
+			}
+		}
 	}
 
 	.role-picker-container {
@@ -281,6 +306,11 @@
 		padding: 0 1rem;
 		max-width: 45rem;
 		margin: auto;
+	}
+
+	.error-message {
+		padding: 0.5rem 0 0.5rem 0;
+		color: var(--error-color);
 	}
 
 	@media (width < 600px) {
