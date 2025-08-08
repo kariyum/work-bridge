@@ -81,34 +81,49 @@
 	<div class="personal-info-container">
 		<div class="username">
 			<div>
-				<input type="text" name="first_name" id="first_name" placeholder="Name" required />
+				<div class="input-group">
+					<input type="text" name="first_name" id="first_name" placeholder=" " required />
+					<label for="first_name">First Name</label>
+				</div>
 				{@render errors(formErrors.get('first_name') ?? [])}
 			</div>
 			<div>
-				<input type="text" name="last_name" id="last_name" placeholder="Last Name" required />
+				<div class="input-group">
+					<input type="text" name="last_name" id="last_name" placeholder=" " required />
+					<label for="last_name">Last Name</label>
+				</div>
 				{@render errors(formErrors.get('last_name') ?? [])}
 			</div>
 		</div>
-		<p class="input-info">
+		<!-- <p class="input-info">
 			We use your name and last name to display them throughout the app, (e.g. on your posts,
 			discussions and profile)
-		</p>
+		</p> -->
 		<div>
-			<input type="email" name="email" id="email" placeholder="Email" required />
+			<div class="input-group">
+				<input type="email" name="email" id="email" placeholder=" " required />
+				<label for="email">Email</label>
+			</div>
 			{@render errors(formErrors.get('email') ?? [])}
 		</div>
 		<div>
-			<input type="password" name="password" id="password" placeholder="Password" required />
-			{@render errors(formErrors.get('password') ?? [])}
+			<div class="input-group">
+				<input type="password" name="password" id="password" placeholder=" " required />
+				<label for="password">Password</label>
+				{@render errors(formErrors.get('password') ?? [])}
+			</div>
 		</div>
 		<div>
-			<input
-				type="password"
-				name="confirm_password"
-				id="confirm_password"
-				placeholder="Confirm password"
-				required
-			/>
+			<div class="input-group">
+				<input
+					type="password"
+					name="confirm_password"
+					id="confirm_password"
+					placeholder=" "
+					required
+				/>
+				<label for="confirm_password">Confirm Password</label>
+			</div>
 			{@render errors(formErrors.get('confirm_password') ?? [])}
 		</div>
 	</div>
@@ -157,7 +172,9 @@
 		</a>
 		<h1>Join us!</h1>
 		<form onsubmit={captureFormData} bind:this={formElement}>
-			{@render steps[currentStep]()}
+			<fieldset>
+				{@render steps[currentStep]()}
+			</fieldset>
 		</form>
 		<div class="actions">
 			{#if currentStep == 0}
@@ -198,6 +215,32 @@
 </div>
 
 <style>
+	fieldset {
+		border: unset;
+	}
+
+	.input-group {
+		position: relative;
+		label {
+			position: absolute;
+			top: 50%;
+			left: 12px;
+			transform: translateY(-50%);
+			color: #5f6368;
+			pointer-events: none; /* Allows clicks to pass through to the input */
+			transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+			border-radius: 5px;
+		}
+
+		input:focus + label,
+		input:not(:placeholder-shown) + label {
+			top: 0;
+			left: 8px;
+			transform: translateY(-50%);
+			background-color: var(--input-bg); /* Same as input background */
+			padding: 0 6px;
+		}
+	}
 	.input-info {
 		font-size: small;
 		color: var(--grey);
@@ -214,26 +257,20 @@
 		width: 100%;
 		justify-content: stretch;
 		align-items: safe;
-
 		> div {
 			flex-grow: 1;
-			> input {
-				width: 100%;
-			}
 		}
+	}
+
+	input {
+		width: 100%;
 	}
 
 	.personal-info-container {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
-		margin-top: 0.5rem;
-		> div {
-			flex-grow: 1;
-			> input {
-				width: 100%;
-			}
-		}
+		gap: 1rem;
+		margin-top: 1rem;
 	}
 
 	.role-picker-container {
