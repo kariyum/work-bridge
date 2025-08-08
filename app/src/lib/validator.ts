@@ -18,8 +18,8 @@ export class Validator {
 enum StringValidationError {
   nonEmpty = "Field should not be empty",
   InvalidEmail = "Invalid email",
-  LengthLowerThanMin = "Field value is too short",
-  LengthGreaterThanMax = "Field value is too long",
+  LengthLowerThanMin = "Value is too short",
+  LengthGreaterThanMax = "Value is too long",
   InvalidEnum = "Invalid entry",
   NotEqual = "Invalid entry",
   NotDefined = "Required field"
