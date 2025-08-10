@@ -18,42 +18,27 @@
 		});
 	}
 
-	let form_element: HTMLFormElement | undefined = $state();
-	let email_element: HTMLInputElement | undefined = $state();
-	let password_element: HTMLInputElement | undefined = $state();
-	let error_message = '';
+	let password: string | undefined = $state(undefined);
+	let email: string | undefined = $state(undefined);
 	let final_error_message = $state('');
 
 	async function handleSubmit() {
-		if (email_element && password_element) {
-			error_message = '';
-			form_element?.reportValidity();
-			const email = email_element.value;
-			const password = password_element.value;
-			if (!email || !validateEmail(email)) {
-				email_element.style.border = '2px solid red';
-				return;
-			} else {
-				email_element.style.border = '';
-			}
-			if (!password) {
-				password_element.style.border = '2px solid red';
-				return;
-			} else {
-				password_element.style.border = '';
-			}
+		if (email && password) {
 			await login(email, cyrb53(password).toString()).then(
 				async (response) => {
 					if (response.ok) {
 						await goto(data.redirectionUrl, { invalidateAll: true });
+					} else if (response.status == 401) {
+						final_error_message = 'Wrong combination';
 					} else {
-						error_message = 'Wrong combination';
+						final_error_message = 'Connection issues, retry later';
 					}
 				},
-				(reason) => console.log('Connection issues, retry later', reason)
+				(reason) => {
+					console.error('Connection issues, retry later', reason);
+					final_error_message = 'Connection issues, retry later';
+				}
 			);
-
-			final_error_message = error_message;
 		}
 	}
 </script>
@@ -67,28 +52,23 @@
 				<MoveLeft size="3rem" />
 			</a>
 			<h1>Welcome</h1>
-			<form
-				class="fields-container"
-				method="post"
-				onsubmit={(event) => event.preventDefault()}
-				bind:this={form_element}
-			>
-				<input name="email" type="email" placeholder="Email" required bind:this={email_element} />
-				<input
-					name="password"
-					type="password"
-					placeholder="Password"
-					required
-					bind:this={password_element}
-				/>
-				<p>
-					{final_error_message}
-				</p>
-				<div class="buttons">
-					<div class="action-buttons">
-						<button type="submit" onclick={handleSubmit}>Login</button>
+			<form class="fields-container" method="post" onsubmit={(event) => event.preventDefault()}>
+				<div class="fields">
+					<div class="input-label">
+						<input name="email" type="email" placeholder=" " required bind:value={email} />
+						<label for="email">Email</label>
+					</div>
+					<div class="input-label">
+						<input name="password" type="password" placeholder=" " required bind:value={password} />
+						<label for="password">Password</label>
 					</div>
 				</div>
+				{#if final_error_message.length > 0}
+					<p class="error-message">
+						{final_error_message}
+					</p>
+				{/if}
+				<button type="submit" onclick={handleSubmit}>Login</button>
 			</form>
 			<a href="/register">Don't have an account? Register!</a>
 		</div>
@@ -96,29 +76,33 @@
 {/if}
 
 <style>
-	.action-buttons {
-		display: flex;
-		flex-flow: row-reverse;
-		align-items: center;
-		gap: 0.5rem;
-		width: 100%;
-	}
-
-	.buttons {
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-	}
-
 	.container {
 		margin-top: 3rem;
 		width: 100%;
+	}
+	.fields {
+		display: flex;
+		gap: 1rem;
+		flex-direction: column;
+	}
+
+	input {
+		width: 100%;
+	}
+
+	p {
+		padding: 0;
+		margin: 0rem;
+		margin-top: 1rem;
+	}
+	button {
+		margin: 0rem;
+		margin-top: 1rem;
 	}
 
 	.fields-container {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
 	}
 
 	a {
