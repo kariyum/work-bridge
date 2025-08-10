@@ -17,6 +17,9 @@
 			Array.from(formErrors.keys()).length == 0
 		);
 	});
+	let hasErrors = (field: string) => {
+		return (formErrors.get(field) ?? []).length > 0;
+	};
 
 	const validators = () => {
 		return {
@@ -82,14 +85,28 @@
 		<div class="username">
 			<div>
 				<div class="input-group">
-					<input type="text" name="first_name" id="first_name" placeholder=" " required />
+					<input
+						type="text"
+						name="first_name"
+						id="first_name"
+						placeholder=" "
+						required
+						class:input-error={hasErrors('first_name')}
+					/>
 					<label for="first_name">First Name</label>
 				</div>
 				{@render errors(formErrors.get('first_name') ?? [])}
 			</div>
 			<div>
 				<div class="input-group">
-					<input type="text" name="last_name" id="last_name" placeholder=" " required />
+					<input
+						type="text"
+						name="last_name"
+						id="last_name"
+						placeholder=" "
+						required
+						class:input-error={hasErrors('last_name')}
+					/>
 					<label for="last_name">Last Name</label>
 				</div>
 				{@render errors(formErrors.get('last_name') ?? [])}
@@ -101,14 +118,28 @@
 		</p> -->
 		<div>
 			<div class="input-group">
-				<input type="email" name="email" id="email" placeholder=" " required />
+				<input
+					type="email"
+					name="email"
+					id="email"
+					placeholder=" "
+					required
+					class:input-error={hasErrors('email')}
+				/>
 				<label for="email">Email</label>
 			</div>
 			{@render errors(formErrors.get('email') ?? [])}
 		</div>
 		<div>
 			<div class="input-group">
-				<input type="password" name="password" id="password" placeholder=" " required />
+				<input
+					type="password"
+					name="password"
+					id="password"
+					placeholder=" "
+					required
+					class:input-error={hasErrors('password')}
+				/>
 				<label for="password">Password</label>
 				{@render errors(formErrors.get('password') ?? [])}
 			</div>
@@ -121,6 +152,7 @@
 					id="confirm_password"
 					placeholder=" "
 					required
+					class:input-error={hasErrors('confirm_password')}
 				/>
 				<label for="confirm_password">Confirm Password</label>
 			</div>
@@ -230,20 +262,22 @@
 			pointer-events: none; /* Allows clicks to pass through to the input */
 			transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 			border-radius: 5px;
+			font-size: 16px;
 		}
 
 		input:focus + label,
 		input:not(:placeholder-shown) + label {
 			top: 0;
-			left: 8px;
+			left: 6px;
+			font-size: 14px;
 			transform: translateY(-50%);
 			background-color: var(--input-bg); /* Same as input background */
 			padding: 0 6px;
 		}
 	}
-	.input-info {
-		font-size: small;
-		color: var(--grey);
+
+	.input-error {
+		border-color: var(--error-color);
 	}
 	.actions {
 		display: flex;
@@ -354,6 +388,10 @@
 		.options {
 			display: flex;
 			flex-direction: column;
+		}
+
+		.username {
+			gap: 1rem;
 		}
 	}
 </style>
