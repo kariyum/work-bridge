@@ -63,6 +63,18 @@
 		}
 	}
 
+	async function submit() {
+		if (formElement.reportValidity()) {
+			captureFormData();
+			reportFormValidation();
+			if (!hasFormErrors) {
+				return await sendRequest();
+			}
+		} else {
+			return await Promise.resolve();
+		}
+	}
+
 	function captureFormData() {
 		let formData = new FormData(formElement);
 		formData.entries().forEach(([key, value]) => allData.set(key, value.toString()));
@@ -84,7 +96,7 @@
 	<div class="personal-info-container">
 		<div class="username">
 			<div>
-				<div class="input-group">
+				<div class="input-label">
 					<input
 						type="text"
 						name="first_name"
@@ -98,7 +110,7 @@
 				{@render errors(formErrors.get('first_name') ?? [])}
 			</div>
 			<div>
-				<div class="input-group">
+				<div class="input-label">
 					<input
 						type="text"
 						name="last_name"
@@ -117,7 +129,7 @@
 			discussions and profile)
 		</p> -->
 		<div>
-			<div class="input-group">
+			<div class="input-label">
 				<input
 					type="email"
 					name="email"
@@ -131,7 +143,7 @@
 			{@render errors(formErrors.get('email') ?? [])}
 		</div>
 		<div>
-			<div class="input-group">
+			<div class="input-label">
 				<input
 					type="password"
 					name="password"
@@ -145,7 +157,7 @@
 			</div>
 		</div>
 		<div>
-			<div class="input-group">
+			<div class="input-label">
 				<input
 					type="password"
 					name="confirm_password"
@@ -203,46 +215,44 @@
 			<MoveLeft size="3rem" />
 		</a>
 		<h1>Join us!</h1>
-		<form onsubmit={captureFormData} bind:this={formElement}>
+		<form
+			onsubmit={async (event) => {
+				event.preventDefault();
+				await submit();
+			}}
+			bind:this={formElement}
+		>
 			<fieldset>
 				{@render steps[currentStep]()}
 			</fieldset>
-		</form>
-		<div class="actions">
-			{#if currentStep == 0}
-				<a href="/login">Already have an account? Login!</a>
-			{/if}
-			<div style="margin-left:auto;">
-				<button class="secondary-btn" onclick={() => (currentStep -= 1)} disabled={currentStep <= 0}
-					>Previous</button
-				>
-				{#if currentStep < steps.length - 1}
-					<button
-						onclick={() => {
-							if (formElement.reportValidity()) {
-								captureFormData();
-								currentStep += 1;
-							}
-						}}
-						disabled={currentStep >= steps.length - 1}>Continue</button
-					>
-				{:else}
-					<button
-						onclick={async () => {
-							if (formElement.reportValidity()) {
-								captureFormData();
-								reportFormValidation();
-								if (!hasFormErrors) {
-									return await sendRequest();
-								}
-							} else {
-								return await Promise.resolve();
-							}
-						}}>Submit</button
-					>
+			<div class="actions">
+				{#if currentStep == 0}
+					<a href="/login">Already have an account? Login!</a>
 				{/if}
+				<div style="margin-left:auto;">
+					<button
+						type="button"
+						class="secondary-btn"
+						onclick={() => (currentStep -= 1)}
+						disabled={currentStep <= 0}>Previous</button
+					>
+					{#if currentStep < steps.length - 1}
+						<button
+							type="button"
+							onclick={() => {
+								if (formElement.reportValidity()) {
+									captureFormData();
+									currentStep += 1;
+								}
+							}}
+							disabled={currentStep >= steps.length - 1}>Continue</button
+						>
+					{:else}
+						<button type="submit" onclick={submit}>Submit</button>
+					{/if}
+				</div>
 			</div>
-		</div>
+		</form>
 	</div>
 </div>
 
@@ -251,35 +261,8 @@
 		border: unset;
 	}
 
-	.input-group {
-		position: relative;
-		label {
-			position: absolute;
-			top: 50%;
-			left: 12px;
-			transform: translateY(-50%);
-			color: #5f6368;
-			pointer-events: none; /* Allows clicks to pass through to the input */
-			transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-			border-radius: 5px;
-			font-size: 16px;
-		}
-
-		input:focus + label,
-		input:not(:placeholder-shown) + label {
-			top: 0;
-			left: 6px;
-			font-size: 14px;
-			transform: translateY(-50%);
-			background-color: var(--input-bg); /* Same as input background */
-			padding: 0 6px;
-		}
-	}
-
-	.input-error {
-		border-color: var(--error-color);
-	}
 	.actions {
+		margin-top: 1rem;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -377,11 +360,6 @@
 		padding: 0 1rem;
 		max-width: 45rem;
 		margin: auto;
-	}
-
-	.error-message {
-		padding: 0.5rem 0 0.5rem 0;
-		color: var(--error-color);
 	}
 
 	@media (width < 600px) {
