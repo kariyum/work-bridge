@@ -10,18 +10,8 @@
 	const steps = [rolePicker, userInfoForm];
 	let currentStep = $state(0);
 	let allData: SvelteMap<string, string> = new SvelteMap();
-	let formErrors: SvelteMap<string, string[]> = new SvelteMap();
-	let hasFormErrors: boolean = $derived.by(() => {
-		return (
-			Array.from(formErrors.values()).some((value) => value.length > 0) ||
-			Array.from(formErrors.keys()).length == 0
-		);
-	});
-	let hasErrors = (field: string) => {
-		return (formErrors.get(field) ?? []).length > 0;
-	};
 
-	const validators = () => {
+	const validators = (data: Map<string, string>) => {
 		return {
 			role: Validator.string().required().in(['freelancer', 'recruiter']),
 			first_name: Validator.string().required().nonEmpty().withMinSize(2).withMaxSize(20),
@@ -30,19 +20,41 @@
 			password: Validator.string().required().nonEmpty().withMinSize(8),
 			confirm_password: Validator.string()
 				.required()
-				.equal(allData.get('password')?.toString() ?? '')
+				.equal(data.get('password')?.toString() ?? '')
 		};
 	};
+	interface FormValidation {
+		formErrors: Map<string, string[]>;
+		hasFormErrors: boolean;
+		getError: (field: string) => string[];
+		hasErrors: (field: string) => boolean;
+	}
 
-	function reportFormValidation() {
-		const arr: [string, StringValidator][] = Object.entries(validators());
-		arr.forEach(([field_name, validator]) => {
+	function reportFormValidation(
+		formData: Map<string, string>,
+		validators: (data: Map<string, string>) => { [key: string]: StringValidator }
+	): FormValidation {
+		const formErrors: Map<string, string[]> = new Map();
+		Object.entries(validators(formData)).forEach(([field_name, validator]) => {
 			const errors = validator
-				.validate(allData.get(field_name)?.toString())
-				.map((x) => x.toString());
+				.validate(formData.get(field_name)?.toString())
+				.map((error) => error.toString());
 			formErrors.set(field_name, errors);
 		});
+		return {
+			formErrors: formErrors,
+			getError(field: string) {
+				return formErrors.get(field) ?? [];
+			},
+			hasErrors(field: string) {
+				return (formErrors.get(field) ?? []).length > 0;
+			},
+			hasFormErrors:
+				Array.from(formErrors.values()).some((value) => value.length > 0) ||
+				Array.from(formErrors.keys()).length == 0
+		};
 	}
+	let formValidation: FormValidation | undefined = $state(undefined);
 
 	function processFormData() {
 		const hashedPassword = cyrb53(allData.get('password') ?? '').toString();
@@ -66,8 +78,8 @@
 	async function submit() {
 		if (formElement.reportValidity()) {
 			captureFormData();
-			reportFormValidation();
-			if (!hasFormErrors) {
+			formValidation = reportFormValidation(allData, validators);
+			if (!formValidation?.hasFormErrors) {
 				return await sendRequest();
 			}
 		} else {
@@ -103,11 +115,11 @@
 						id="first_name"
 						placeholder=" "
 						required
-						class:input-error={hasErrors('first_name')}
+						class:input-error={formValidation?.hasErrors('first_name')}
 					/>
 					<label for="first_name">First Name</label>
 				</div>
-				{@render errors(formErrors.get('first_name') ?? [])}
+				{@render errors(formValidation?.getError('first_name') ?? [])}
 			</div>
 			<div>
 				<div class="input-label">
@@ -117,11 +129,11 @@
 						id="last_name"
 						placeholder=" "
 						required
-						class:input-error={hasErrors('last_name')}
+						class:input-error={formValidation?.hasErrors('last_name')}
 					/>
 					<label for="last_name">Last Name</label>
 				</div>
-				{@render errors(formErrors.get('last_name') ?? [])}
+				{@render errors(formValidation?.getError('last_name') ?? [])}
 			</div>
 		</div>
 		<!-- <p class="input-info">
@@ -136,11 +148,11 @@
 					id="email"
 					placeholder=" "
 					required
-					class:input-error={hasErrors('email')}
+					class:input-error={formValidation?.hasErrors('email')}
 				/>
 				<label for="email">Email</label>
 			</div>
-			{@render errors(formErrors.get('email') ?? [])}
+			{@render errors(formValidation?.getError('email') ?? [])}
 		</div>
 		<div>
 			<div class="input-label">
@@ -150,10 +162,10 @@
 					id="password"
 					placeholder=" "
 					required
-					class:input-error={hasErrors('password')}
+					class:input-error={formValidation?.hasErrors('password')}
 				/>
 				<label for="password">Password</label>
-				{@render errors(formErrors.get('password') ?? [])}
+				{@render errors(formValidation?.getError('password') ?? [])}
 			</div>
 		</div>
 		<div>
@@ -164,11 +176,11 @@
 					id="confirm_password"
 					placeholder=" "
 					required
-					class:input-error={hasErrors('confirm_password')}
+					class:input-error={formValidation?.hasErrors('confirm_password')}
 				/>
 				<label for="confirm_password">Confirm Password</label>
 			</div>
-			{@render errors(formErrors.get('confirm_password') ?? [])}
+			{@render errors(formValidation?.getError('confirm_password') ?? [])}
 		</div>
 	</div>
 {/snippet}
