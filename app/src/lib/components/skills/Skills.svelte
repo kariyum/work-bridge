@@ -3,12 +3,12 @@
 
 	let {
 		skillsIn = $bindable([]),
-		addSkill, 
+		addSkill,
 		removeSkillAtIndex
 	}: {
-		skillsIn: string[],
-		addSkill: (skill: string) => void,
-		removeSkillAtIndex: (index: number) => void
+		skillsIn: string[];
+		addSkill: (skill: string) => void;
+		removeSkillAtIndex: (index: number) => void;
 	} = $props();
 
 	let skillInput = $state('');
@@ -23,7 +23,7 @@
 	let isFocused = $state(false);
 </script>
 
-<div class="container" class:blue-outline={isFocused} >
+<div class="container" class:blue-outline={isFocused}>
 	{#each skillsIn as skill, index}
 		<div>
 			<Tag onClose={() => removeSkillAtIndex(index)}>
@@ -33,11 +33,42 @@
 			</Tag>
 		</div>
 	{/each}
-	<input type="text" onfocus={() => isFocused = true} onblur={() => isFocused = false} placeholder="Add a skill" bind:value={skillInput} onkeydown={onKeydown} />
+	<input
+		type="text"
+		onfocus={() => (isFocused = true)}
+		onblur={() => (isFocused = false)}
+		placeholder=" "
+		bind:value={skillInput}
+		onkeydown={onKeydown}
+	/>
+	<label for="" class:focused-label={isFocused || skillsIn.length > 0}>Skills</label>
 </div>
 
 <style>
+	label {
+		position: absolute;
+		top: 50%;
+		left: 6px;
+		transform: translateY(-50%);
+		color: #5f6368;
+		pointer-events: none;
+		background-color: var(--input-bg);
+		transition:
+			top 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+			left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+			font-size 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+		border-radius: 5px;
+		font-size: 16px;
+		padding: 0 6px;
+	}
+	.focused-label {
+		top: 0;
+		left: 6px;
+		font-size: 14px;
+		transform: translateY(-50%);
+	}
 	.container {
+		position: relative;
 		width: max-width;
 		display: flex;
 		flex-wrap: wrap;

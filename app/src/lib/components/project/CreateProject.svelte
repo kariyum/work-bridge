@@ -123,33 +123,22 @@
 			}
 		}}
 	>
-		<div class="input">
+		<div class="input input-label">
+			<input type="text" id="title" placeholder=" " bind:value={projectFormInput.title} />
 			<label for="title">Project Title</label>
-			<input
-				type="text"
-				id="title"
-				placeholder="e.g. Business Website"
-				bind:value={projectFormInput.title}
-			/>
 		</div>
 		<div class="input">
-			<label for="">Project Description</label>
 			<RichTextEditor bind:x={projectFormInput.content}></RichTextEditor>
 		</div>
 
-		<div class="input">
+		<div class="input input-label">
+			<input type="text" id="budget" placeholder=" " bind:value={projectFormInput.budget} />
 			<label for="">Budget</label>
-			<input type="text" id="budget" placeholder="500 DT" bind:value={projectFormInput.budget} />
 		</div>
 
-		<div class="input">
+		<div class="input input-label">
+			<input type="date" id="deadline" placeholder=" " bind:value={projectFormInput.deadline} />
 			<label for="">Deadline</label>
-			<input
-				type="date"
-				id="deadline"
-				placeholder="Project deadline"
-				bind:value={projectFormInput.deadline}
-			/>
 		</div>
 
 		<div style="width: 100%;">
@@ -178,7 +167,6 @@
 			{/snippet}
 			<AsyncButton idleView={submitButton} {endView} onclick={(event) => handleSubmit(event)} />
 		</div>
-		<!-- <input style="background-color:#f0f0f0;" type="submit" value="Create project" /> -->
 	</form>
 </div>
 
@@ -216,12 +204,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		gap: 0.3rem;
-	}
-
-	input {
-		padding: 0;
-		padding: 0.7rem;
-		border: 2px solid var(--border);
+		gap: 0.5rem;
+		margin-top: 1rem;
 	}
 </style>

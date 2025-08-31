@@ -45,7 +45,7 @@
 	});
 </script>
 
-<div class="doc" class:focused>
+<div class="doc label-top" class:focused>
 	<div class="outer-button-container">
 		<div class="button-container">
 			<div class="button-group">
@@ -115,10 +115,33 @@
 			</div>
 		</div>
 	</div>
-	<div bind:this={element} class="editor-content" onfocusin={() => focused = true} onfocusout={() => focused = false}></div>
+	<div
+		bind:this={element}
+		class="input-label editor-content"
+		onfocusin={() => (focused = true)}
+		onfocusout={() => (focused = false)}
+	></div>
+	<label for="">Project Description</label>
 </div>
 
 <style>
+	.label-top {
+		position: relative;
+
+		label {
+			position: absolute;
+			transform: translateY(-50%);
+			color: #5f6368;
+			pointer-events: none;
+			background-color: var(--input-bg);
+			border-radius: 5px;
+			font-size: 16px;
+			padding: 0 6px;
+			top: 0;
+			left: 6px;
+			font-size: 14px;
+		}
+	}
 	div {
 		background-color: var(--input-bg);
 	}
@@ -150,6 +173,7 @@
 		border-radius: 5px 5px 0 0;
 		flex-direction: row nowrap;
 		padding: 0.3rem;
+		margin-top: 0.5rem;
 		width: max-content;
 		justify-content: space-around;
 	}
@@ -188,9 +212,8 @@
 	.doc {
 		border: 2px solid var(--border);
 		border-radius: 5px;
-		overflow: hidden;
 	}
 	.focused {
 		border-color: var(--blue);
-	}	
+	}
 </style>
