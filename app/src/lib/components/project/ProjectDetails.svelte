@@ -2,7 +2,9 @@
 	import { invalidate } from '$app/navigation';
 	import type { User } from '$lib/types';
 	import type { ProjectGET } from '$lib/types/project';
-	import { formatDate, snakeToCapital } from '$lib/utils';
+	import { formatBudget, formatDate, formatDateSentence, snakeToCapital } from '$lib/utils';
+	import { Calendar, HandCoins, SquarePen, UserRound } from 'lucide-svelte';
+
 	interface props {
 		projectIn: ProjectGET;
 		user?: User;
@@ -34,39 +36,54 @@
 	{#if projectIn.tasks?.length !== 0}
 		<div class="tasks-container">
 			{#each projectIn.tasks?.sort((a, b) => a.id - b.id) ?? [] as task}
-				<div class="task" id={task.id.toString()}>
-					<h3>
-						#{task.id}
-						{task.title}
-					</h3>
-					<div class="status" data-type={task.status}>
-						{snakeToCapital(task.status)}
-					</div>
-					<div>
-						Budget: {task.budget}
-					</div>
-					<div>
-						Assigned to: {task.assignee_id}
-					</div>
-					<div class="task-content rich-content">
-						Description:
-						{#if task.content.length === 0}
-							<div>No content for this task</div>
-						{:else}
-							{@html task.content}
-						{/if}
+				<a
+					class="reset card task hover-effect"
+					id={task.id.toString()}
+					href={`/project/${projectIn.id}/task/${task.id}`}
+				>
+					<div class="padding-no-buttom">
+						<div class="detail">
+							<h3>{task.title}</h3>
+							<div class="status" data-type={task.status}>
+								{snakeToCapital(task.status)}
+							</div>
+						</div>
+						<div class="task-content rich-content">
+							{#if task.content.length === 0}
+								<div>No content for this task</div>
+							{:else}
+								{@html task.content}
+							{/if}
+						</div>
+						<div class="icons">
+							<div>
+								<UserRound size="14" />
+								{task.assignee_id}
+							</div>
+							<div>
+								<Calendar size="14" />
+								{formatDateSentence(task.created_at)}
+							</div>
+							<div>
+								<HandCoins size="14" />
+								{formatBudget(task.budget)}
+							</div>
+						</div>
 					</div>
 					<div class="skills">
-						{#if task.skills.length === 0}
-							<div>No skills required.</div>
-						{:else}
-							{#each task.skills as skill}
-								<div class="skill">{skill}</div>
-							{/each}
-						{/if}
+						<span>Skills: </span>
+						<div class="flex-row">
+							{#if task.skills.length === 0}
+								<div>No skills required.</div>
+							{:else}
+								{#each task.skills as skill}
+									<div class="skill">{skill}</div>
+								{/each}
+							{/if}
+						</div>
 					</div>
 
-					{#if user?.role === 'freelancer'}
+					<!-- {#if user?.role === 'freelancer'}
 						<button
 							class="apply-btn"
 							disabled={task.proposal_status != undefined}
@@ -83,8 +100,8 @@
 						<div class="view-link">
 							<a href={`/project/${projectIn.id}/task/${task.id}`}>View</a>
 						</div>
-					{/if}
-				</div>
+					{/if} -->
+				</a>
 			{/each}
 		</div>
 	{:else}
@@ -95,33 +112,150 @@
 <div class="container">
 	<div class="sub-container">
 		<div class="header">
-			<h1>#{projectIn.id} {projectIn.title}</h1>
+			<h1>{projectIn.title}</h1>
 			{#if userIsCreator}
-				<button onclick={onEdit}>Edit</button>
+				<button onclick={onEdit} class="button-icon"><SquarePen size="14" />Edit</button>
 			{/if}
 		</div>
-		<div>
-			<span style="font-weight: 500;">Client's email:</span>
-			<span>{projectIn.user_id}</span>
+		<div class="body">
+			<div class="column">
+				<div class="card padding">
+					<h2>Description</h2>
+					{#if projectIn.content.length === 0}
+						<span>No content for this project</span>
+					{:else}
+						<span>{@html projectIn.content}</span>
+					{/if}
+				</div>
+				<h2>Tasks ({projectIn.tasks?.length || 0})</h2>
+				<div>
+					{@render tasksSnippet()}
+				</div>
+			</div>
+			<div class="column">
+				<div class="card padding">
+					<h2>Details</h2>
+					<div class="detail">
+						<span>Creator</span>
+						<span>{projectIn.user_id}</span>
+					</div>
+					<div class="detail">
+						<span>Created On</span>
+						<span>{formatDateSentence(projectIn.created_at)}</span>
+					</div>
+					<div class="detail">
+						<span>Project ID</span>
+						<span>{projectIn.id}</span>
+					</div>
+				</div>
+				<div class="card padding">
+					<h2>Key Information</h2>
+					<div class="information">
+						<span>Deadline</span>
+						<span>{formatDateSentence(projectIn.deadline)}</span>
+					</div>
+					<div class="information">
+						<span>Budget</span>
+						<span>{formatBudget(projectIn.budget)}</span>
+					</div>
+				</div>
+			</div>
+			<!-- <div>
+				<span style="font-weight: 500;">Client's email:</span>
+				<span>{projectIn.user_id}</span>
+			</div>
+			<div>
+				<span style="font-weight: 500;">Posted on: </span>
+				{formatDate(projectIn.created_at)}
+			</div>
+			<div class="content rich-content">
+				{#if projectIn.content.length === 0}
+					<span>No content for this project</span>
+				{:else}
+					{@html projectIn.content}
+				{/if}
+			</div>
+			<hr style="margin: 0.5rem 0; color: black;" />
+
+			<h2>Tasks ({projectIn.tasks?.length})</h2> -->
 		</div>
-		<div>
-			<span style="font-weight: 500;">Posted on: </span>
-			{formatDate(projectIn.created_at)}
-		</div>
-		<div class="content rich-content">
-			{#if projectIn.content.length === 0}
-				<span>No content for this project</span>
-			{:else}
-				{@html projectIn.content}
-			{/if}
-		</div>
-		<hr style="margin: 0.5rem 0; color: black;" />
-		<h2>Tasks</h2>
-		{@render tasksSnippet()}
 	</div>
 </div>
 
 <style>
+	.information {
+		span:first-child {
+			color: var(--sub-title);
+		}
+		span:last-child {
+			display: block;
+			font-size: medium;
+		}
+	}
+	.flex-row {
+		display: flex;
+		gap: 0.5rem;
+	}
+	.reset {
+		color: unset;
+		text-decoration: unset;
+	}
+	.hover-effect:hover {
+		background-color: var(--hover-color);
+	}
+	.icons {
+		display: flex;
+		justify-content: start;
+		align-items: center;
+		gap: 1.5rem;
+		> div {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+		}
+	}
+	.detail {
+		display: flex;
+		justify-content: space-between;
+		gap: 0.5rem;
+		flex-wrap: wrap;
+		> span:first-child {
+			color: var(--sub-title);
+		}
+	}
+	.column {
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+	.padding {
+		padding: 2rem;
+	}
+	.padding-no-buttom {
+		padding: 1rem 1rem 0rem 1rem;
+	}
+	.card {
+		border-radius: 15px;
+		background-color: var(--card-bg);
+		border: 1px solid var(--border);
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+	.body {
+		display: grid;
+		grid-template-columns: 5fr 2fr;
+		column-gap: 2rem;
+	}
+	.button-icon {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 0.5rem;
+		height: fit-content;
+		padding: 0.5rem 0.8rem;
+		font-size: medium;
+	}
 	.view-link {
 		width: 100%;
 
@@ -161,21 +295,21 @@
 	.tasks-container {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	.task {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-		/* border: 2px solid var(--border); */
-		padding: 0.5rem 0;
-		border-radius: 5px;
+		gap: 2rem;
 	}
 
 	.skills {
 		display: flex;
+		align-items: center;
 		gap: 0.5rem;
+		border-radius: 0 0 15px 15px;
+		padding: 0.5rem 1rem;
+		height: 3rem;
+		background-color: var(--secondary);
+
+		> span {
+			color: var(--sub-title);
+		}
 	}
 
 	.skill {
