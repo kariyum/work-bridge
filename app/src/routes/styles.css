@@ -128,7 +128,7 @@ textarea {
 
     -webkit-tap-highlight-color: hsla(0, 0%, 51%, 0.283);
     --foreground: hsl(0, 0%, 95%);
-    --secondary: hsl(0, 0%, 5%);
+    --secondary: hsl(0, 0%, 9%);
     --font-color: #bfbfbf;
     --card-bg: hsl(0, 0%, 13%);
     --background-color: hsl(0, 0%, 9%);
@@ -147,7 +147,7 @@ textarea {
     --primary: #212227;
     --dark-text: #f9fafb;
     --bright-text: #111827;
-    --border: #505050;
+    --border: hsl(0, 0%, 20%);
     --btn-bg: #272d31;
     --tag-bg: #464646;
 
@@ -215,6 +215,7 @@ textarea:focus {
 
 .status[data-type='todo'] {
     background-color: var(--green-bg);
+    color: hsl(120, 100%, 6%);
 }
 
 .status[data-type='inprogress'] {
