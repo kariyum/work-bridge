@@ -35,9 +35,15 @@
 				<h2>Add task</h2>
 			{/if}
 			<form class="input-container" onsubmit={(event) => event.preventDefault()}>
-				<input type="text" placeholder="Title" bind:value={taskClass.title} />
+				<div class="input-label">
+					<input type="text" placeholder=" " id="title" bind:value={taskClass.title} />
+					<label for="title">Title</label>
+				</div>
 				<RichTextEditor bind:x={taskClass.content}></RichTextEditor>
-				<input type="text" placeholder="Assignee" bind:value={taskClass.assignee_id} />
+				<div class="input-label">
+					<input type="text" placeholder=" " bind:value={taskClass.assignee_id} />
+					<label for="assignee">Assignee</label>
+				</div>
 				<!-- <input type="text" placeholder="Skills" bind:value={taskClass.skills} /> -->
 				<div class="skills-input">
 					<Skills
@@ -47,13 +53,22 @@
 					></Skills>
 				</div>
 				<!-- <input type="text" placeholder="Status" bind:value={taskClass.status} /> -->
-				<select name="status" id="status" bind:value={taskClass.status}>
-					<option value="todo">Todo</option>
-					<option value="inprogress">In Progress</option>
-					<option value="done">Done</option>
-				</select>
-				<input type="text" placeholder="Budget" bind:value={taskClass.budget} />
-				<input type="date" placeholder="Deadline" bind:value={taskClass.deadline} />
+				<div class="input-label">
+					<select name="status" id="status" bind:value={taskClass.status}>
+						<option value="todo">Todo</option>
+						<option value="inprogress">In Progress</option>
+						<option value="done">Done</option>
+					</select>
+					<label class="focused-label" for="status">Status</label>
+				</div>
+				<div class="input-label">
+					<input type="text" placeholder="Budget" bind:value={taskClass.budget} />
+					<label for="budget">Budget</label>
+				</div>
+				<div class="input-label">
+					<input type="date" placeholder="Deadline" bind:value={taskClass.deadline} />
+					<label for="deadline">Deadline</label>
+				</div>
 				<!-- <input type="text" placeholder="Estimated Efforts" /> -->
 				<div class="act-task">
 					<button class="cancel-btn" onclick={cancel}>Cancel</button>
@@ -75,6 +90,17 @@
 		padding: 0.5rem;
 		border-radius: 5px;
 		border: 2px solid var(--border);
+		height: 3rem;
+	}
+	input,
+	select {
+		width: 100%;
+	}
+	.focused-label {
+		top: 0;
+		left: 6px;
+		font-size: 14px;
+		transform: translateY(-50%);
 	}
 	.act-task {
 		margin-left: auto;
@@ -82,7 +108,7 @@
 	.input-container {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 1rem;
 	}
 	.create-task {
 		display: flex;
