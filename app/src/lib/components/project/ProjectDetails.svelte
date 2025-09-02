@@ -246,6 +246,7 @@
 		display: grid;
 		grid-template-columns: 5fr 2fr;
 		column-gap: 2rem;
+		margin-top: 2rem;
 	}
 	.button-icon {
 		display: flex;

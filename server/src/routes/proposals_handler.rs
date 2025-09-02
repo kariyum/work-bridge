@@ -1,8 +1,5 @@
 use crate::repository::notifications::{insert_notification, CreateNotification, NotificationType};
-use crate::repository::proposal::{
-    insert_proposal, read_proposal_for_notification, read_proposals, update_proposal_status,
-    CreateProposal, ProposalStatus,
-};
+use crate::repository::proposal::{insert_proposal, read_proposal_for_notification, read_proposals_owner, update_proposal_status, CreateProposal, ProposalStatus};
 use crate::repository::tasks::{read_task_creator_by_id, TaskCreator};
 use crate::services::token::Claims;
 use crate::websocket::lobby::Lobby;
@@ -99,12 +96,12 @@ pub async fn create_proposal(
 }
 
 pub async fn get_proposals(
-    _: Claims,
+    claims: Claims,
     path: Path<(i32, i32)>,
-    pgpool: web::Data<PgPool>,
+    pgpool: Data<PgPool>,
 ) -> impl Responder {
     let (_, task_id) = path.into_inner();
-    let proposals = read_proposals(task_id, pgpool.as_ref())
+    let proposals = read_proposals_owner(claims.sub, task_id, pgpool.as_ref())
         .await
         .expect("Failed to read proposals");
     HttpResponse::Ok().json(proposals)

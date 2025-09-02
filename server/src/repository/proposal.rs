@@ -32,6 +32,7 @@ pub struct CreateProposal {
     pub content: Option<String>,
 }
 
+#[allow(dead_code)]
 pub async fn read_proposals(
     task_id: i32,
     conn: impl Executor<'_, Database = Postgres>,
@@ -40,6 +41,22 @@ pub async fn read_proposals(
         RawProposal,
         "SELECT id, user_id, task_id, status as \"status: ProposalStatus\", budget, content, created_at FROM proposals WHERE task_id = $1",
         task_id
+    )
+        .fetch_all(conn)
+        .await
+}
+
+pub async fn read_proposals_owner(
+    task_owner: String,
+    task_id: i32,
+    conn: impl Executor<'_, Database = Postgres>,
+) -> Result<Vec<RawProposal>, sqlx::Error> {
+    sqlx::query_as!(
+        RawProposal,
+        "SELECT p.id, p.user_id, p.task_id, p.status as \"status: ProposalStatus\", p.budget, p.content, p.created_at FROM proposals AS p JOIN tasks AS t \
+        ON p.task_id = t.id JOIN projects AS pr ON t.project_id = pr.id WHERE p.task_id = $1 and pr.user_id = $2",
+        task_id,
+        task_owner
     )
         .fetch_all(conn)
         .await
