@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { invalidate } from '$app/navigation';
+	import { goto, invalidate, pushState } from '$app/navigation';
 	import type { TaskGET } from '$lib/types/task.js';
 	import { snakeToCapital } from '$lib/utils.js';
 	import { SquarePen } from 'lucide-svelte';
@@ -94,6 +94,35 @@
 	{/each}
 {/snippet}
 
+{#snippet applications(task: TaskGET)}
+	<div class="applications">
+		<h2>Applications ({filteredProposals?.length || 0})</h2>
+		<div class="app-actions">
+			<button data-active={filterStatus == undefined} onclick={() => (filterStatus = undefined)}
+				>All</button
+			>
+			<button data-active={filterStatus == 'pending'} onclick={() => (filterStatus = 'pending')}
+				>{proposalsCount?.pending ?? ''} Pending</button
+			>
+			<button data-active={filterStatus == 'accepted'} onclick={() => (filterStatus = 'accepted')}
+				>{proposalsCount?.accepted ?? ''} Accepted</button
+			>
+			<button data-active={filterStatus == 'declined'} onclick={() => (filterStatus = 'declined')}
+				>{proposalsCount?.declined ?? ''} Declined</button
+			>
+		</div>
+		<div class="proposals">
+			{#if filteredProposals && filteredProposals.length !== 0}
+				{@render proposalsSnippet(filteredProposals, task)}
+			{:else if filteredProposals && filterStatus}
+				<div>0 {filterStatus} applications</div>
+			{:else}
+				<div>No applications yet!</div>
+			{/if}
+		</div>
+	</div>
+{/snippet}
+
 <div class="container">
 	{#if task}
 		<div class="task">
@@ -114,7 +143,13 @@
 						<div class="details">
 							<div class="detail">
 								<span>Assignee</span>
-								<span>{task.assignee_id}</span>
+								<span>
+									{#if task.assignee_id}
+										{task.assignee_id}
+									{:else}
+										Not Assinged
+									{/if}
+								</span>
 							</div>
 							<div class="detail">
 								<span>Deadline</span>
@@ -139,54 +174,40 @@
 						</div>
 					</div>
 				</div>
-				<div>
-					<div class="card">
-						<h2 style="padding: 1rem; padding-bottom:0;">Task Actions</h2>
-						<div class="actions">
-							<button class="row">
-								<div class="icon">
-									<SquarePen />
-								</div>
-								<div class="btn-text">
-									<div>Edit Task</div>
-									<div>Change task details or content</div>
-								</div>
-							</button>
-							<!-- <button>Close Task</button> -->
+				{#if data.project?.user_id === data.user?.email}
+					<div>
+						<div class="card">
+							<h2 style="padding: 1rem; padding-bottom:0;">Task Actions</h2>
+							<div class="actions">
+								<button
+									class="row"
+									onclick={async () => {
+										await goto(`/project/${data.project?.id}`, {
+											state: {
+												projectEditMode: true,
+												showTaskPopup: false,
+												profileEditMode: false
+											}
+										});
+									}}
+								>
+									<div class="icon">
+										<SquarePen />
+									</div>
+									<div class="btn-text">
+										<div>Edit Task</div>
+										<div>Change task details or content</div>
+									</div>
+								</button>
+								<!-- <button>Close Task</button> -->
+							</div>
 						</div>
 					</div>
-				</div>
+				{/if}
 			</div>
-			<div class="applications">
-				<h2>Applications ({filteredProposals?.length || 0})</h2>
-				<div class="app-actions">
-					<button data-active={filterStatus == undefined} onclick={() => (filterStatus = undefined)}
-						>All</button
-					>
-					<button data-active={filterStatus == 'pending'} onclick={() => (filterStatus = 'pending')}
-						>{proposalsCount?.pending ?? ''} Pending</button
-					>
-					<button
-						data-active={filterStatus == 'accepted'}
-						onclick={() => (filterStatus = 'accepted')}
-						>{proposalsCount?.accepted ?? ''} Accepted</button
-					>
-					<button
-						data-active={filterStatus == 'declined'}
-						onclick={() => (filterStatus = 'declined')}
-						>{proposalsCount?.declined ?? ''} Declined</button
-					>
-				</div>
-				<div class="proposals">
-					{#if filteredProposals && filteredProposals.length !== 0}
-						{@render proposalsSnippet(filteredProposals, task)}
-					{:else if filteredProposals && filterStatus}
-						<div>0 {filterStatus} applications</div>
-					{:else}
-						<div>No applications yet!</div>
-					{/if}
-				</div>
-			</div>
+			{#if data.project?.user_id === data.user?.email}
+				{@render applications(task)}
+			{/if}
 		</div>
 	{:else}
 		<div>Task Not Found !?</div>
@@ -253,8 +274,13 @@
 		gap: 1rem;
 	}
 	.body {
-		display: grid;
-		grid-template-columns: 5fr 2fr;
+		display: flex;
+		> div:first-child {
+			flex-grow: 10;
+		}
+		> div:last-child {
+			flex-grow: 1;
+		}
 		column-gap: 2rem;
 	}
 	.card {
