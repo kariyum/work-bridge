@@ -15,10 +15,12 @@
 			projectIn={data.project}
 			user={data.user}
 			onEdit={() => {
-				pushState('', {
-					projectEditMode: true,
-					showTaskPopup: false,
-					profileEditMode: false
+				document.startViewTransition(() => {
+					pushState('', {
+						projectEditMode: true,
+						showTaskPopup: false,
+						profileEditMode: false
+					});
 				});
 			}}
 		/>
