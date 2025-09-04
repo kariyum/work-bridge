@@ -143,6 +143,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
+		view-transition-name: discussion;
 	}
 
 	.messages-col {
@@ -182,6 +183,7 @@
 		background-color: var(--blue);
 		left: -0.6rem;
 		top: 0.15rem;
+		view-transition-name: active-page;
 	}
 
 	a:hover {
@@ -193,7 +195,7 @@
 		flex-direction: column;
 		gap: 0.5rem;
 	}
-	
+
 	@media (width < 600px) {
 		.messages-col[data-selected='false'] {
 			display: none !important;

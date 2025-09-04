@@ -73,8 +73,9 @@
 			});
 
 			if (response.status === 200) {
-				await invalidate(`/api/projects/${projectIn.id}`);
-				await goto(`/project/${projectIn.id}`);
+				document.startViewTransition(async () => {
+					return await invalidate(`/api/projects/${projectIn.id}`);
+				});
 			}
 			return;
 		} else {
@@ -87,7 +88,7 @@
 			});
 
 			if (response.status === 201) {
-				await goto('/');
+				return await goto('/');
 			}
 		}
 	}
@@ -98,7 +99,10 @@
 				method: 'DELETE'
 			});
 			if (response.ok) {
-				await invalidate('/api/projects');
+				document.startViewTransition(async () => {
+					await invalidate('/api/projects');
+					return await goto('/');
+				});
 			}
 		}
 	}
@@ -146,7 +150,14 @@
 		</div>
 		<hr />
 		<div class="action-buttons">
-			<button class="cancel-btn" onclick={() => history.back()}>Cancel</button>
+			<button
+				class="cancel-btn"
+				onclick={() => {
+					document.startViewTransition(() => {
+						history.back();
+					});
+				}}>Cancel</button
+			>
 			{#snippet deleteButton()}
 				<div>Delete</div>
 			{/snippet}
