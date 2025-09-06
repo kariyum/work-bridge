@@ -72,7 +72,7 @@
 					</div>
 					<div class="skills">
 						<span>Skills: </span>
-						<div class="flex-row">
+						<div class="flex-row" style="flex-wrap: wrap;">
 							{#if task.skills.length === 0}
 								<div>No skills required.</div>
 							{:else}
@@ -224,10 +224,22 @@
 		flex-direction: column;
 		gap: 1rem;
 	}
-	.body {
-		display: flex;
-		gap: 2rem;
-		flex-wrap: wrap;
+	@media (width >= 600px) {
+		.body {
+			display: grid;
+			grid-template-columns: 5fr 2fr;
+			column-gap: 2rem;
+			row-gap: 2rem;
+		}
+	}
+
+	@media (width < 600px) {
+		.body {
+			margin-top: 1rem;
+			display: flex;
+			gap: 2rem;
+			flex-direction: column-reverse;
+		}
 	}
 	.button-icon {
 		display: flex;
@@ -286,7 +298,7 @@
 		gap: 0.5rem;
 		border-radius: 0 0 15px 15px;
 		padding: 0.5rem 1rem;
-		height: 3rem;
+		min-height: 3rem;
 		background-color: var(--secondary);
 
 		> span {

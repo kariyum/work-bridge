@@ -22,10 +22,12 @@ kanban-plugin: board
 - [ ] add integration tests
 - [ ] make richtexteditor buttons unfocused with TAB
 - [ ] Assign tasks to applicants after accepting the proposal
+- [ ] load mobile css vs desktop css based on width
 
 
 ## p2
 
+- [ ] UI unit test
 - [ ] add email verification - SMTP server (look for a free provider)
 - [ ] add phone number verification
 - [ ] keep header / navbar sticky
@@ -35,8 +37,11 @@ kanban-plugin: board
 
 ## p1
 
-- [ ] UI unit test
-- [ ] load mobile css vs desktop css based on width
+- [ ] projects search
+- [ ] sending email capabilities
+- [ ] forgot password
+- [ ] google login
+- [ ] settings page
 
 
 ## doing
