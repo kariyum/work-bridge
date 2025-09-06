@@ -315,6 +315,11 @@
 			flex-grow: 1;
 		}
 	}
+	@media (width < 600px) {
+		.body {
+			flex-direction: column-reverse;
+		}
+	}
 	.card {
 		border-radius: 15px;
 		background-color: var(--card-bg);
