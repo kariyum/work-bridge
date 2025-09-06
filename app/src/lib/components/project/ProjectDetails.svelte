@@ -118,7 +118,7 @@
 			{/if}
 		</div>
 		<div class="body">
-			<div class="column">
+			<div class="column" style="flex-grow: 5;">
 				<div class="card padding">
 					<h2>Description</h2>
 					{#if projectIn.content.length === 0}
@@ -132,7 +132,7 @@
 					{@render tasksSnippet()}
 				</div>
 			</div>
-			<div class="column">
+			<div class="column" style="flex-grow: 1;">
 				<div class="card padding">
 					<h2>Details</h2>
 					<div class="detail">
@@ -225,10 +225,9 @@
 		gap: 1rem;
 	}
 	.body {
-		display: grid;
-		grid-template-columns: 5fr 2fr;
-		column-gap: 2rem;
-		margin-top: 2rem;
+		display: flex;
+		gap: 2rem;
+		flex-wrap: wrap;
 	}
 	.button-icon {
 		display: flex;
