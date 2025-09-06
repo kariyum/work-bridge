@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto, invalidate, pushState } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 	import type { TaskGET } from '$lib/types/task.js';
 	import { snakeToCapital } from '$lib/utils.js';
 	import { SquarePen } from 'lucide-svelte';
@@ -42,6 +42,13 @@
 		} else {
 			// todo show error banner
 		}
+	}
+	let width = $state(30);
+	let left = $state(0);
+	async function updateFilter(element: HTMLElement, filter: string | undefined) {
+		filterStatus = filter;
+		width = element.offsetWidth;
+		left = element.offsetLeft;
 	}
 
 	let filterStatus: string | undefined = $state(undefined); // enum: all, pending, rejected, accepted
@@ -97,17 +104,32 @@
 {#snippet applications(task: TaskGET)}
 	<div class="applications">
 		<h2>Applications ({filteredProposals?.length || 0})</h2>
-		<div class="app-actions">
-			<button data-active={filterStatus == undefined} onclick={() => (filterStatus = undefined)}
-				>All</button
+		<div
+			class="app-actions"
+			style:--top={'0px'}
+			style:--left={`${left}px`}
+			style:--width={`${width}px`}
+			style:--height={'30px'}
+		>
+			<button
+				data-active={filterStatus == undefined}
+				onclick={(event) => {
+					updateFilter(event.currentTarget, undefined);
+				}}>All</button
 			>
-			<button data-active={filterStatus == 'pending'} onclick={() => (filterStatus = 'pending')}
+			<button
+				data-active={filterStatus == 'pending'}
+				onclick={(event) => updateFilter(event.currentTarget, 'pending')}
 				>{proposalsCount?.pending ?? ''} Pending</button
 			>
-			<button data-active={filterStatus == 'accepted'} onclick={() => (filterStatus = 'accepted')}
+			<button
+				data-active={filterStatus == 'accepted'}
+				onclick={(event) => updateFilter(event.currentTarget, 'accepted')}
 				>{proposalsCount?.accepted ?? ''} Accepted</button
 			>
-			<button data-active={filterStatus == 'declined'} onclick={() => (filterStatus = 'declined')}
+			<button
+				data-active={filterStatus == 'declined'}
+				onclick={(event) => updateFilter(event.currentTarget, 'declined')}
 				>{proposalsCount?.declined ?? ''} Declined</button
 			>
 		</div>
@@ -301,10 +323,11 @@
 		}
 
 		.app-actions {
+			position: relative;
 			display: flex;
 			padding-bottom: 0.5rem;
 			gap: 0.2rem;
-			border-bottom: 1px solid var(--border);
+			border-bottom: 2px solid var(--border);
 
 			button {
 				position: relative;
@@ -314,23 +337,37 @@
 				padding: 0.5rem 0.5rem 0.5rem 0.5rem;
 			}
 
-			button[data-active='true'] {
-				background-color: var(--selected-color);
-			}
-			button[data-active='true']::after {
-				position: absolute;
-				content: '';
-				background-color: var(--blue);
-				width: 100%;
-				height: 1px;
-				bottom: -8px;
-				border-radius: 15px;
-				left: 0;
-			}
-
 			button[data-active='false'] {
 				color: rgba(var(--font-color), 0.1);
 			}
+		}
+
+		.app-actions::before {
+			content: '';
+			position: absolute;
+			left: var(--left);
+			top: var(--top);
+			width: var(--width);
+			background-color: var(--selected-color);
+			height: var(--height);
+			z-index: 0;
+			border-radius: 5px;
+			transition:
+				width 0.3s ease-in-out,
+				left 0.3s ease-in-out;
+		}
+		.app-actions::after {
+			content: '';
+			position: absolute;
+			background-color: var(--blue);
+			width: var(--width);
+			left: var(--left);
+			height: 2px;
+			bottom: -2px;
+			border-radius: 15px;
+			transition:
+				width 0.3s ease-in-out,
+				left 0.3s ease-in-out;
 		}
 	}
 	.status {
