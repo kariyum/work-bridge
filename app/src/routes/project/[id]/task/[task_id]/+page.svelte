@@ -2,7 +2,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import type { TaskGET } from '$lib/types/task.js';
 	import { snakeToCapital } from '$lib/utils.js';
-	import { SquarePen } from 'lucide-svelte';
+	import { MessageCircle, SquarePen } from 'lucide-svelte';
 	import type { ProposalGET } from './+page.js';
 
 	let { data } = $props();
@@ -66,7 +66,12 @@
 	{#each sortedProposals as proposal}
 		<div class="proposal">
 			<div class="left">
-				<div>{proposal.user_id}</div>
+				<div class="row">
+					<div>{proposal.user_id}</div>
+					<a href="/messages?user_id={proposal.user_id}" class="reset"
+						><MessageCircle size="14" /></a
+					>
+				</div>
 				<div>
 					<span>Applied On:</span>
 					<span>{task.created_at.toDateString()}</span>
@@ -85,7 +90,6 @@
 					{snakeToCapital(proposal.status)}
 				</div>
 				<div>
-					<!-- <a href="/messages?user_id={proposal.user_id}">Open discussion</a> -->
 					<button
 						class="muted-btn"
 						onclick={() => patchProposalStatus(task.project_id, task.id, proposal.id, 'decline')}
@@ -237,6 +241,10 @@
 </div>
 
 <style>
+	.reset {
+		color: unset;
+		text-decoration: unset;
+	}
 	.flex-row {
 		display: flex;
 		flex-wrap: wrap;
@@ -264,6 +272,7 @@
 	.right {
 		display: flex;
 		align-items: center;
+		justify-content: center;
 		gap: 1rem;
 	}
 	.details {
@@ -297,13 +306,14 @@
 	}
 	.body {
 		display: flex;
+		flex-wrap: wrap;
+		gap: 2rem;
 		> div:first-child {
 			flex-grow: 10;
 		}
 		> div:last-child {
 			flex-grow: 1;
 		}
-		column-gap: 2rem;
 	}
 	.card {
 		border-radius: 15px;
@@ -376,6 +386,7 @@
 
 	.muted-btn {
 		background-color: transparent;
+		margin-right: 0.5rem;
 	}
 
 	.actions {
@@ -390,10 +401,6 @@
 			width: 100%;
 			border-radius: 0;
 		}
-	}
-
-	.proposal {
-		width: 100%;
 	}
 
 	.proposals {
@@ -413,7 +420,9 @@
 			border: 1px solid var(--border);
 			display: flex;
 			flex-direction: row;
+			flex-wrap: wrap;
 			justify-content: space-between;
+			gap: 1rem;
 		}
 	}
 

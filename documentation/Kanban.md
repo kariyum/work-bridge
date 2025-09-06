@@ -36,6 +36,7 @@ kanban-plugin: board
 ## p1
 
 - [ ] UI unit test
+- [ ] load mobile css vs desktop css based on width
 
 
 ## doing
