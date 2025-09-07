@@ -165,6 +165,9 @@
 </div>
 
 <style>
+	:global(ol) {
+		margin-left: 2rem;
+	}
 	.information {
 		span:first-child {
 			color: var(--sub-title);

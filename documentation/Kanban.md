@@ -33,10 +33,12 @@ kanban-plugin: board
 - [ ] keep header / navbar sticky
 - [ ] deleting a project makes the screen refresh because of the asynchronous behavior. Fix that.
 - [ ] data loading
+- [ ] support french and english
 
 
 ## p1
 
+- [ ] products search, start with what is available in the ui, using service workers to not lag the ui at the same time request remote search and either combine or show API response for completeness
 - [ ] sending email capabilities
 - [ ] forgot password
 - [ ] google login

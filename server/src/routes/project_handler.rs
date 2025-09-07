@@ -1,7 +1,5 @@
 use crate::repository;
-use crate::repository::project::{
-    delete_project, insert_project, put_project, ProjectInsert, ProjectRaw,
-};
+use crate::repository::project::{delete_project, insert_project, put_project, ProjectInsert, ProjectRaw};
 use crate::repository::tasks::{
     delete_tasks, insert_tasks_sequentially, read_tasks_by_project_id, update_task, CreateTask,
 };
@@ -45,17 +43,6 @@ impl From<ProjectRaw> for ProjectResponse {
             tasks: None,
         }
     }
-}
-
-async fn get_projects(pgpool: web::Data<PgPool>) -> impl Responder {
-    let projects: Vec<ProjectResponse> = repository::project::get_projects(pgpool.as_ref())
-        .await
-        .expect("Failed to get projects")
-        .into_iter()
-        .map(ProjectResponse::from)
-        .collect();
-
-    HttpResponse::Ok().json(projects)
 }
 
 #[allow(dead_code)]
@@ -331,9 +318,37 @@ async fn put_project_handler(
     HttpResponse::Ok().json(response)
 }
 
+#[derive(Deserialize)]
+struct ProjectSearchQuery {
+    q: Option<String>
+}
+async fn get_projects_search(
+    query: web::Query<ProjectSearchQuery>,
+    pgpool: web::Data<PgPool>,
+) -> impl Responder {
+    let query = query.into_inner();
+    if let Some(query) = query.q {
+        let result: Vec<ProjectResponse> = repository::project::search_products(query, pgpool.as_ref()).await
+            .expect("Failed to search products")
+            .into_iter()
+            .map(ProjectResponse::from)
+            .collect();
+        HttpResponse::Ok().json(result)
+    } else {
+        let projects: Vec<ProjectResponse> = repository::project::get_projects(pgpool.as_ref())
+            .await
+            .expect("Failed to get projects")
+            .into_iter()
+            .map(ProjectResponse::from)
+            .collect();
+
+        HttpResponse::Ok().json(projects)
+    }
+}
+
 pub fn routes() -> impl HttpServiceFactory {
     web::scope("projects")
-        .route("", web::get().to(get_projects))
+        .route("", web::get().to(get_projects_search))
         .route("", web::post().to(create_project_handler))
         .route("/{id}", web::get().to(get_project_with_tasks))
         .route("/{id}", web::delete().to(delete_project_handler))

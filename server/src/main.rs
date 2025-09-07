@@ -27,7 +27,7 @@ async fn main() -> std::io::Result<()> {
     dotenv().ok();
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("debug")); // "info"
     let pool = get_db_pool().await?;
-    sqlx::migrate!()
+    sqlx::migrate!("./migrations")
         .run(&pool)
         .await
         .expect("Migrations failed");

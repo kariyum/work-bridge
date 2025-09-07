@@ -127,6 +127,41 @@ pub async fn delete_project(
     Ok(())
 }
 
+pub async fn search_products(
+    query: String,
+    conn: impl Executor<'_, Database = Postgres>,
+) -> Result<Vec<ProjectRaw>, sqlx::Error> {
+    sqlx::query_as!(
+        ProjectRaw,
+        r#"WITH search_query AS (SELECT lower($1) AS raw, websearch_to_tsquery('english', lower($1)) AS ts)
+         SELECT p.id, p.user_id, p.title, p.content, p.deadline, p.budget, p.currency_code, p.created_at FROM (
+             SELECT p.id, p.user_id, p.title, p.content, p.deadline, p.budget, p.currency_code, p.created_at,
+             (ts_rank_cd(p.search_vector, q.ts)) AS fts_rank,
+             GREATEST(
+                similarity(lower(p.title), q.raw),
+                similarity(lower(p.content), q.raw),
+                MAX(similarity(lower(t.title), q.raw)),
+                MAX(similarity(lower(t.content), q.raw))
+             ) AS trgm_similarity
+             FROM projects p
+             LEFT JOIN tasks t ON p.id = t.project_id
+             CROSS JOIN search_query q
+             WHERE
+                q.ts @@ p.search_vector OR
+                lower(p.title) % q.raw OR
+                lower(p.content) % q.raw OR
+                lower(t.title) % q.raw OR
+                lower(t.content) % q.raw
+            GROUP BY
+                p.id, q.ts, q.raw
+            ORDER BY
+                fts_rank DESC,
+                trgm_similarity DESC
+        ) as p"#,
+        query
+    ).fetch_all(conn).await
+}
+
 #[cfg(test)]
 mod tests {
     use crate::repository::project::{

@@ -218,7 +218,7 @@
 	}
 
 	.container {
-		max-width: 1200px;
+		max-width: var(--page-width);
 		margin: 1rem auto;
 		width: 100%;
 	}

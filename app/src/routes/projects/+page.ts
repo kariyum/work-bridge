@@ -4,8 +4,10 @@
 import { processProjectJson, type ProjectGET, type ProjectJSON } from "$lib/types/project";
 import { fetchIntoResult } from "$lib/utils.js";
 
-export async function load({ fetch }) {
-    const response = await fetchIntoResult<ProjectJSON[]>(() => fetch("/api/projects", { method: "GET" }));
+export async function load({ fetch, url }) {
+    let searchQuery = url.searchParams.get("q")
+    let projectsUrl = searchQuery !== null ? `/api/projects?q=${searchQuery}` : "/api/projects"
+    const response = await fetchIntoResult<ProjectJSON[]>(() => fetch(projectsUrl, { method: "GET" }));
     const parseProjectJSON = (jsonData: ProjectJSON[]) => jsonData.map((json) => processProjectJson(json));
     const projects = response.map((value: ProjectJSON[]) => parseProjectJSON(value))
 
