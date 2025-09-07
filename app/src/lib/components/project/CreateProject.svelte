@@ -73,11 +73,14 @@
 			});
 
 			if (response.status === 200) {
-				document.startViewTransition(async () => {
+				if (document.startViewTransition) {
+					document.startViewTransition(async () => {
+						return await invalidate(`/api/projects/${projectIn.id}`);
+					});
+				} else {
 					return await invalidate(`/api/projects/${projectIn.id}`);
-				});
+				}
 			}
-			return;
 		} else {
 			const response = await fetch('/api/projects', {
 				method: 'POST',
@@ -99,10 +102,15 @@
 				method: 'DELETE'
 			});
 			if (response.ok) {
-				document.startViewTransition(async () => {
+				if (document.startViewTransition) {
+					document.startViewTransition(async () => {
+						await invalidate('/api/projects');
+						return await goto('/');
+					});
+				} else {
 					await invalidate('/api/projects');
 					return await goto('/');
-				});
+				}
 			}
 		}
 	}
@@ -153,9 +161,13 @@
 			<button
 				class="cancel-btn"
 				onclick={() => {
-					document.startViewTransition(() => {
+					if (document.startViewTransition) {
+						document.startViewTransition(() => {
+							history.back();
+						});
+					} else {
 						history.back();
-					});
+					}
 				}}>Cancel</button
 			>
 			{#snippet deleteButton()}

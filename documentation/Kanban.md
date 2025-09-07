@@ -37,7 +37,6 @@ kanban-plugin: board
 
 ## p1
 
-- [ ] projects search
 - [ ] sending email capabilities
 - [ ] forgot password
 - [ ] google login
@@ -46,6 +45,7 @@ kanban-plugin: board
 
 ## doing
 
+- [ ] projects search
 
 
 ## tested
