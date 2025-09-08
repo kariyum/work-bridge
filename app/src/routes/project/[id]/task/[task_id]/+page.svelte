@@ -21,6 +21,24 @@
 		}
 	});
 
+	async function submitApplication(taskId: number) {
+		const payload = {
+			task_id: taskId
+		};
+		const response = await fetch('/api/proposals', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(payload)
+		});
+		if (response.ok) {
+			await invalidate(`/api/projects/${data.project?.id}`);
+		} else {
+			alert('Failed to submit proposal!');
+		}
+	}
+
 	async function patchProposalStatus(
 		projectId: number,
 		taksId: number,
@@ -229,6 +247,33 @@
 							</div>
 						</div>
 					</div>
+				{:else if data.user?.role == 'freelancer'}
+					<div class="column">
+						<div class="card">
+							{#if !task.proposal_status}
+								<h2 style="padding: 1rem; padding-bottom:0;">Ready To Apply?</h2>
+								<div style="padding: 0 1rem; color: var(--sub-title); font-size:medium;">
+									You can submit your application now.
+								</div>
+								<button
+									class="btn-submit"
+									onclick={async () => {
+										submitApplication(task.id);
+									}}>Submit Application</button
+								>
+							{:else}
+								<h2 style="padding: 1rem; padding-bottom:0;">Application Status</h2>
+								<div class="status" style="margin:auto;" data-type={task.proposal_status}>
+									{snakeToCapital(task.proposal_status)}
+								</div>
+								<button class="btn-submit" style="background-color:var(--vibrant-red)" onclick={async () => {}}>Delete Application</button>
+							{/if}
+						</div>
+						<div class="card">
+							<h2 style="padding: 1rem; padding-bottom:0;">About the Recruiter</h2>
+							<div style="padding: 1rem; padding-top:0;">{data.project?.user_id}</div>
+						</div>
+					</div>
 				{/if}
 			</div>
 			{#if data.project?.user_id === data.user?.email}
@@ -241,6 +286,13 @@
 </div>
 
 <style>
+	.btn-submit {
+		margin: auto;
+		margin-bottom: 1rem;
+		padding: 1rem 4rem;
+		font-size: medium;
+	}
+
 	.reset {
 		color: unset;
 		text-decoration: unset;
@@ -384,9 +436,6 @@
 				width 0.3s ease-in-out,
 				left 0.3s ease-in-out;
 		}
-	}
-	.status {
-		margin-bottom: 0.3rem;
 	}
 
 	.muted-btn {

@@ -13,23 +13,6 @@
 	let { projectIn, user, onEdit }: props = $props();
 	let userIsCreator = $derived(user?.email == projectIn.user_id);
 
-	async function submitApplication(taskId: number) {
-		const payload = {
-			task_id: taskId
-		};
-		const response = await fetch('/api/proposals', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(payload)
-		});
-		if (response.ok) {
-			await invalidate(`/api/projects/${projectIn.id}`);
-		} else {
-			alert('Failed to submit proposal!');
-		}
-	}
 </script>
 
 {#snippet tasksSnippet()}

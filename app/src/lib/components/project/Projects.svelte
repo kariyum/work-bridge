@@ -8,7 +8,6 @@
 
 	let searchQuery = $state(page.url.searchParams.get('q') || '');
 	let searchedQuery: string = $state(page.url.searchParams.get('q') || '');
-	let searching = $state(false);
 	let timeout: number | undefined = undefined;
 
 	$effect(() => {
@@ -18,12 +17,10 @@
 			untrack(() => {
 				if (timeout === undefined) {
 					timeout = setTimeout(async () => {
-						searching = true;
 						searchedQuery = searchQuery;
 						const url = searchQuery.trim().length == 0 ? `/projects` : `/projects?q=${searchQuery}`;
 						await goto(url, { keepFocus: true, replaceState: true });
 						timeout = undefined;
-						searching = false;
 					}, 1000);
 				}
 			});
@@ -33,7 +30,7 @@
 
 <div class="outer-container">
 	<input
-		autofocus
+		autofocus={page.url.searchParams.get('q') ? true : false}
 		type="text"
 		name="search"
 		id="search"

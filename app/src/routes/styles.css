@@ -208,18 +208,21 @@ textarea:focus {
 
 .status {
     width: fit-content;
-    padding: 0.3rem 0.7rem;
+    padding: 0.5rem 0.7rem;
     line-height: 1;
     border-radius: 30px;
 }
 
 .status[data-type='todo'] {
     background-color: var(--green-bg);
-    color: hsl(120, 100%, 6%);
+    color: hsl(120, 100%, 11%);
+    font-weight: bold;
 }
 
 .status[data-type='inprogress'] {
     background-color: var(--violet-bg);
+    color: hsl(255, 76%, 15%);
+    font-weight: bold;
 }
 
 .status[data-type='done'] {
@@ -240,6 +243,8 @@ textarea:focus {
 
 .status[data-type='accepted'] {
     background-color: var(--green-bg);
+    color: hsl(120, 100%, 11%);
+    font-weight: bold;
 }
 
 .delete-btn {
