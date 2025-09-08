@@ -27,6 +27,7 @@ kanban-plugin: board
 
 ## p2
 
+- [ ] products search, start with what is available in the ui, using service workers to not lag the ui at the same time request remote search and either combine or show API response for completeness
 - [ ] UI unit test
 - [ ] add email verification - SMTP server (look for a free provider)
 - [ ] add phone number verification
@@ -38,7 +39,6 @@ kanban-plugin: board
 
 ## p1
 
-- [ ] products search, start with what is available in the ui, using service workers to not lag the ui at the same time request remote search and either combine or show API response for completeness
 - [ ] sending email capabilities
 - [ ] forgot password
 - [ ] google login
@@ -47,7 +47,10 @@ kanban-plugin: board
 
 ## doing
 
-- [ ] projects search
+- [ ] freelancer applying to projects
+- [ ] freelancers removing application
+- [ ] change status colors
+- [ ] change status class name in /task/task_id
 
 
 ## tested
@@ -56,6 +59,7 @@ kanban-plugin: board
 
 ## done
 
+- [ ] projects search
 - [ ] ritchtexteditor buttons do not react when the cursor is on H1 H2 text while before the cursor was writing in P
 - [ ] profile page
 - [ ] UI styling
