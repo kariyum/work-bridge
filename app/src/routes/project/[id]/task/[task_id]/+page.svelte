@@ -277,7 +277,17 @@
 						</div>
 						<div class="card">
 							<h2 style="padding: 1rem; padding-bottom:0;">About the Recruiter</h2>
-							<div style="padding: 1rem; padding-top:0;">{data.project?.user_id}</div>
+							<div
+								style="padding: 1rem; padding-top:0; display:flex; align-items:center; gap: 1rem;"
+							>
+								<div class="avatar" data-content="{data.project?.user_id.charAt(0).toUpperCase()}"></div>
+								<div>
+									<div style="font-weight: bold; font-size:large;">
+										{data.project?.user_id.split('@')[0]}
+									</div>
+									<div>{data.project?.user_id}</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				{/if}
@@ -292,6 +302,22 @@
 </div>
 
 <style>
+	.avatar {
+		width: 3rem;
+		height: 3rem;
+		border-radius: 50%;
+		position: relative;
+		background-color: hsl(210, 11%, 50%);
+	}
+	.avatar::before {
+		content: attr(data-content);
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		font-size: large;
+		color: hsl(110, 11%, 15%);
+	}
 	.application-status {
 		padding: 1rem;
 		padding-bottom: 0%;
