@@ -219,7 +219,7 @@
 					</div>
 				</div>
 				{#if data.project?.user_id === data.user?.email}
-					<div>
+					<div class="column">
 						<div class="card">
 							<h2 style="padding: 1rem; padding-bottom:0;">Task Actions</h2>
 							<div class="actions">
@@ -262,11 +262,17 @@
 									}}>Submit Application</button
 								>
 							{:else}
-								<h2 style="padding: 1rem; padding-bottom:0;">Application Status</h2>
-								<div class="status" style="margin:auto;" data-type={task.proposal_status}>
-									{snakeToCapital(task.proposal_status)}
+								<div class="application-status">
+									<h2>Application Status</h2>
+									<div class="status" data-type={task.proposal_status}>
+										{snakeToCapital(task.proposal_status)}
+									</div>
 								</div>
-								<button class="btn-submit" style="background-color:var(--vibrant-red)" onclick={async () => {}}>Delete Application</button>
+								<button
+									class="btn-delete"
+									style="background-color:var(--vibrant-red)"
+									onclick={async () => {}}>Delete Application</button
+								>
 							{/if}
 						</div>
 						<div class="card">
@@ -286,11 +292,27 @@
 </div>
 
 <style>
-	.btn-submit {
+	.application-status {
+		padding: 1rem;
+		padding-bottom: 0%;
+		width: 100%;
+		justify-content: space-between;
+		display: flex;
+		align-items: center;
+	}
+	.btn-delete {
 		margin: auto;
-		margin-bottom: 1rem;
 		padding: 1rem 4rem;
 		font-size: medium;
+		width: 100%;
+		border-radius: 0 0 15px 15px;
+	}
+	.btn-submit {
+		margin: auto;
+		padding: 1rem 4rem;
+		font-size: medium;
+		width: 100%;
+		border-radius: 0 0 15px 15px;
 	}
 
 	.reset {
@@ -357,18 +379,21 @@
 		gap: 1rem;
 	}
 	.body {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 2rem;
-		> div:first-child {
-			flex-grow: 10;
-		}
-		> div:last-child {
-			flex-grow: 1;
-		}
+		display: grid;
+		grid-template-columns: 7fr 3fr;
+		column-gap: 2rem;
 	}
 	@media (width < 600px) {
 		.body {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 2rem;
+			> div:first-child {
+				flex-grow: 10;
+			}
+			> div:last-child {
+				flex-grow: 1;
+			}
 			flex-direction: column-reverse;
 		}
 	}
