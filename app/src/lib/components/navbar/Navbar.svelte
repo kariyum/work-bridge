@@ -73,15 +73,25 @@
 
 	let showNotifications = $state(false);
 	let menuDialog: HTMLDialogElement;
+	let notificationMenu: HTMLDialogElement;
+	let left = $state(0);
+	let liNotification: HTMLLIElement;
 
 	function notificationClickHandler(event: MouseEvent) {
 		// if ((event.target as Element)?.closest('.notification-container')) {
 		// 	return;
 		// }
 		if ((event.target as Element)?.closest('.notifications')) {
+			left = liNotification.getBoundingClientRect().left;
 			showNotifications = !showNotifications;
+			if (showNotifications) {
+				notificationMenu.showPopover();
+			} else {
+				notificationMenu.hidePopover();
+			}
 		} else {
 			showNotifications = false;
+			notificationMenu.hidePopover();
 		}
 	}
 
@@ -112,6 +122,14 @@
 <svelte:body
 	onclick={(event) => {
 		notificationClickHandler(event);
+	}}
+/>
+
+<svelte:window
+	onresize={() => {
+		if (liNotification) {
+			left = liNotification.getBoundingClientRect().left;
+		}
 	}}
 />
 
@@ -193,13 +211,16 @@
 		{/if}
 		<li><a href="/messages">Discussions</a></li>
 		<div class="desktop">
-			<li class="notifications">
+			<li class="notifications" bind:this={liNotification}>
 				<button> Notifications </button>
-				{#if showNotifications}
-					<div class="notification-container">
-						<NotificationMenu notifications={finalNotifications} />
-					</div>
-				{/if}
+				<dialog
+					class="notification-container"
+					bind:this={notificationMenu}
+					popover="auto"
+					style:--left={`${left}px`}
+				>
+					<NotificationMenu notifications={finalNotifications} />
+				</dialog>
 			</li>
 		</div>
 		<div class="mobile">
@@ -451,18 +472,17 @@
 		}
 
 		.notification-container {
-			display: block;
 			position: absolute;
 			border: 2px solid var(--border);
 			border-radius: 5px;
 			padding: 1rem;
-			z-index: 1;
 			width: 25rem;
 			max-height: 30rem;
 			overflow-y: auto;
-			top: 2rem;
-			transform: translateX(-20%);
+			top: 3.5rem;
+			left: var(--left);
 			background-color: var(--background-color);
+			transform: translateX(-20%);
 		}
 
 		nav {
