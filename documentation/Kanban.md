@@ -47,10 +47,8 @@ kanban-plugin: board
 
 ## doing
 
-- [ ] freelancer applying to projects
-- [ ] freelancers removing application
 - [ ] change status colors
-- [ ] change status class name in /task/task_id
+- [ ] freelancers removing application
 
 
 ## tested
@@ -59,6 +57,8 @@ kanban-plugin: board
 
 ## done
 
+- [ ] freelancer applying to projects
+- [ ] change status class name in /task/task_id
 - [ ] projects search
 - [ ] ritchtexteditor buttons do not react when the cursor is on H1 H2 text while before the cursor was writing in P
 - [ ] profile page
