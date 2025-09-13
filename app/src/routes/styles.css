@@ -227,18 +227,26 @@ textarea:focus {
 
 .status[data-type='done'] {
     background-color: var(--grey);
+    color: hsl(10, 0%, 40%);
+    font-weight: bold;
 }
 
 .status[data-type='declined'] {
     background-color: var(--red);
+    color: hsl(40, 100%, 11%);
+    font-weight: bold;
 }
 
 .status[data-type='pending'] {
     background-color: var(--orange);
+    color: hsl(40, 100%, 11%);
+    font-weight: bold;
 }
 
 .status[data-type='declined'] {
     background-color: var(--red);
+    color: hsl(30, 100%, 11%);
+    font-weight: bold;
 }
 
 .status[data-type='accepted'] {

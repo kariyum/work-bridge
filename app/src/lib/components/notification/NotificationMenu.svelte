@@ -13,6 +13,7 @@
 
 {#snippet renderProposalNotification(notif: ProposalNotification)}
 	<a class="notif-container proposal" href={ProposalNotificationImpl.getHref(notif)}>
+		<h3 style="margin-bottom: 0.5rem;">Application Status</h3>
 		<p>
 			{ProposalNotificationImpl.getContent(notif)}
 		</p>
@@ -24,6 +25,7 @@
 
 {#snippet renderNewProposalNotification(notif: NewProposalNotification)}
 	<a class="notif-container proposal" href={NewProposalNotificationImpl.getHref(notif)}>
+		<h3 style="margin-bottom: 0.5rem;">New Application</h3>
 		<p>
 			{NewProposalNotificationImpl.getContent(notif)}
 		</p>
@@ -71,6 +73,7 @@
 		.timeago {
 			font-size: smaller;
 			font-weight: 500;
+			align-self: self-end;
 		}
 	}
 </style>
