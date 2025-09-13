@@ -210,19 +210,17 @@
 			<li><a href="/project">Create a project</a></li>
 		{/if}
 		<li><a href="/messages">Discussions</a></li>
-		<div class="desktop">
-			<li class="notifications" bind:this={liNotification}>
-				<button> Notifications </button>
-				<dialog
-					class="notification-container"
-					bind:this={notificationMenu}
-					popover="auto"
-					style:--left={`${left}px`}
-				>
-					<NotificationMenu notifications={finalNotifications} />
-				</dialog>
-			</li>
-		</div>
+		<li class="notifications desktop" bind:this={liNotification}>
+			<button> Notifications </button>
+			<dialog
+				class="notification-container"
+				bind:this={notificationMenu}
+				popover="auto"
+				style:--left={`${left}px`}
+			>
+				<NotificationMenu notifications={finalNotifications} />
+			</dialog>
+		</li>
 		<div class="mobile">
 			<li><a href="/notifications">Notifications</a></li>
 		</div>
@@ -454,6 +452,19 @@
 			color: inherit;
 		}
 
+		li {
+			padding: 0.5rem;
+			border-radius: 5px;
+		}
+
+		li:hover {
+			background-color: var(--hover-color);
+		}
+
+		li:last-child {
+			padding: 0;
+		}
+
 		button {
 			background-color: transparent;
 			border: none;
@@ -493,14 +504,6 @@
 			text-decoration: none;
 		}
 
-		nav > ul {
-			display: flex;
-			justify-content: flex-end;
-			align-items: safe center;
-			gap: 1rem;
-			list-style: none;
-		}
-
 		.container {
 			display: flex;
 			flex-direction: row nowrap;
@@ -516,6 +519,7 @@
 		ul {
 			display: flex;
 			justify-content: space-around;
+			gap: 0.5rem;
 			align-items: safe center;
 			list-style: none;
 			padding: 0;
