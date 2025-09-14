@@ -12,7 +12,10 @@ export interface TaskJSON {
     created_at: string,
     skills: string[],
     proposal_status: string | undefined,
-    proposal_id: number | undefined
+    proposal_id: number | undefined,
+    proposal_content: string | undefined,
+    proposal_submission_date: string | undefined,
+    proposal_budget: number | undefined,
 }
 
 export interface TaskGET {
@@ -27,7 +30,10 @@ export interface TaskGET {
     deadline: Date,
     created_at: Date,
     proposal_status: ProposalStatus | undefined,
-    proposal_id: number | undefined
+    proposal_id: number | undefined,
+    proposal_content: string | undefined,
+    proposal_submission_date: Date | undefined,
+    proposal_budget: number | undefined,
 }
 
 export function processTaskJson(json: TaskJSON) {
@@ -43,7 +49,10 @@ export function processTaskJson(json: TaskJSON) {
         created_at: new Date(json.created_at),
         skills: json.skills,
         proposal_status: json.proposal_status as ProposalStatus,
-        proposal_id: json.proposal_id
+        proposal_id: json.proposal_id,
+        proposal_content: json.proposal_content,
+        proposal_submission_date: json.proposal_submission_date ? new Date(json.proposal_submission_date) : undefined,
+        proposal_budget: json.proposal_budget,
     };
     return result;
 }

@@ -1,3 +1,4 @@
+use bigdecimal::BigDecimal;
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use sqlx::{Executor, Postgres};
@@ -17,6 +18,9 @@ pub struct RawTaskProposal {
     pub skills: Vec<String>,
     pub proposal_status: Option<ProposalStatus>,
     pub proposal_id: Option<i32>,
+    pub proposal_content: Option<String>,
+    pub proposal_budget: Option<BigDecimal>,
+    pub proposal_submission_date: Option<DateTime<Utc>>,
 }
 
 pub async fn read_tasks_with_submission_by_project_id(
@@ -29,7 +33,10 @@ pub async fn read_tasks_with_submission_by_project_id(
             tasks.id, tasks.project_id, tasks.title, tasks.content, tasks.deadline,
             tasks.assignee_id, tasks.budget, tasks.status, tasks.created_at, tasks.skills,
             proposals.status as "proposal_status: Option<ProposalStatus>",
-            proposals.id as "proposal_id: Option<i32>"
+            proposals.id as "proposal_id: Option<i32>",
+            proposals.content as proposal_content,
+            proposals.budget as proposal_budget,
+            proposals.created_at as "proposal_submission_date: Option<DateTime<Utc>>"
         FROM
             tasks LEFT JOIN proposals ON tasks.id = proposals.task_id AND proposals.user_id = $2
         WHERE tasks.project_id = $1;"#,
