@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
 	import { processTaskJson, type TaskGET } from '$lib/types/task.js';
-	import { snakeToCapital } from '$lib/utils.js';
+	import { formatDate, snakeToCapital } from '$lib/utils.js';
 	import { MessageCircle, SquarePen } from 'lucide-svelte';
 	import type { ProposalGET } from './+page.js';
 
@@ -257,21 +257,49 @@
 										{snakeToCapital(task.proposal_status)}
 									</div>
 								</div>
-								{#if task.proposal_status !== 'cancelled'}
-									<button
-										class="btn-delete"
-										style="background-color:var(--vibrant-red)"
-										onclick={async () =>
-											patchProposalStatus(task.project_id, task.id, task.proposal_id!, 'cancel')}
-										>Delete Application</button
-									>
-								{:else}
+								<div style="padding: 1rem;">
+									<div class="details" style="padding-bottom: 1rem;">
+										<div class="detail">
+											<span>Budget</span>
+											<span>
+												{task.proposal_budget ?? 'Unspecified'}
+											</span>
+										</div>
+
+										<div class="detail">
+											<span>Submitted At</span>
+											<span>
+												{task.proposal_submission_date
+													? formatDate(task.proposal_submission_date)
+													: 'Unspecified'}
+											</span>
+										</div>
+									</div>
+									<div class="detail">
+										<span>Content</span>
+										<span>
+											{task.proposal_content ?? 'Unspecified'}
+										</span>
+									</div>
+								</div>
+								{#if task.proposal_status == 'cancelled'}
 									<button
 										class="btn-submit"
 										onclick={async () => {
 											submitApplication(task.id);
 										}}>Re-submit Application</button
 									>
+								{:else}
+									<div>
+										<button> Edit </button>
+										<button
+											class="btn-delete"
+											style="background-color:var(--vibrant-red)"
+											onclick={async () =>
+												patchProposalStatus(task.project_id, task.id, task.proposal_id!, 'cancel')}
+											>Delete Application</button
+										>
+									</div>
 								{/if}
 							{:else}
 								<h2 style="padding: 1rem; padding-bottom:0;">Ready To Apply?</h2>
