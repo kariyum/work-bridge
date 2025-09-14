@@ -95,7 +95,8 @@ async fn get_project_with_tasks(
                     status: task.status,
                     created_at: task.created_at,
                     skills: task.skills,
-                    proposal_status: None
+                    proposal_status: None,
+                    proposal_id: None
                 }
             }).collect()
     };

@@ -12,6 +12,7 @@ export interface TaskJSON {
     created_at: string,
     skills: string[],
     proposal_status: string | undefined,
+    proposal_id: number | undefined
 }
 
 export interface TaskGET {
@@ -25,7 +26,8 @@ export interface TaskGET {
     skills: string[],
     deadline: Date,
     created_at: Date,
-    proposal_status: ProposalStatus | undefined
+    proposal_status: ProposalStatus | undefined,
+    proposal_id: number | undefined
 }
 
 export function processTaskJson(json: TaskJSON) {
@@ -40,7 +42,8 @@ export function processTaskJson(json: TaskJSON) {
         deadline: new Date(json.deadline),
         created_at: new Date(json.created_at),
         skills: json.skills,
-        proposal_status: json.proposal_status as ProposalStatus
+        proposal_status: json.proposal_status as ProposalStatus,
+        proposal_id: json.proposal_id
     };
     return result;
 }
