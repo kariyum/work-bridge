@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
-	import type { TaskGET } from '$lib/types/task.js';
+	import { processTaskJson, type TaskGET } from '$lib/types/task.js';
 	import { snakeToCapital } from '$lib/utils.js';
 	import { MessageCircle, SquarePen } from 'lucide-svelte';
 	import type { ProposalGET } from './+page.js';
@@ -250,7 +250,30 @@
 				{:else if data.user?.role == 'freelancer'}
 					<div class="column">
 						<div class="card">
-							{#if !task.proposal_status}
+							{#if task.proposal_status && task.proposal_id}
+								<div class="application-status">
+									<h2>Application Status</h2>
+									<div class="status" data-type={task.proposal_status}>
+										{snakeToCapital(task.proposal_status)}
+									</div>
+								</div>
+								{#if task.proposal_status !== 'cancelled'}
+									<button
+										class="btn-delete"
+										style="background-color:var(--vibrant-red)"
+										onclick={async () =>
+											patchProposalStatus(task.project_id, task.id, task.proposal_id!, 'cancel')}
+										>Delete Application</button
+									>
+								{:else}
+									<button
+										class="btn-submit"
+										onclick={async () => {
+											submitApplication(task.id);
+										}}>Re-submit Application</button
+									>
+								{/if}
+							{:else}
 								<h2 style="padding: 1rem; padding-bottom:0;">Ready To Apply?</h2>
 								<div style="padding: 0 1rem; color: var(--sub-title); font-size:medium;">
 									You can submit your application now.
@@ -261,18 +284,6 @@
 										submitApplication(task.id);
 									}}>Submit Application</button
 								>
-							{:else}
-								<div class="application-status">
-									<h2>Application Status</h2>
-									<div class="status" data-type={task.proposal_status}>
-										{snakeToCapital(task.proposal_status)}
-									</div>
-								</div>
-								<button
-									class="btn-delete"
-									style="background-color:var(--vibrant-red)"
-									onclick={async () => {}}>Delete Application</button
-								>
 							{/if}
 						</div>
 						<div class="card">
@@ -280,7 +291,10 @@
 							<div
 								style="padding: 1rem; padding-top:0; display:flex; align-items:center; gap: 1rem;"
 							>
-								<div class="avatar" data-content="{data.project?.user_id.charAt(0).toUpperCase()}"></div>
+								<div
+									class="avatar"
+									data-content={data.project?.user_id.charAt(0).toUpperCase()}
+								></div>
 								<div>
 									<div style="font-weight: bold; font-size:large;">
 										{data.project?.user_id.split('@')[0]}

@@ -103,8 +103,12 @@ pub async fn insert_proposal(
 ) -> Result<RawProposal, sqlx::Error> {
     sqlx::query_as!(
         RawProposal,
-        "INSERT INTO proposals (user_id, task_id, status, budget, content) VALUES ($1, $2, $3, $4, $5) \
-         RETURNING id, user_id, task_id, status as \"status: ProposalStatus\", budget, content, created_at",
+        r#"INSERT INTO proposals (user_id, task_id, status, budget, content) VALUES ($1, $2, $3, $4, $5)
+           ON CONFLICT (user_id, task_id) DO UPDATE SET
+              status = EXCLUDED.status,
+              budget = EXCLUDED.budget,
+              content = EXCLUDED.content
+         RETURNING id, user_id, task_id, status as "status: ProposalStatus", budget, content, created_at"#,
         insert_proposal.user_id,
         insert_proposal.task_id,
         insert_proposal.status as ProposalStatus,

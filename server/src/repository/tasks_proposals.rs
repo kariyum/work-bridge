@@ -16,6 +16,7 @@ pub struct RawTaskProposal {
     pub created_at: DateTime<Utc>,
     pub skills: Vec<String>,
     pub proposal_status: Option<ProposalStatus>,
+    pub proposal_id: Option<i32>,
 }
 
 pub async fn read_tasks_with_submission_by_project_id(
@@ -24,13 +25,14 @@ pub async fn read_tasks_with_submission_by_project_id(
     conn: impl Executor<'_, Database = Postgres>,
 ) -> Result<Vec<RawTaskProposal>, sqlx::Error> {
     sqlx::query_as!(RawTaskProposal,
-        "SELECT \
-            tasks.id, tasks.project_id, tasks.title, tasks.content, tasks.deadline, tasks.assignee_id, tasks.budget, tasks.status, tasks.created_at, tasks.skills, \
-            proposals.status as \"proposal_status: Option<ProposalStatus>\" \
-        FROM \
-            tasks LEFT JOIN proposals \
-                ON tasks.id = proposals.task_id AND proposals.user_id = $2 \
-        WHERE tasks.project_id = $1;",
+        r#"SELECT
+            tasks.id, tasks.project_id, tasks.title, tasks.content, tasks.deadline,
+            tasks.assignee_id, tasks.budget, tasks.status, tasks.created_at, tasks.skills,
+            proposals.status as "proposal_status: Option<ProposalStatus>",
+            proposals.id as "proposal_id: Option<i32>"
+        FROM
+            tasks LEFT JOIN proposals ON tasks.id = proposals.task_id AND proposals.user_id = $2
+        WHERE tasks.project_id = $1;"#,
         project_id,
         user_id
     )

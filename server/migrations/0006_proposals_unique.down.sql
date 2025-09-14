@@ -1,0 +1,1 @@
+ALTER TABLE proposals DROP CONSTRAINT unique_user_proposal_constraint;
