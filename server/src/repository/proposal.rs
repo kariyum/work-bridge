@@ -79,6 +79,7 @@ pub struct RawProposalForNotification {
     pub id: i32,
     pub user_id: String,
     pub task_id: i32,
+    pub task_creator: String,
     pub status: ProposalStatus,
     pub budget: Option<BigDecimal>,
     pub content: Option<String>,
@@ -92,7 +93,8 @@ pub async fn read_proposal_for_notification(
 ) -> Result<Option<RawProposalForNotification>, sqlx::Error> {
     sqlx::query_as!(
         RawProposalForNotification,
-        "SELECT p.id, p.user_id, task_id, p.status as \"status: ProposalStatus\", p.budget, p.content, p.created_at, t.project_id FROM proposals AS p JOIN tasks AS t ON p.task_id = t.id WHERE p.id = $1",
+        r#"SELECT p.id, p.user_id, task_id, p.status as "status: ProposalStatus", p.budget, p.content, p.created_at, t.project_id, projects.user_id as task_creator
+           FROM proposals AS p JOIN tasks AS t ON p.task_id = t.id JOIN projects on projects.id = t.project_id WHERE p.id = $1"#,
         proposal_id
     ).fetch_optional(conn).await
 }

@@ -220,14 +220,14 @@ textarea:focus {
 }
 
 .status[data-type='inprogress'] {
-    background-color: var(--violet-bg);
-    color: hsl(255, 76%, 15%);
+    background-color: hsl(280, 20%, 50%);
+    color: hsl(280, 30%, 10%);
     font-weight: bold;
 }
 
 .status[data-type='done'] {
-    background-color: var(--grey);
-    color: hsl(10, 0%, 40%);
+    background-color: hsl(210, 20%, 50%);
+    color: hsl(210, 30%, 10%);
     font-weight: bold;
 }
 
@@ -238,20 +238,27 @@ textarea:focus {
 }
 
 .status[data-type='pending'] {
-    background-color: var(--orange);
-    color: hsl(40, 100%, 11%);
+    background-color: hsl(33, 20%, 50%);
+    color: hsl(33, 30%, 10%);
     font-weight: bold;
 }
 
 .status[data-type='declined'] {
-    background-color: var(--red);
-    color: hsl(30, 100%, 11%);
+    background-color: hsl(0, 20%, 50%);
+    color: hsl(30, 30%, 10%);
     font-weight: bold;
 }
 
 .status[data-type='accepted'] {
-    background-color: var(--green-bg);
-    color: hsl(120, 100%, 11%);
+    background-color: hsl(125, 20%, 50%);
+    color: hsl(125, 30%, 11%);
+    font-weight: bold;
+}
+
+
+.status[data-type='cancelled'] {
+    background-color: hsl(0, 0%, 50%);
+    color: hsl(0, 0%, 11%);
     font-weight: bold;
 }
 

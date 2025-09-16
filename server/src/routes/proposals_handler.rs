@@ -1,5 +1,8 @@
 use crate::repository::notifications::{insert_notification, CreateNotification, NotificationType};
-use crate::repository::proposal::{insert_proposal, read_proposal_for_notification, read_proposals_owner, update_proposal_status, CreateProposal, ProposalStatus};
+use crate::repository::proposal::{
+    insert_proposal, read_proposal_for_notification, read_proposals_owner, update_proposal_status,
+    CreateProposal, ProposalStatus,
+};
 use crate::repository::tasks::{read_task_creator_by_id, TaskCreator};
 use crate::services::token::Claims;
 use crate::websocket::lobby::Lobby;
@@ -54,7 +57,7 @@ pub async fn create_proposal(
 
     if let Some(TaskCreator {
         user_id: project_creator,
-        project_id
+        project_id,
     }) = task_creator
     {
         let create_notification = CreateNotification {
@@ -176,16 +179,29 @@ async fn update_proposal_status_handler(
         .await
         .expect("Failed to read proposal");
     if let Some(proposal) = proposal {
-        let create_notification = CreateNotification {
-            user_id: proposal.user_id.clone(),
-            content: json!({
-                "proposal_id": proposal.id,
-                "proposal_status": target_status,
-                "task_id": proposal.task_id,
-                "project_id": proposal.project_id,
-                "trigger_user_id": claims.sub
-            }),
-            notification_type: NotificationType::Proposal,
+        let create_notification = match target_status {
+            ProposalStatus::Cancelled => CreateNotification {
+                user_id: proposal.task_creator,
+                content: json!({
+                    "proposal_id": proposal.id,
+                    "proposal_status": target_status,
+                    "task_id": proposal.task_id,
+                    "project_id": proposal.project_id,
+                    "trigger_user_id":  claims.sub,
+                }),
+                notification_type: NotificationType::Proposal,
+            },
+            _ => CreateNotification {
+                user_id: proposal.user_id.clone(),
+                content: json!({
+                    "proposal_id": proposal.id,
+                    "proposal_status": target_status,
+                    "task_id": proposal.task_id,
+                    "project_id": proposal.project_id,
+                    "trigger_user_id": claims.sub
+                }),
+                notification_type: NotificationType::Proposal,
+            },
         };
         let inserted_notification =
             insert_notification(create_notification.clone(), pgpool.as_ref())
