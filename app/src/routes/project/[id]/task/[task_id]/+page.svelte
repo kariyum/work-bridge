@@ -2,7 +2,7 @@
 	import { goto, invalidate } from '$app/navigation';
 	import { processTaskJson, type TaskGET } from '$lib/types/task.js';
 	import { formatDate, snakeToCapital } from '$lib/utils.js';
-	import { MessageCircle, SquarePen } from 'lucide-svelte';
+	import { MessageCircle, SquarePen, Trash } from 'lucide-svelte';
 	import type { ProposalGET } from './+page.js';
 
 	let { data } = $props();
@@ -57,6 +57,7 @@
 		});
 		if (response.ok) {
 			await invalidate(`/api/projects/${projectId}/task/${taksId}/proposals`);
+			await invalidate(`/api/projects/${projectId}`);
 		} else {
 			// todo show error banner
 		}
@@ -290,14 +291,13 @@
 										}}>Re-submit Application</button
 									>
 								{:else}
-									<div>
-										<button> Edit </button>
+									<div class="edit-delete-btns">
+										<button>Edit</button>
 										<button
-											class="btn-delete"
 											style="background-color:var(--vibrant-red)"
 											onclick={async () =>
 												patchProposalStatus(task.project_id, task.id, task.proposal_id!, 'cancel')}
-											>Delete Application</button
+											><Trash size="14" /></button
 										>
 									</div>
 								{/if}
@@ -344,6 +344,27 @@
 </div>
 
 <style>
+	.edit-delete-btns {
+		display: flex;
+		justify-content: stretch;
+		border-width: 1px 0 0 0;
+		border-style: solid;
+		border-color: var(--border);
+
+		> button:first-child {
+			font-size: medium;
+			align-self: unset;
+			flex-grow: 1;
+			border-radius: 0;
+			border: none;
+		}
+
+		> button:last-child {
+			border: none;
+			align-self: unset;
+			border-radius: 0;
+		}
+	}
 	.avatar {
 		width: 3rem;
 		height: 3rem;
@@ -368,16 +389,10 @@
 		display: flex;
 		align-items: center;
 	}
-	.btn-delete {
-		margin: auto;
-		padding: 1rem 4rem;
-		font-size: medium;
-		width: 100%;
-		border-radius: 0 0 15px 15px;
-	}
+
 	.btn-submit {
 		margin: auto;
-		padding: 1rem 4rem;
+		padding: 1rem 2rem;
 		font-size: medium;
 		width: 100%;
 		border-radius: 0 0 15px 15px;
@@ -472,6 +487,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
+		overflow: hidden;
 	}
 	.padding {
 		padding: 2rem;

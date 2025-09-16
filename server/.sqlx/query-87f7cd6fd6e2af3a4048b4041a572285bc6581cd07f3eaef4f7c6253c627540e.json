@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT p.id, p.user_id, task_id, p.status as \"status: ProposalStatus\", p.budget, p.content, p.created_at, t.project_id FROM proposals AS p JOIN tasks AS t ON p.task_id = t.id WHERE p.id = $1",
+  "query": "SELECT p.id, p.user_id, task_id, p.status as \"status: ProposalStatus\", p.budget, p.content, p.created_at, t.project_id, projects.user_id as task_creator\n           FROM proposals AS p JOIN tasks AS t ON p.task_id = t.id JOIN projects on projects.id = t.project_id WHERE p.id = $1",
   "describe": {
     "columns": [
       {
@@ -54,6 +54,11 @@
         "ordinal": 7,
         "name": "project_id",
         "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "task_creator",
+        "type_info": "Varchar"
       }
     ],
     "parameters": {
@@ -69,8 +74,9 @@
       true,
       true,
       false,
+      false,
       false
     ]
   },
-  "hash": "3b9ac65b9f845f878c2fbe795dbdcc85bc4dc3d0dcf65b74e953c80e0b156f5f"
+  "hash": "87f7cd6fd6e2af3a4048b4041a572285bc6581cd07f3eaef4f7c6253c627540e"
 }

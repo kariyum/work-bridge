@@ -42,7 +42,7 @@ pub async fn read_notifications(
 pub struct CreateNotification {
     pub user_id: String,
     pub content: Value,
-    pub notification_type: NotificationType
+    pub notification_type: NotificationType,
 }
 
 pub async fn insert_notification(
