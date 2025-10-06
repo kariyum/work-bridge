@@ -151,7 +151,7 @@ export class Result<T, E> {
     return this.isOk() ? this.value! : defaultValue;
   }
 
-  getOrThrow(): T {
+  unwrap(): T {
     const t = this;
     if (this.isOk()) {
       return this.value!;

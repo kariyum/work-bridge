@@ -52,7 +52,7 @@ async fn main() -> std::io::Result<()> {
             .service(routes::comments_handler::routes())
             .service(routes::proposals_handler::routes())
             .service(routes::discussions_handler::routes())
-            .service(routes::messages_handler::routes())
+            .service(routes::tasks_handler::routes())
             .service(routes::push_events_handler::routes())
             .service(routes::notifications_handler::routes())
     })

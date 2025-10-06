@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT id, from_user_id, discussion_id, content, created_at FROM messages WHERE discussion_id = $1 ORDER BY created_at ASC ",
+  "query": "SELECT id, from_user_id, content, created_at from messages where discussion_id = $1",
   "describe": {
     "columns": [
       {
@@ -15,16 +15,11 @@
       },
       {
         "ordinal": 2,
-        "name": "discussion_id",
-        "type_info": "Int4"
-      },
-      {
-        "ordinal": 3,
         "name": "content",
         "type_info": "Varchar"
       },
       {
-        "ordinal": 4,
+        "ordinal": 3,
         "name": "created_at",
         "type_info": "Timestamptz"
       }
@@ -38,9 +33,8 @@
       false,
       false,
       false,
-      false,
       false
     ]
   },
-  "hash": "dc6ee3fa766eadd1499a6b06ba798b80a5922e027f07d06038ed4c526d243243"
+  "hash": "57d9a0ae7278fc1d5140dd96457d7012cb3d50acc085c31744639998b65a324b"
 }

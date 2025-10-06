@@ -202,14 +202,7 @@
 	.padding-no-buttom {
 		padding: 1rem 1rem 0rem 1rem;
 	}
-	.card {
-		border-radius: 15px;
-		background-color: var(--card-bg);
-		border: 1px solid var(--border);
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-	}
+
 	@media (width >= 600px) {
 		.body {
 			display: grid;

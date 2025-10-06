@@ -27,10 +27,10 @@
 {:else}
 	<div class="page">
 		{#if data.profileData.isOk() && page.state.profileEditMode}
-			<CreateProfile user={data.profileData.getOrThrow()} />
+			<CreateProfile user={data.profileData.unwrap()} />
 		{:else}
 			<div class="edit-profile">
-				<ProfileDetails profile={data.profileData.getOrThrow()} />
+				<ProfileDetails profile={data.profileData.unwrap()} />
 				<button onclick={switchToProfileEditMode}>Edit Profile</button>
 			</div>
 		{/if}

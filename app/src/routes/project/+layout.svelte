@@ -20,9 +20,9 @@
 			{#if page.params.task_id}
 				<div class="link">
 					<ChevronRight size="16" />
-					<div>Tasks</div>
+					<a href="/project/{page.params.id}">Tasks</a>
 					<ChevronRight size="16" />
-					<div>{page.params.task_id}</div>
+					<a href="/project/{page.params.id}/task/{page.params.task_id}">{page.params.task_id}</a>
 				</div>
 			{/if}
 		</div>
@@ -35,19 +35,20 @@
 </div>
 
 <style>
-    a {
-        color: unset;
-        text-decoration: unset;
-    }
+	a {
+		color: unset;
+		text-decoration: unset;
+	}
 	.page {
-		padding: 1rem;
 		padding-top: 0;
+		height: 100%;
 	}
 
 	.links {
-        margin: auto;
-        max-width: var(--page-width);
+		max-width: var(--page-width);
+		padding: 0 1rem 1rem 1rem;
 		display: flex;
+		margin: auto;
 		view-transition-name: links;
 	}
 
@@ -58,6 +59,17 @@
 		color: var(--sub-title);
 		> :last-child {
 			color: var(--font-color);
+		}
+	}
+
+	@media (width < 600px) {
+		.page {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.links {
+			margin: 0;
 		}
 	}
 </style>

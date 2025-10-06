@@ -5,6 +5,7 @@
 	import { browser } from '$app/environment';
 	import type {
 		BaseNotification,
+		MessagesJsonResponse,
 		NewProposalNotification,
 		ProposalNotification,
 		User
@@ -33,7 +34,7 @@
 	onMount(() => {
 		if (browser) {
 			webSocketService = WebSocketService.getInstance();
-			const handler = (notif: ProposalNotification | NewProposalNotification) => {
+			const handler = (notif: ProposalNotification | NewProposalNotification | MessagesJsonResponse) => {
 				realtimeNotifications = [notif, ...realtimeNotifications];
 				const id = Date.now();
 				toastsQueue.push({
@@ -52,6 +53,9 @@
 				handler(notif);
 				await invalidate(`/api/projects/${notif.content.project_id}/${notif.content.task_id}`);
 			});
+			// webSocketService.subscribeToChatMessages(async (notif) => {
+			// 	handler(notif);
+			// })
 		}
 	});
 

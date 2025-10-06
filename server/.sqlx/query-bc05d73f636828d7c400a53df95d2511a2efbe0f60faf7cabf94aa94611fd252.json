@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "SELECT id FROM discussions WHERE user_ids <@ $1 AND user_ids @> $1",
+  "query": "SELECT id FROM discussions WHERE task_id = $1 AND proposal_id = $2",
   "describe": {
     "columns": [
       {
@@ -11,12 +11,13 @@
     ],
     "parameters": {
       "Left": [
-        "TextArray"
+        "Int4",
+        "Int4"
       ]
     },
     "nullable": [
       false
     ]
   },
-  "hash": "a220377f37fc35d08c96b2b1f71e152087905d8094e100338561cf5728323d52"
+  "hash": "bc05d73f636828d7c400a53df95d2511a2efbe0f60faf7cabf94aa94611fd252"
 }

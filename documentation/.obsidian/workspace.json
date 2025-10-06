@@ -54,6 +54,18 @@
               "icon": "lucide-trello",
               "title": "Kanban"
             }
+          },
+          {
+            "id": "e40bddc42265db46",
+            "type": "leaf",
+            "state": {
+              "type": "release-notes",
+              "state": {
+                "currentVersion": "1.9.14"
+              },
+              "icon": "lucide-book-up",
+              "title": "Release Notes 1.9.14"
+            }
           }
         ],
         "currentTab": 2
@@ -203,11 +215,11 @@
   },
   "active": "2dab26cf665dfcb9",
   "lastOpenFiles": [
+    "Excalidraw/Drawing 2025-02-13 22.17.47.excalidraw.md",
     "resources/css.md",
     "typescript/Regex search.md",
     "typescript",
     "Excalidraw/Drawing 2025-01-02 21.05.03.excalidraw.md",
-    "Excalidraw/Drawing 2025-02-13 22.17.47.excalidraw.md",
     "Excalidraw/Drawing 2024-11-25 13.03.53.excalidraw.md",
     "Kanban.md",
     "Design/Dark Mode.md",
