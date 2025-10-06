@@ -17,12 +17,12 @@ export async function load({ fetch }) {
     } as BaseNotification;
   }
   if (whoamiResponse.isOk() && notificationsResponse.isOk()) {
-    const whoami = whoamiResponse.getOrThrow();
+    const whoami = whoamiResponse.unwrap();
     const user = {
       email: whoami.sub,
       role: whoami.role
     } as User;
-    const notifications = notificationsResponse.getOrThrow().map(processNotifications);
+    const notifications = notificationsResponse.unwrap().map(processNotifications);
     return {
       user: user,
       notifications: notifications.toSorted((a, b) => b.created_at.getTime() - a.created_at.getTime())

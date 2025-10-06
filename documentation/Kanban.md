@@ -10,6 +10,7 @@ kanban-plugin: board
 
 ## p3
 
+- [ ] ids should be u32 not i32
 - [ ] change id to uuid for entities that needs this change
 - [ ] add dynamic postgres schema support
 - [ ] fix cors
@@ -46,12 +47,15 @@ kanban-plugin: board
 - [ ] forgot password
 - [ ] google login
 - [ ] settings page
+- [ ] rename urls. Use projects/{id} instead of project/{id}. Plural vs Singular. Plural is the REST standard
+- [ ] add cancelled status color
+- [ ] add budget form submission
+- [ ] add on chat message notification
+- [ ] discussion page man, get it done well
 
 
 ## doing
 
-- [ ] change status colors
-- [ ] freelancers removing application
 
 
 ## tested
@@ -60,6 +64,8 @@ kanban-plugin: board
 
 ## done
 
+- [ ] change status colors
+- [ ] freelancers removing application
 - [ ] freelancer applying to projects
 - [ ] change status class name in /task/task_id
 - [ ] projects search

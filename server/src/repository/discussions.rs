@@ -26,16 +26,56 @@ pub async fn get_user_discussions(
 
 #[derive(Serialize)]
 pub struct DiscussionId {
-    id: i32,
+    pub id: i32,
 }
 pub async fn get_discussion_id(
-    user_ids: Vec<String>,
-    conn: impl Executor<'_, Database = Postgres>,
+    task_id: i32,
+    proposal_id: i32,
+    pgpool: impl Executor<'_, Database = Postgres>,
 ) -> Result<Option<DiscussionId>, sqlx::Error> {
     sqlx::query_as!(
         DiscussionId,
-        r#"SELECT id FROM discussions WHERE user_ids <@ $1 AND user_ids @> $1"#,
-        &user_ids
+        r#"SELECT id FROM discussions WHERE task_id = $1 AND proposal_id = $2"#,
+        task_id,
+        proposal_id
     )
-    .fetch_optional(conn).await
+    .fetch_optional(pgpool)
+    .await
+}
+
+pub struct CreateDiscussion {
+    pub user_ids: Vec<String>,
+    pub task_id: i32,
+    pub proposal_id: i32,
+    pub created_by: String,
+}
+pub async fn insert_discussion(
+    create_discussion: CreateDiscussion,
+    pgpool: impl Executor<'_, Database = Postgres>,
+) -> Result<(), sqlx::Error> {
+    sqlx::query!(
+        r#"INSERT INTO discussions (user_ids, task_id, proposal_id, created_by) VALUES ($1, $2, $3, $4)"#,
+        &create_discussion.user_ids,
+        &create_discussion.task_id,
+        &create_discussion.proposal_id,
+        &create_discussion.created_by
+    )
+    .execute(pgpool)
+    .await
+    .map(|_| {})
+}
+
+pub struct DiscussionIdWithMembers {
+    pub id: i32,
+    pub members: Vec<String>,
+}
+pub async fn get_discussion_id_with_members(
+    user_id: String,
+    task_id: i32,
+    proposal_id: i32,
+    pgpool: impl Executor<'_, Database = Postgres>,
+) -> Result<Option<DiscussionIdWithMembers>, sqlx::Error> {
+    sqlx::query_as!(DiscussionIdWithMembers, r#"SELECT id, user_ids as members FROM discussions WHERE task_id = $1 AND proposal_id = $2 AND $3 = ANY(user_ids)"#, task_id, proposal_id, user_id)
+        .fetch_optional(pgpool)
+        .await
 }

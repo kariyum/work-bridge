@@ -29,29 +29,20 @@ pub async fn insert_message(
 }
 
 #[derive(Serialize, sqlx::FromRow)]
-pub struct MessageRow {
+pub struct LightMessage {
     id: i32,
     from_user_id: String,
-    discussion_id: i32,
     content: String,
     created_at: chrono::DateTime<chrono::Utc>,
 }
 
-pub async fn read_messages(
+pub async fn read_messages_by_proposal_and_task(
     discussion_id: i32,
     pgpool: impl Executor<'_, Database = Postgres>,
-) -> Result<Vec<MessageRow>, sqlx::Error> {
+) -> Result<Vec<LightMessage>, sqlx::Error> {
     sqlx::query_as!(
-        MessageRow,
-        "\
-            SELECT \
-                id, from_user_id, discussion_id, content, created_at \
-            FROM \
-                messages \
-            WHERE \
-                discussion_id = $1 \
-            ORDER BY created_at ASC \
-        ", // make sure the fetcher is in the discussion for privacy
+        LightMessage,
+        r#"SELECT id, from_user_id, content, created_at from messages where discussion_id = $1"#,
         discussion_id
     )
     .fetch_all(pgpool)

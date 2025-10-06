@@ -1,8 +1,7 @@
+use crate::repository::discussions::get_discussion_id;
+use crate::repository::discussions::{insert_discussion, CreateDiscussion};
 use crate::repository::notifications::{insert_notification, CreateNotification, NotificationType};
-use crate::repository::proposal::{
-    insert_proposal, read_proposal_for_notification, read_proposals_owner, update_proposal_status,
-    CreateProposal, ProposalStatus,
-};
+use crate::repository::proposal::{insert_proposal, read_proposal_for_notification, read_proposals_freelancer, read_proposals_owner, update_proposal_status, CreateProposal, ProposalStatus};
 use crate::repository::tasks::{read_task_creator_by_id, TaskCreator};
 use crate::services::token::Claims;
 use crate::websocket::lobby::Lobby;
@@ -77,25 +76,29 @@ pub async fn create_proposal(
 
         lobby.do_send(raw_notification);
 
-        let exists = sqlx::query("SELECT * FROM discussions where user_ids = $1")
-            .bind(vec![&claims.sub, &project_creator])
-            .fetch_optional(pgpool.as_ref())
-            .await
-            .expect("Failed to fetch discussion from database")
-            .is_some();
+        let exists = get_discussion_id(
+            inserted_proposal.task_id,
+            inserted_proposal.id,
+            pgpool.as_ref(),
+        )
+        .await
+        .expect("Failed to fetch discussion from database")
+        .is_some();
 
         if !exists {
-            sqlx::query("INSERT INTO discussions (user_ids, created_by, created_at) VALUES ($1, $2, $3) RETURNING *")
-                .bind(vec![&claims.sub, &project_creator])
-                .bind(&claims.sub)
-                .bind(chrono::Utc::now())
-                .execute(pgpool.as_ref())
+            let create_discussion = CreateDiscussion {
+                user_ids: vec![claims.sub.clone(), project_creator],
+                task_id: inserted_proposal.task_id,
+                proposal_id: inserted_proposal.id,
+                created_by: claims.sub,
+            };
+            insert_discussion(create_discussion, pgpool.as_ref())
                 .await
                 .expect("Failed to insert discussion into database");
         }
     }
 
-    HttpResponse::Created()
+    HttpResponse::Created().finish()
 }
 
 pub async fn get_proposals(
@@ -104,9 +107,15 @@ pub async fn get_proposals(
     pgpool: Data<PgPool>,
 ) -> impl Responder {
     let (_, task_id) = path.into_inner();
-    let proposals = read_proposals_owner(claims.sub, task_id, pgpool.as_ref())
-        .await
-        .expect("Failed to read proposals");
+    let proposals = if claims.role == "recruiter" {
+        read_proposals_owner(claims.sub, task_id, pgpool.as_ref())
+            .await
+            .expect("Failed to read proposals")
+    } else {
+        read_proposals_freelancer(claims.sub, task_id, pgpool.as_ref())
+            .await
+            .expect("Failed to read proposals")
+    };
     HttpResponse::Ok().json(proposals)
 }
 

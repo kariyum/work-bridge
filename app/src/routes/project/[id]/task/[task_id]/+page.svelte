@@ -3,7 +3,8 @@
 	import { processTaskJson, type TaskGET } from '$lib/types/task.js';
 	import { formatDate, snakeToCapital } from '$lib/utils.js';
 	import { MessageCircle, SquarePen, Trash } from 'lucide-svelte';
-	import type { ProposalGET } from './+page.js';
+	import type { ProposalGET } from './+layout.js';
+	import { page } from '$app/state';
 
 	let { data } = $props();
 	let task = $derived(data.task);
@@ -87,8 +88,9 @@
 			<div class="left">
 				<div class="row">
 					<div>{proposal.user_id}</div>
-					<a href="/messages?user_id={proposal.user_id}" class="reset"
-						><MessageCircle size="14" /></a
+					<a
+						href={`/project/${page.params.id}/task/${proposal.task_id}/proposals/${proposal.id}/discussion`}
+						class="reset"><MessageCircle size="14" /></a
 					>
 				</div>
 				<div>
@@ -168,7 +170,7 @@
 	</div>
 {/snippet}
 
-<div class="container">
+<div class="container page-padding">
 	{#if task}
 		<div class="task">
 			<div class="row">
@@ -299,6 +301,10 @@
 												patchProposalStatus(task.project_id, task.id, task.proposal_id!, 'cancel')}
 											><Trash size="14" /></button
 										>
+										<a
+											href={`/project/${task.project_id}/task/${task.id}/proposals/${task.proposal_id}/discussion`}
+											>Chat</a
+										>
 									</div>
 								{/if}
 							{:else}
@@ -316,9 +322,7 @@
 						</div>
 						<div class="card">
 							<h2 style="padding: 1rem; padding-bottom:0;">About the Recruiter</h2>
-							<div
-								style="padding: 1rem; padding-top:0; display:flex; align-items:center; gap: 1rem;"
-							>
+							<div class="avatar-container">
 								<div
 									class="avatar"
 									data-content={data.project?.user_id.charAt(0).toUpperCase()}
@@ -364,22 +368,6 @@
 			align-self: unset;
 			border-radius: 0;
 		}
-	}
-	.avatar {
-		width: 3rem;
-		height: 3rem;
-		border-radius: 50%;
-		position: relative;
-		background-color: hsl(210, 11%, 50%);
-	}
-	.avatar::before {
-		content: attr(data-content);
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%);
-		font-size: large;
-		color: hsl(110, 11%, 15%);
 	}
 	.application-status {
 		padding: 1rem;
@@ -480,15 +468,7 @@
 			flex-direction: column-reverse;
 		}
 	}
-	.card {
-		border-radius: 15px;
-		background-color: var(--card-bg);
-		border: 1px solid var(--border);
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
-		overflow: hidden;
-	}
+
 	.padding {
 		padding: 2rem;
 	}

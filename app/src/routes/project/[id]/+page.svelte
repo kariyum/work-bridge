@@ -9,29 +9,33 @@
 
 {#if data.project !== undefined}
 	{#if page.state.projectEditMode ?? false}
-		<CreateProject projectIn={data.project} />
+		<div class="page-padding">
+			<CreateProject projectIn={data.project} />
+		</div>
 	{:else}
-		<ProjectDetails
-			projectIn={data.project}
-			user={data.user}
-			onEdit={() => {
-				if (document.startViewTransition) {
-					document.startViewTransition(() => {
+		<div class="page-padding">
+			<ProjectDetails
+				projectIn={data.project}
+				user={data.user}
+				onEdit={() => {
+					if (document.startViewTransition) {
+						document.startViewTransition(() => {
+							pushState('', {
+								projectEditMode: true,
+								showTaskPopup: false,
+								profileEditMode: false
+							});
+						});
+					} else {
 						pushState('', {
 							projectEditMode: true,
 							showTaskPopup: false,
 							profileEditMode: false
 						});
-					});
-				} else {
-					pushState('', {
-						projectEditMode: true,
-						showTaskPopup: false,
-						profileEditMode: false
-					});
-				}
-			}}
-		/>
+					}
+				}}
+			/>
+		</div>
 	{/if}
 {:else}
 	Project does not exist

@@ -62,6 +62,21 @@ pub async fn read_proposals_owner(
         .await
 }
 
+pub async fn read_proposals_freelancer(
+    user_id: String,
+    task_id: i32,
+    pgpool: impl Executor<'_, Database = Postgres>,
+) -> Result<Vec<RawProposal>, sqlx::Error> {
+    sqlx::query_as!(
+        RawProposal,
+        r#"SELECT id, user_id, task_id, status as "status: ProposalStatus", budget, content, created_at FROM proposals WHERE task_id = $1 AND user_id = $2"#,
+        task_id,
+        user_id
+    )
+        .fetch_all(pgpool)
+        .await
+}
+
 #[allow(dead_code)]
 pub async fn read_proposal(
     proposal_id: i32,

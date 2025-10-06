@@ -9,3 +9,4 @@ pub mod discussions_handler;
 pub mod messages_handler;
 pub mod push_events_handler;
 pub mod notifications_handler;
+pub mod tasks_handler;
