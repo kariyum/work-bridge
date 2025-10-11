@@ -164,12 +164,12 @@
 				>
 			</li>
 		{/if}
-		<li>
+		<!-- <li>
 			<a href="/messages"
 				><MessageCircle />
 				<div>Discussions</div></a
 			>
-		</li>
+		</li> -->
 		<div class="mobile">
 			<li>
 				<a href="/notifications"
@@ -213,7 +213,7 @@
 		{#if user.role === 'recruiter'}
 			<li><a href="/project">Create a project</a></li>
 		{/if}
-		<li><a href="/messages">Discussions</a></li>
+		<!-- <li><a href="/messages">Discussions</a></li> -->
 		<li class="notifications desktop" bind:this={liNotification}>
 			<button> Notifications </button>
 			<dialog
