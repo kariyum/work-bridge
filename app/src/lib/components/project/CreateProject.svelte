@@ -6,6 +6,9 @@
 	import RichTextEditor from '../texteditor/RichTextEditor.svelte';
 	import Tasks from '../task/Tasks.svelte';
 	import AsyncButton from '../button/AsyncButton.svelte';
+	import { Plus } from 'lucide-svelte';
+	import TaskForm from '../task/TaskForm.svelte';
+	import Skills from '../skills/Skills.svelte';
 
 	let {
 		projectIn
@@ -116,47 +119,18 @@
 	}
 </script>
 
-<div class="container">
-	{#if projectIn}
-		<h1>Update your project</h1>
-	{:else}
-		<h1>Create a project</h1>
-	{/if}
+{#snippet deleteButton()}
+	<div>Delete</div>
+{/snippet}
+{#snippet submitButton()}
+	<div>{projectIn ? 'Update Project' : 'Save Project'}</div>
+{/snippet}
+{#snippet endView()}
+	Done!
+{/snippet}
 
-	<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-	<form
-		onsubmit={(event) => {
-			event.preventDefault();
-			event.stopImmediatePropagation();
-		}}
-		onkeypress={(event) => {
-			if (event.key === 'Enter') {
-				event.preventDefault();
-			}
-		}}
-	>
-		<div class="input input-label">
-			<input type="text" id="title" placeholder=" " bind:value={projectFormInput.title} />
-			<label for="title">Project Title</label>
-		</div>
-		<div class="input">
-			<RichTextEditor bind:x={projectFormInput.content}></RichTextEditor>
-		</div>
-
-		<div class="input input-label">
-			<input type="text" id="budget" placeholder=" " bind:value={projectFormInput.budget} />
-			<label for="">Budget</label>
-		</div>
-
-		<div class="input input-label">
-			<input type="date" id="deadline" placeholder=" " bind:value={projectFormInput.deadline} />
-			<label for="">Deadline</label>
-		</div>
-
-		<div style="width: 100%;">
-			<Tasks projectId={projectIn?.id} bind:tasks></Tasks>
-		</div>
-		<hr />
+{#snippet actions()}
+	<div style="width: 100%;">
 		<div class="action-buttons">
 			<button
 				class="cancel-btn"
@@ -170,9 +144,6 @@
 					}
 				}}>Cancel</button
 			>
-			{#snippet deleteButton()}
-				<div>Delete</div>
-			{/snippet}
 			{#if projectIn?.id}
 				<AsyncButton
 					--color="var(--vibrant-red)"
@@ -182,22 +153,158 @@
 					onclick={(event) => deleteProject()}
 				/>
 			{/if}
-			{#snippet submitButton()}
-				<div>{projectIn ? 'Update Project' : 'Save Project'}</div>
-			{/snippet}
-			{#snippet endView()}
-				<button>Done!</button>
-			{/snippet}
 			<AsyncButton idleView={submitButton} {endView} onclick={(event) => handleSubmit(event)} />
 		</div>
-	</form>
+	</div>
+{/snippet}
+
+{#snippet createProject(projectIn: ProjectGET | undefined)}
+	{#if projectIn}
+		<h1>Update your project</h1>
+	{:else}
+		<h1>Create a new project</h1>
+	{/if}
+	<div class="new-container">
+		<div class="left">
+			<div class="card card-padding">
+				<h2 style="margin-bottom: 0.2rem;">Project Details</h2>
+				<div>
+					<div class="input input-label">
+						<input type="text" id="title" placeholder=" " bind:value={projectFormInput.title} />
+						<label for="title">Project Title</label>
+					</div>
+					<div style="margin-top: 1.5rem;"></div>
+					<div class="input">
+						<RichTextEditor bind:x={projectFormInput.content}></RichTextEditor>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="right">
+			<div class="card card-padding">
+				<h2>Project Constraints</h2>
+				<div class="input input-label">
+					<input type="text" id="budget" placeholder=" " bind:value={projectFormInput.budget} />
+					<label for="">Budget</label>
+				</div>
+
+				<div class="input input-label">
+					<input type="date" id="deadline" placeholder=" " bind:value={projectFormInput.deadline} />
+					<label for="">Deadline</label>
+				</div>
+			</div>
+		</div>
+	</div>
+{/snippet}
+
+{#snippet createTask()}
+	<div class="flex-row justify-between align-center" style="margin: 1rem 0;">
+		<h2>Tasks</h2>
+		<div>
+			<button
+				class="flex-row justify-between align-center"
+				style="gap: 0.5rem;"
+				onclick={() => {
+					tasks.push(new TaskClass());
+				}}><Plus size="16" /> Add Task</button
+			>
+		</div>
+	</div>
+	{#each tasks as taskInstance}
+		<div class="card card-padding" style="margin-bottom: 1rem;">
+			<div class="task-container">
+				<div class="flex-column">
+					<h2>Task Details</h2>
+					<div class="input-label input-style">
+						<input
+							class="input-style"
+							type="text"
+							placeholder=" "
+							id="title"
+							bind:value={taskInstance.title}
+						/>
+						<label for="title">Title</label>
+					</div>
+					<RichTextEditor bind:x={taskInstance.content}></RichTextEditor>
+				</div>
+				<div class="flex-column">
+					<h2>Task Constraints</h2>
+					<div class="input-label">
+						<input
+							class="input-style"
+							type="date"
+							placeholder="Deadline"
+							bind:value={taskInstance.deadline}
+						/>
+						<label for="deadline">Deadline</label>
+					</div>
+					<div class="input-label">
+						<input
+							class="input-style"
+							type="text"
+							placeholder=" "
+							bind:value={taskInstance.budget}
+						/>
+						<label for="budget">Budget</label>
+					</div>
+					<Skills
+						skillsIn={taskInstance.skills}
+						addSkill={(skill) => taskInstance.addSkill(skill)}
+						removeSkillAtIndex={(index) => taskInstance.removeSkillIndex(index)}
+					></Skills>
+				</div>
+			</div>
+			<div class="act-task">
+				<button
+					class="cancel-btn"
+					onclick={() => {
+						tasks = tasks.filter((instance) => instance != taskInstance);
+					}}>Remove</button
+				>
+			</div>
+		</div>
+	{/each}
+{/snippet}
+<div class="container">
+	{@render createProject(projectIn)}
+	{@render createTask()}
+	{@render actions()}
 </div>
 
 <style>
+	.task-container {
+		display: grid;
+		grid-template-columns: 4fr 2fr;
+		gap: 1rem;
+	}
+	.flex-column {
+		display: flex;
+		flex-direction: column;
+		gap: 1.2rem;
+		justify-content: stretch;
+	}
+
+	.input-style {
+		width: 100%;
+	}
+	.new-container {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		margin-top: 1rem;
+
+		.left {
+			flex-grow: 4;
+		}
+		.right {
+			flex-grow: 1;
+		}
+	}
 	.action-buttons {
 		display: flex;
 		gap: 1rem;
 		margin-left: auto;
+		width: max-content;
 	}
 	hr {
 		width: 100%;
@@ -229,5 +336,13 @@
 		align-items: center;
 		gap: 0.5rem;
 		margin-top: 1rem;
+	}
+
+	@media (width < 600px) {
+		.task-container {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
 	}
 </style>

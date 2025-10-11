@@ -181,11 +181,11 @@
 			</div>
 			<div class="body">
 				<div class="column">
-					<div class="card padding">
+					<div class="card card-padding">
 						<h2>Task Content</h2>
 						{@html task.content}
 					</div>
-					<div class="card padding">
+					<div class="card card-padding">
 						<h2>Details</h2>
 						<div class="details">
 							<div class="detail">
@@ -301,10 +301,6 @@
 												patchProposalStatus(task.project_id, task.id, task.proposal_id!, 'cancel')}
 											><Trash size="14" /></button
 										>
-										<a
-											href={`/project/${task.project_id}/task/${task.id}/proposals/${task.proposal_id}/discussion`}
-											>Chat</a
-										>
 									</div>
 								{/if}
 							{:else}
@@ -321,7 +317,13 @@
 							{/if}
 						</div>
 						<div class="card">
-							<h2 style="padding: 1rem; padding-bottom:0;">About the Recruiter</h2>
+							<div class="flex-row justify-between align-center">
+								<h2 style="padding: 1rem; padding-bottom:0;">About the Recruiter</h2>
+								<a
+									href={`/project/${task.project_id}/task/${task.id}/proposals/${task.proposal_id}/discussion`}
+									>Chat</a
+								>
+							</div>
 							<div class="avatar-container">
 								<div
 									class="avatar"
@@ -469,9 +471,6 @@
 		}
 	}
 
-	.padding {
-		padding: 2rem;
-	}
 	.applications {
 		margin: 1rem 0;
 		> * {
@@ -567,11 +566,6 @@
 			justify-content: space-between;
 			gap: 1rem;
 		}
-	}
-
-	.skills {
-		display: flex;
-		gap: 0.5rem;
 	}
 
 	.skill {
