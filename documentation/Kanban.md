@@ -41,7 +41,6 @@ kanban-plugin: board
 ## p1
 
 - [ ] discussion page revamp
-- [ ] add discussion context Task content
 - [ ] add freelancer feature to see ongoing tasks for him
 - [ ] sending email capabilities
 - [ ] forgot password
@@ -64,6 +63,7 @@ kanban-plugin: board
 
 ## done
 
+- [ ] add discussion context Task content
 - [ ] change status colors
 - [ ] freelancers removing application
 - [ ] freelancer applying to projects

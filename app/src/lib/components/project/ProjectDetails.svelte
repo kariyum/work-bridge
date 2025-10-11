@@ -102,7 +102,7 @@
 		</div>
 		<div class="body">
 			<div class="column" style="flex-grow: 5;">
-				<div class="card padding">
+				<div class="card card-padding">
 					<h2>Description</h2>
 					{#if projectIn.content.length === 0}
 						<span>No content for this project</span>
@@ -116,7 +116,7 @@
 				</div>
 			</div>
 			<div class="column" style="flex-grow: 1;">
-				<div class="card padding">
+				<div class="card card-padding">
 					<h2>Details</h2>
 					<div class="detail">
 						<span>Creator</span>
@@ -131,7 +131,7 @@
 						<span>{projectIn.id}</span>
 					</div>
 				</div>
-				<div class="card padding">
+				<div class="card card-padding">
 					<h2>Key Information</h2>
 					<div class="information">
 						<span>Deadline</span>
@@ -196,9 +196,7 @@
 		flex-direction: column;
 		gap: 2rem;
 	}
-	.padding {
-		padding: 2rem;
-	}
+
 	.padding-no-buttom {
 		padding: 1rem 1rem 0rem 1rem;
 	}

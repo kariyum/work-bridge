@@ -5,24 +5,23 @@
 </script>
 
 
-<div class="container">
+<span class="container">
     {@render children()}
     <button onclick={onClose}>
         <X size="12" />
     </button>
-</div>
+</span>
 
 <style>
     .container {
-        display: flex;
-        gap: 0.5rem;
         background-color: var(--selected-color);
         padding: 0.2rem 0.5rem;
-        align-items: center;
         font-size: small;
         border-radius: 50px;
+        text-wrap: nowrap;
     }
     button {
+        display: inline;
         border: none;
         border-radius: 50%;
         margin: 0;
