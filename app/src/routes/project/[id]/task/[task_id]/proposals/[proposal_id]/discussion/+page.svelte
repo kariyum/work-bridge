@@ -67,7 +67,7 @@
 {/snippet}
 
 {#if task && proposal && user}
-	<div class="with-context">
+	<div class="with-context page-padding">
 		{@render conversationWithContext(task, proposal, user)}
 	</div>
 	<div class="p-1 flex-row justify-between align-center without-context">
@@ -88,7 +88,6 @@
 		display: grid;
 		grid-template-columns: 4fr 1fr;
 		margin: auto;
-		padding: 0 1rem;
 	}
 	.section {
 		margin-bottom: 1.5rem;
