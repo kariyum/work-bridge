@@ -7,24 +7,26 @@
 
 {#snippet breadcrumbs()}
 	{#if !page.state.projectEditMode}
-		<div class="links">
-			<div class="link">
-				<a href="/">Projects</a>
-				<ChevronRight size="16" />
+		<div class="page-padding">
+			<div class="links">
+				<div class="link">
+					<a href="/">Projects</a>
+					<ChevronRight size="16" />
+					{#if page.params.task_id}
+						<a href="/project/{page.params.id}">{page.params.id}</a>
+					{:else}
+						<div>{page.params.id}</div>
+					{/if}
+				</div>
 				{#if page.params.task_id}
-					<a href="/project/{page.params.id}">{page.params.id}</a>
-				{:else}
-					<div>{page.params.id}</div>
+					<div class="link">
+						<ChevronRight size="16" />
+						<a href="/project/{page.params.id}">Tasks</a>
+						<ChevronRight size="16" />
+						<a href="/project/{page.params.id}/task/{page.params.task_id}">{page.params.task_id}</a>
+					</div>
 				{/if}
 			</div>
-			{#if page.params.task_id}
-				<div class="link">
-					<ChevronRight size="16" />
-					<a href="/project/{page.params.id}">Tasks</a>
-					<ChevronRight size="16" />
-					<a href="/project/{page.params.id}/task/{page.params.task_id}">{page.params.task_id}</a>
-				</div>
-			{/if}
 		</div>
 	{/if}
 {/snippet}
@@ -46,7 +48,6 @@
 
 	.links {
 		max-width: var(--page-width);
-		padding: 0 1rem 1rem 1rem;
 		display: flex;
 		margin: auto;
 		view-transition-name: links;

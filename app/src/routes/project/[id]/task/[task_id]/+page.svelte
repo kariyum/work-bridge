@@ -169,184 +169,189 @@
 		</div>
 	</div>
 {/snippet}
-
-<div class="container page-padding">
-	{#if task}
-		<div class="task">
-			<div class="row">
-				<h2>{task.title}</h2>
-				<div class="status" data-type={task.status}>
-					{snakeToCapital(task.status)}
-				</div>
-			</div>
-			<div class="body">
-				<div class="column">
-					<div class="card card-padding">
-						<h2>Task Content</h2>
-						{@html task.content}
+<div class="page-padding">
+	<div class="container">
+		{#if task}
+			<div class="task">
+				<div class="row">
+					<h2>{task.title}</h2>
+					<div class="status" data-type={task.status}>
+						{snakeToCapital(task.status)}
 					</div>
-					<div class="card card-padding">
-						<h2>Details</h2>
-						<div class="details">
-							<div class="detail">
-								<span>Assignee</span>
-								<span>
-									{#if task.assignee_id}
-										{task.assignee_id}
-									{:else}
-										Not Assinged
-									{/if}
-								</span>
-							</div>
-							<div class="detail">
-								<span>Deadline</span>
-								<span>{task.deadline.toDateString()}</span>
-							</div>
-							<div class="detail">
-								<span>Budget</span>
-								<span>{task.budget}</span>
-							</div>
-							<div class="detail">
-								<span>Required Skills</span>
-								<div class="flex-row">
-									{#if task.skills.length === 0}
-										<div>No skills required.</div>
-									{:else}
-										{#each task.skills as skill}
-											<div class="skill">{skill}</div>
-										{/each}
-									{/if}
+				</div>
+				<div class="body">
+					<div class="column">
+						<div class="card card-padding">
+							<h2>Task Content</h2>
+							{@html task.content}
+						</div>
+						<div class="card card-padding">
+							<h2>Details</h2>
+							<div class="details">
+								<div class="detail">
+									<span>Assignee</span>
+									<span>
+										{#if task.assignee_id}
+											{task.assignee_id}
+										{:else}
+											Not Assinged
+										{/if}
+									</span>
+								</div>
+								<div class="detail">
+									<span>Deadline</span>
+									<span>{task.deadline.toDateString()}</span>
+								</div>
+								<div class="detail">
+									<span>Budget</span>
+									<span>{task.budget}</span>
+								</div>
+								<div class="detail">
+									<span>Required Skills</span>
+									<div class="flex-row">
+										{#if task.skills.length === 0}
+											<div>No skills required.</div>
+										{:else}
+											{#each task.skills as skill}
+												<div class="skill">{skill}</div>
+											{/each}
+										{/if}
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				{#if data.project?.user_id === data.user?.email}
-					<div class="column">
-						<div class="card">
-							<h2 style="padding: 1rem; padding-bottom:0;">Task Actions</h2>
-							<div class="actions">
-								<button
-									class="row"
-									onclick={async () => {
-										await goto(`/project/${data.project?.id}`, {
-											state: {
-												projectEditMode: true,
-												showTaskPopup: false,
-												profileEditMode: false
-											}
-										});
-									}}
-								>
-									<div class="icon">
-										<SquarePen />
-									</div>
-									<div class="btn-text">
-										<div>Edit Task</div>
-										<div>Change task details or content</div>
-									</div>
-								</button>
-								<!-- <button>Close Task</button> -->
+					{#if data.project?.user_id === data.user?.email}
+						<div class="column">
+							<div class="card">
+								<h2 style="padding: 1rem; padding-bottom:0;">Task Actions</h2>
+								<div class="actions">
+									<button
+										class="row"
+										onclick={async () => {
+											await goto(`/project/${data.project?.id}`, {
+												state: {
+													projectEditMode: true,
+													showTaskPopup: false,
+													profileEditMode: false
+												}
+											});
+										}}
+									>
+										<div class="icon">
+											<SquarePen />
+										</div>
+										<div class="btn-text">
+											<div>Edit Task</div>
+											<div>Change task details or content</div>
+										</div>
+									</button>
+									<!-- <button>Close Task</button> -->
+								</div>
 							</div>
 						</div>
-					</div>
-				{:else if data.user?.role == 'freelancer'}
-					<div class="column">
-						<div class="card">
-							{#if task.proposal_status && task.proposal_id}
-								<div class="application-status">
-									<h2>Application Status</h2>
-									<div class="status" data-type={task.proposal_status}>
-										{snakeToCapital(task.proposal_status)}
-									</div>
-								</div>
-								<div style="padding: 1rem;">
-									<div class="details" style="padding-bottom: 1rem;">
-										<div class="detail">
-											<span>Budget</span>
-											<span>
-												{task.proposal_budget ?? 'Unspecified'}
-											</span>
+					{:else if data.user?.role == 'freelancer'}
+						<div class="column">
+							<div class="card">
+								{#if task.proposal_status && task.proposal_id}
+									<div class="application-status">
+										<h2>Application Status</h2>
+										<div class="status" data-type={task.proposal_status}>
+											{snakeToCapital(task.proposal_status)}
 										</div>
+									</div>
+									<div style="padding: 1rem;">
+										<div class="details" style="padding-bottom: 1rem;">
+											<div class="detail">
+												<span>Budget</span>
+												<span>
+													{task.proposal_budget ?? 'Unspecified'}
+												</span>
+											</div>
 
+											<div class="detail">
+												<span>Submitted At</span>
+												<span>
+													{task.proposal_submission_date
+														? formatDate(task.proposal_submission_date)
+														: 'Unspecified'}
+												</span>
+											</div>
+										</div>
 										<div class="detail">
-											<span>Submitted At</span>
+											<span>Content</span>
 											<span>
-												{task.proposal_submission_date
-													? formatDate(task.proposal_submission_date)
-													: 'Unspecified'}
+												{task.proposal_content ?? 'Unspecified'}
 											</span>
 										</div>
 									</div>
-									<div class="detail">
-										<span>Content</span>
-										<span>
-											{task.proposal_content ?? 'Unspecified'}
-										</span>
+									{#if task.proposal_status == 'cancelled'}
+										<button
+											class="btn-submit"
+											onclick={async () => {
+												submitApplication(task.id);
+											}}>Re-submit Application</button
+										>
+									{:else}
+										<div class="edit-delete-btns">
+											<button>Edit</button>
+											<button
+												style="background-color:var(--vibrant-red)"
+												onclick={async () =>
+													patchProposalStatus(
+														task.project_id,
+														task.id,
+														task.proposal_id!,
+														'cancel'
+													)}><Trash size="14" /></button
+											>
+										</div>
+									{/if}
+								{:else}
+									<h2 style="padding: 1rem; padding-bottom:0;">Ready To Apply?</h2>
+									<div style="padding: 0 1rem; color: var(--sub-title); font-size:medium;">
+										You can submit your application now.
 									</div>
-								</div>
-								{#if task.proposal_status == 'cancelled'}
 									<button
 										class="btn-submit"
 										onclick={async () => {
 											submitApplication(task.id);
-										}}>Re-submit Application</button
+										}}>Submit Application</button
 									>
-								{:else}
-									<div class="edit-delete-btns">
-										<button>Edit</button>
-										<button
-											style="background-color:var(--vibrant-red)"
-											onclick={async () =>
-												patchProposalStatus(task.project_id, task.id, task.proposal_id!, 'cancel')}
-											><Trash size="14" /></button
-										>
-									</div>
 								{/if}
-							{:else}
-								<h2 style="padding: 1rem; padding-bottom:0;">Ready To Apply?</h2>
-								<div style="padding: 0 1rem; color: var(--sub-title); font-size:medium;">
-									You can submit your application now.
-								</div>
-								<button
-									class="btn-submit"
-									onclick={async () => {
-										submitApplication(task.id);
-									}}>Submit Application</button
-								>
-							{/if}
-						</div>
-						<div class="card">
-							<div class="flex-row justify-between align-center">
-								<h2 style="padding: 1rem; padding-bottom:0;">About the Recruiter</h2>
-								<a
-									href={`/project/${task.project_id}/task/${task.id}/proposals/${task.proposal_id}/discussion`}
-									>Chat</a
-								>
 							</div>
-							<div class="avatar-container">
-								<div
-									class="avatar"
-									data-content={data.project?.user_id.charAt(0).toUpperCase()}
-								></div>
-								<div>
-									<div style="font-weight: bold; font-size:large;">
-										{data.project?.user_id.split('@')[0]}
+							<div class="card">
+								<div class="flex-row justify-between align-center">
+									<h2 style="padding: 1rem; padding-bottom:0;">About the Recruiter</h2>
+									<a
+										href={`/project/${task.project_id}/task/${task.id}/proposals/${task.proposal_id}/discussion`}
+										>Chat</a
+									>
+								</div>
+								<div class="avatar-container">
+									<div
+										class="avatar"
+										data-content={data.project?.user_id.charAt(0).toUpperCase()}
+									></div>
+									<div>
+										<div style="font-weight: bold; font-size:large;">
+											{data.project?.user_id.split('@')[0]}
+										</div>
+										<div>{data.project?.user_id}</div>
 									</div>
-									<div>{data.project?.user_id}</div>
 								</div>
 							</div>
 						</div>
-					</div>
+					{/if}
+				</div>
+				{#if data.project?.user_id === data.user?.email}
+					{@render applications(task)}
 				{/if}
 			</div>
-			{#if data.project?.user_id === data.user?.email}
-				{@render applications(task)}
-			{/if}
-		</div>
-	{:else}
-		<div>Task Not Found !?</div>
-	{/if}
+		{:else}
+			<div>Task Not Found !?</div>
+		{/if}
+	</div>
 </div>
 
 <style>

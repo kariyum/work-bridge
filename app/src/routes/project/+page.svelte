@@ -2,4 +2,6 @@
 	import CreateProject from '$lib/components/project/CreateProject.svelte';
 </script>
 
-<CreateProject></CreateProject>
+<div class="page-padding">
+	<CreateProject></CreateProject>
+</div>
