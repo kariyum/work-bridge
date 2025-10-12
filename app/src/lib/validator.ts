@@ -1,143 +1,260 @@
-import { Result } from "./utils";
+import { Result } from './utils';
 
-export class Validator {
-  static string(): StringValidator {
-    return new StringValidator();
+export abstract class Validator<T, E> {
+  abstract validate(s: T | undefined | null): E[];
+
+  static string(field: string): StringValidator {
+    return new StringValidator(field);
   }
 
-  static int(n: number): NumberValidator {
-    return new NumberValidator(n);
+  static number(field: string): NumberValidator {
+    return new NumberValidator(field);
   }
 
-  static stringArray(arr: string[]): ArrayValidator {
-    return new ArrayValidator(arr);
+  static stringArray(field: string): StringArrayValidator {
+    return new StringArrayValidator(field);
   }
 }
 
-
-enum StringValidationError {
-  nonEmpty = "Field should not be empty",
-  InvalidEmail = "Invalid email",
-  LengthLowerThanMin = "Value is too short",
-  LengthGreaterThanMax = "Value is too long",
-  InvalidEnum = "Invalid entry",
-  NotEqual = "Invalid entry",
-  NotDefined = "Required field"
-}
-
-type StringValidatorType = (s: string | null | undefined) => Result<void, StringValidationError>;
-export class StringValidator {
+export class StringValidator extends Validator<string, string> {
   private validators: StringValidatorType[];
+  private field: string;
 
-  constructor() {
+  constructor(field: string) {
+    super();
     this.validators = [];
+    this.field = field.charAt(0).toUpperCase() + field.slice(1);
   }
 
   nonEmpty(): StringValidator {
-    const nonEmptyValidator: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
-      if (!s || s.length > 0) {
-        return new Result<void, StringValidationError>();
+    const nonEmptyValidator: StringValidatorType = (
+      s: string | undefined | null
+    ): Result<void, string> => {
+      if (s == null || s == undefined || s.length > 0) {
+        return new Result<void, string>();
       } else {
-        return new Result<void, StringValidationError>(undefined, StringValidationError.nonEmpty);
+        return new Result<void, string>(undefined, `${this.field} should not be empty`);
       }
-    }
+    };
     this.validators.push(nonEmptyValidator);
     return this;
   }
 
   withMinSize(minSize: number): StringValidator {
-    const minSizeValidator: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+    const minSizeValidator: StringValidatorType = (
+      s: string | undefined | null
+    ): Result<void, string> => {
       if (!s || s.length >= minSize) {
-        return new Result<void, StringValidationError>();
+        return new Result<void, string>();
       } else {
-        return new Result<void, StringValidationError>(undefined, StringValidationError.LengthLowerThanMin);
+        return new Result<void, string>(
+          undefined,
+          `${this.field} should contain more than ${minSize} characters`
+        );
       }
-    }
+    };
     this.validators.push(minSizeValidator);
     return this;
   }
 
   withMaxSize(maxSize: number): StringValidator {
-    const maxSizeValidator: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+    const maxSizeValidator: StringValidatorType = (
+      s: string | undefined | null
+    ): Result<void, string> => {
       if (!s || s.length <= maxSize) {
-        return new Result<void, StringValidationError>();
+        return new Result<void, string>();
       } else {
-        return new Result<void, StringValidationError>(undefined, StringValidationError.LengthGreaterThanMax)
+        return new Result<void, string>(
+          undefined,
+          `${this.field} should not exceed ${maxSize} characters`
+        );
       }
-    }
+    };
     this.validators.push(maxSizeValidator);
     return this;
   }
 
   email(): StringValidator {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const emailValidator: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
-      if (!s) return new Result<void, StringValidationError>();
+    const emailValidator: StringValidatorType = (
+      s: string | undefined | null
+    ): Result<void, string> => {
+      if (!s) return new Result<void, string>();
       if (emailRegex.test(s)) {
-        return new Result<void, StringValidationError>();
+        return new Result<void, string>();
       } else {
-        return new Result<void, StringValidationError>(undefined, StringValidationError.InvalidEmail)
+        return new Result<void, string>(
+          undefined,
+          "Invalid email"
+        );
       }
-    }
+    };
     this.validators.push(emailValidator);
     return this;
   }
 
   in(arr: string[]): StringValidator {
-    const inValidator: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+    const inValidator: StringValidatorType = (
+      s: string | undefined | null
+    ): Result<void, string> => {
       if (!s || arr.includes(s)) {
-        return new Result<void, StringValidationError>();
+        return new Result<void, string>();
       } else {
-        return new Result<void, StringValidationError>(undefined, StringValidationError.InvalidEnum)
+        return new Result<void, string>(
+          undefined,
+          `${s} is unknown`
+        );
       }
-    }
+    };
     this.validators.push(inValidator);
     return this;
   }
 
-  equal(other: string): StringValidator {
-    const equal: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+  equal(other: string, otherField: string): StringValidator {
+    const equal: StringValidatorType = (
+      s: string | undefined | null
+    ): Result<void, string> => {
       if (!s || s === other) {
-        return new Result<void, StringValidationError>();
+        return new Result<void, string>();
       } else {
-        return new Result<void, StringValidationError>(undefined, StringValidationError.NotEqual)
+        return new Result<void, string>(undefined, `${this.field} is not equal to ${otherField}`);
       }
-    }
+    };
     this.validators.push(equal);
     return this;
   }
 
   required(): StringValidator {
-    const required: StringValidatorType = (s: string | undefined | null): Result<void, StringValidationError> => {
+    const required: StringValidatorType = (
+      s: string | undefined | null
+    ): Result<void, string> => {
       if (s != null && s != undefined) {
-        return new Result<void, StringValidationError>();
-      } else return new Result<void, StringValidationError>(undefined, StringValidationError.NotDefined);
-    }
+        return new Result<void, string>();
+      } else
+        return new Result<void, string>(undefined, `${this.field} is required`);
+    };
     this.validators.push(required);
     return this;
   }
 
-  validate(s: string | undefined | null): StringValidationError[] {
+  validate(s: string | undefined | null): string[] {
     const results = this.validators.map((validator) => validator(s));
-    const errors = results
-      .map((error) => error.error)
-      .filter((error) => error != undefined);
+    const errors = results.map((error) => error.error).filter((error) => error != undefined);
     return errors;
   }
 }
 
-class NumberValidator {
-  value: number
+export class NumberValidator extends Validator<number, string> {
+  private validators: NumberValidatorType[];
+  private field: string;
+  constructor(field: string) {
+    super();
+    this.validators = [];
+    this.field = field.charAt(0).toUpperCase() + field.slice(1);
+  }
 
-  constructor(n: number) {
-    this.value = n;
+  required(): NumberValidator {
+    const required: NumberValidatorType = (
+      s: number | undefined | null
+    ): Result<void, string> => {
+      if (s != null && s != undefined) {
+        return new Result<void, string>();
+      } else
+        return new Result<void, string>(undefined, `${this.field} is required`);
+    };
+    this.validators.push(required);
+    return this;
+  }
+
+  isPositive(): NumberValidator {
+    const positive: NumberValidatorType = (
+      n: number | undefined | null
+    ): Result<void, string> => {
+      if (n != null && n != undefined && n >= 0) {
+        return new Result<void, string>();
+      } else
+        return new Result<void, string>(
+          undefined,
+          `${this.field} should be positive`
+        );
+    };
+    this.validators.push(positive);
+    return this;
+  }
+
+  validate(s: number | undefined | null): string[] {
+    const results = this.validators.map((validator) => validator(s));
+    const errors = results.map((error) => error.error).filter((error) => error != undefined);
+    return errors;
   }
 }
 
-class ArrayValidator {
-  value: string[]
+export class StringArrayValidator extends Validator<string[], string> {
+  private validators: StringArrayValidatorType[];
+  private field: string;
 
-  constructor(arr: string[]) {
-    this.value = arr;
+  constructor(field: string) {
+    super();
+    this.validators = [];
+    this.field = field.charAt(0).toUpperCase() + field.slice(1);
+  }
+
+  nonEmpty() {
+    const emptinessCheck: StringArrayValidatorType = (
+      arr: string[] | undefined | null
+    ): Result<void, string> => {
+      console.log("CHECKING ARRAY LENGTH", arr?.length)
+      if (arr != null && arr != undefined && arr.length != 0) {
+        return new Result<void, string>();
+      } else
+        return new Result<void, string>(
+          undefined,
+          `${this.field} should not be empty`
+        );
+    };
+    this.validators.push(emptinessCheck);
+    return this;
+  }
+
+  maxSize(n: number) {
+    const lengthCheck: StringArrayValidatorType = (
+      arr: string[] | undefined | null
+    ): Result<void, string> => {
+      if (arr != null && arr != undefined && arr.length <= n) {
+        return new Result<void, string>();
+      } else
+        return new Result<void, string>(
+          undefined,
+          `${this.field} should not exceed ${n} elements`
+        );
+    };
+    this.validators.push(lengthCheck);
+    return this;
+  }
+
+  validate(s: string[] | undefined | null): string[] {
+    const results = this.validators.map((validator) => validator(s));
+    const errors = results.map((error) => error.error).filter((error) => error != undefined);
+    return errors;
   }
 }
+
+enum StringValidationError {
+  nonEmpty = 'Field should not be empty',
+  InvalidEmail = 'Invalid email',
+  LengthLowerThanMin = 'Value is too short',
+  LengthGreaterThanMax = 'Value is too long',
+  InvalidEnum = 'Invalid entry',
+  NotEqual = 'Values are not equal',
+  NotDefined = 'Required field'
+}
+
+type StringValidatorType = (s: string | null | undefined) => Result<void, string>;
+type StringArrayValidatorType = (s: string[] | null | undefined) => Result<void, string>;
+
+enum NumberValidationError {
+  NotPositive = 'Not Positive',
+  NotDefined = 'Required field'
+}
+
+type NumberValidatorType = (s: number | null | undefined) => Result<void, string>;

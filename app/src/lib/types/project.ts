@@ -30,7 +30,6 @@ export interface ProjectPOST {
     title: string;
     content: string;
     budget: number;
-    currency_code: string;
     deadline: string;
     tasks?: Array<TaskPOST>;
 }
@@ -40,7 +39,6 @@ export interface ProjectForm {
     title: string;
     content: string;
     budget: string;
-    currency_code: string;
     deadline: string;
 }
 

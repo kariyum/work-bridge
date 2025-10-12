@@ -122,7 +122,6 @@ struct ProjectPost {
     content: String,
     deadline: DateTime<Utc>,
     budget: f32,
-    currency_code: String,
     tasks: Vec<TaskPost>,
 }
 
@@ -174,7 +173,7 @@ async fn create_project_handler(
             content: project_post.content,
             deadline: project_post.deadline,
             budget: project_post.budget,
-            currency_code: project_post.currency_code,
+            currency_code: String::from("TN"),
         };
 
         let project_raw = insert_project(project_create, pgpool.as_ref())
@@ -209,7 +208,6 @@ impl Dummy<Faker> for ProjectPost {
         ProjectPost {
             title: Sentence(1..10).fake_with_rng(rng),
             content: Sentence(1..100).fake_with_rng(rng),
-            currency_code: "".to_string(),
             budget: Faker.fake::<f32>(),
             tasks: (1..10).map(|_| Faker.fake::<TaskPost>()).collect(),
             deadline: Faker.fake_with_rng(rng),
@@ -251,7 +249,7 @@ async fn put_project_handler(
         content: project_post.content,
         deadline: project_post.deadline,
         budget: project_post.budget,
-        currency_code: project_post.currency_code,
+        currency_code: String::from("TN"),
     };
     let response: ProjectResponse = put_project(project_id, project_insert, pgpool.as_ref())
         .await
