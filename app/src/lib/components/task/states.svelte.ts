@@ -1,5 +1,6 @@
 // used for storing added tasks that are not saved yet!
 
+import type { TaskForm } from "$lib/types";
 import type { TaskGET } from "$lib/types/task";
 
 export class TaskClass {
@@ -78,5 +79,16 @@ export class TaskClass {
 
     removeSkillIndex(index: number): void {
         this.skills.splice(index, 1);
+    }
+
+    toTaskForm(): TaskForm {
+        const taskForm: TaskForm = $state.snapshot({
+            title: this.title,
+            content: this.content,
+            deadline: this.deadline,
+            budget: this.budget,
+            skills: this.skills
+        })
+        return taskForm;
     }
 }

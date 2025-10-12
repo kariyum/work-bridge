@@ -9,7 +9,7 @@
 	let myEditor: Editor | undefined = $state();
 	let focused: boolean = $state(false);
 
-	let { x = $bindable() }: { x: string } = $props();
+	let { x = $bindable(), label }: { x: string, label: string } = $props();
 	onMount(() => {
 		myEditor = new Editor({
 			editorProps: {
@@ -121,7 +121,7 @@
 		onfocusin={() => (focused = true)}
 		onfocusout={() => (focused = false)}
 	></div>
-	<label for="">Project Description</label>
+	<label for="">{label}</label>
 </div>
 
 <style>

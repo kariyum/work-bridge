@@ -91,14 +91,11 @@ export type FetchErrors = {
 }
 
 export interface TaskForm {
-    title: string;
-    assignee_id: string;
-    status: string;
-    content: string;
-    deadline: string;
+    title?: string;
+    content?: string;
+    deadline?: string;
     budget?: number;
-    skills: string[];
-    id?: number;
+    skills?: string[];
 }
 
 export interface Tab {

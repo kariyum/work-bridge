@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { goto, invalidate } from '$app/navigation';
 	import { TaskClass } from '$lib/components/task/states.svelte';
+	import { validateObject, type ValidationErrors } from '$lib/object-validator';
 	import type { ProjectForm, ProjectGET, ProjectPOST } from '$lib/types/project';
 	import type { TaskPOST } from '$lib/types/task';
-	import RichTextEditor from '../texteditor/RichTextEditor.svelte';
-	import Tasks from '../task/Tasks.svelte';
-	import AsyncButton from '../button/AsyncButton.svelte';
+	import { Validator } from '$lib/validator';
 	import { Plus } from 'lucide-svelte';
-	import TaskForm from '../task/TaskForm.svelte';
+	import AsyncButton from '../button/AsyncButton.svelte';
 	import Skills from '../skills/Skills.svelte';
+	import RichTextEditor from '../texteditor/RichTextEditor.svelte';
 
 	let {
 		projectIn
@@ -21,8 +21,7 @@
 			title: projectIn?.title ?? '',
 			content: projectIn?.content ?? '',
 			budget: projectIn?.budget.toString() ?? '',
-			currency_code: projectIn?.currency_code ?? '',
-			deadline: projectIn?.deadline.toLocaleDateString() ?? ''
+			deadline: projectIn?.deadline.toLocaleDateString('en-CA') ?? ''
 		});
 		return projectState;
 	});
@@ -31,17 +30,23 @@
 		tasks = projectIn?.tasks?.map((task) => TaskClass.fromGET(task)) ?? ([] as TaskClass[]);
 	});
 
-	let tasks = $state(
+	let tasks: TaskClass[] = $state(
 		projectIn?.tasks?.map((task) => TaskClass.fromGET(task)) ?? ([] as TaskClass[])
 	);
 
 	async function handleSubmit(event: Event) {
 		event.preventDefault();
+		formValidation = reportFormValidation(projectFormInput, tasks);
+		if (formValidation.hasErrors) {
+			console.log('Form has errors');
+			console.log(formValidation.projectErrors);
+			console.log(formValidation.tasksError);
+			return;
+		}
 		const projectPost: ProjectPOST = {
 			title: projectFormInput.title,
 			content: projectFormInput.content,
 			budget: parseFloat(projectFormInput.budget),
-			currency_code: projectFormInput.currency_code,
 			deadline: new Date(projectFormInput.deadline).toISOString()
 		};
 
@@ -117,6 +122,50 @@
 			}
 		}
 	}
+
+	interface FormValidation {
+		projectErrors: ValidationErrors<ProjectForm>;
+		tasksError: Map<TaskClass, ValidationErrors<TaskClass>>;
+		hasErrors: boolean;
+	}
+
+	function reportFormValidation(project: ProjectForm, tasks: TaskClass[]): FormValidation {
+		const projectSchema = {
+			title: Validator.string('project title').required().nonEmpty().withMinSize(5).withMaxSize(20),
+			content: Validator.string('Project description')
+				.required()
+				.nonEmpty()
+				.withMinSize(10)
+				.withMaxSize(500),
+			budget: Validator.number('project budget').required().isPositive(),
+			deadline: Validator.string('project deadline').required()
+		};
+		const taskSchema = {
+			title: Validator.string('task title').required().nonEmpty().withMinSize(5).withMaxSize(20),
+			content: Validator.string('task description')
+				.required()
+				.nonEmpty()
+				.withMinSize(10)
+				.withMaxSize(500),
+			budget: Validator.number('task budget').required().isPositive(),
+			deadline: Validator.string('task deadline').required(),
+			skills: Validator.stringArray('skills').nonEmpty().maxSize(50)
+		};
+		const projectErrors = validateObject(project, projectSchema);
+		const tasksError = new Map(
+			tasks.map((task) => [task, validateObject(task.toTaskForm(), taskSchema)])
+		);
+		const hasProjectFormErrors = Object.values(projectErrors).some((errors) => errors.length > 0);
+		const hasTaskFormErrors = Array.from(tasksError.values())
+			.flatMap((errors) => Object.values(errors))
+			.some((value) => value.length > 0);
+		return {
+			projectErrors,
+			tasksError,
+			hasErrors: hasProjectFormErrors || hasTaskFormErrors
+		};
+	}
+	let formValidation: FormValidation | undefined = $state(undefined);
 </script>
 
 {#snippet deleteButton()}
@@ -127,6 +176,16 @@
 {/snippet}
 {#snippet endView()}
 	Done!
+{/snippet}
+
+{#snippet errors(errors: string[])}
+	{#if errors.length > 0}
+		<div class="error-message">
+			{#each errors as err}
+				<div class="form-reason">{err}</div>
+			{/each}
+		</div>
+	{/if}
 {/snippet}
 
 {#snippet actions()}
@@ -172,10 +231,17 @@
 					<div class="input input-label">
 						<input type="text" id="title" placeholder=" " bind:value={projectFormInput.title} />
 						<label for="title">Project Title</label>
+						{#if formValidation}
+							{@render errors(formValidation.projectErrors.title ?? [])}
+						{/if}
 					</div>
 					<div style="margin-top: 1.5rem;"></div>
-					<div class="input">
-						<RichTextEditor bind:x={projectFormInput.content}></RichTextEditor>
+					<div>
+						<RichTextEditor bind:x={projectFormInput.content} label={'Project Description'}
+						></RichTextEditor>
+						{#if formValidation}
+							{@render errors(formValidation.projectErrors.content ?? [])}
+						{/if}
 					</div>
 				</div>
 			</div>
@@ -186,11 +252,17 @@
 				<div class="input input-label">
 					<input type="text" id="budget" placeholder=" " bind:value={projectFormInput.budget} />
 					<label for="">Budget</label>
+					{#if formValidation}
+						{@render errors(formValidation.projectErrors.budget ?? [])}
+					{/if}
 				</div>
 
 				<div class="input input-label">
 					<input type="date" id="deadline" placeholder=" " bind:value={projectFormInput.deadline} />
 					<label for="">Deadline</label>
+					{#if formValidation}
+						{@render errors(formValidation.projectErrors.deadline ?? [])}
+					{/if}
 				</div>
 			</div>
 		</div>
@@ -224,8 +296,17 @@
 							bind:value={taskInstance.title}
 						/>
 						<label for="title">Title</label>
+						{#if formValidation}
+							{@render errors(formValidation.tasksError.get(taskInstance)?.title ?? [])}
+						{/if}
 					</div>
-					<RichTextEditor bind:x={taskInstance.content}></RichTextEditor>
+					<div>
+						<RichTextEditor bind:x={taskInstance.content} label={'Task Description'}
+						></RichTextEditor>
+						{#if formValidation}
+							{@render errors(formValidation.tasksError.get(taskInstance)?.content ?? [])}
+						{/if}
+					</div>
 				</div>
 				<div class="flex-column">
 					<h2>Task Constraints</h2>
@@ -237,6 +318,9 @@
 							bind:value={taskInstance.deadline}
 						/>
 						<label for="deadline">Deadline</label>
+						{#if formValidation}
+							{@render errors(formValidation.tasksError.get(taskInstance)?.deadline ?? [])}
+						{/if}
 					</div>
 					<div class="input-label">
 						<input
@@ -246,12 +330,20 @@
 							bind:value={taskInstance.budget}
 						/>
 						<label for="budget">Budget</label>
+						{#if formValidation}
+							{@render errors(formValidation.tasksError.get(taskInstance)?.budget ?? [])}
+						{/if}
 					</div>
-					<Skills
-						skillsIn={taskInstance.skills}
-						addSkill={(skill) => taskInstance.addSkill(skill)}
-						removeSkillAtIndex={(index) => taskInstance.removeSkillIndex(index)}
-					></Skills>
+					<div>
+						<Skills
+							skillsIn={taskInstance.skills}
+							addSkill={(skill) => taskInstance.addSkill(skill)}
+							removeSkillAtIndex={(index) => taskInstance.removeSkillIndex(index)}
+						></Skills>
+						{#if formValidation}
+							{@render errors(formValidation.tasksError.get(taskInstance)?.skills ?? [])}
+						{/if}
+					</div>
 				</div>
 			</div>
 			<div class="act-task">
@@ -311,13 +403,6 @@
 		margin: 1rem 0 0.3rem 0;
 		border: none;
 		border-top: 2px solid var(--border);
-	}
-	.input {
-		width: 100%;
-		margin: 0 0 0.5rem 0;
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
 	}
 
 	.input > input {

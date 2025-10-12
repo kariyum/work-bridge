@@ -112,7 +112,4 @@
 		outline: 2px solid var(--blue);
 		outline-offset: -2px;
 	}
-	p {
-		line-height: 1.2;
-	}
 </style>
