@@ -291,6 +291,9 @@
 			>
 		</div>
 	</div>
+	{#if tasks.length == 0}
+		<div>No tasks were added to this project yet</div>
+	{/if}
 	{#each tasks as taskInstance}
 		<div class="card card-padding" style="margin-bottom: 1rem;">
 			<div class="task-container">
