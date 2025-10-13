@@ -10,8 +10,8 @@ describe('validateObject', () => {
         };
 
         const schema: ValidationSchema<typeof obj> = {
-            name: Validator.string().required(),
-            age: Validator.number().required().isPositive(),
+            name: Validator.string("name").required(),
+            age: Validator.number("age").required().isPositive(),
         };
 
         const errors = validateObject(obj, schema);
@@ -28,15 +28,15 @@ describe('validateObject', () => {
         };
 
         const schema: ValidationSchema<typeof obj> = {
-            name: Validator.string().required().nonEmpty(),
-            age: Validator.number().required().isPositive(),
+            name: Validator.string("name").required().nonEmpty(),
+            age: Validator.number("age").required().isPositive(),
         };
 
         const errors = validateObject(obj, schema);
 
         expect(errors).toEqual({
-            name: ['Field should not be empty'],
-            age: ['Not Positive'],
+            name: ['Name should not be empty'],
+            age: ['Age should be positive'],
         });
     });
 });

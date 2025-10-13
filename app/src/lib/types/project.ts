@@ -38,7 +38,7 @@ export interface ProjectPOST {
 export interface ProjectForm {
     title: string;
     content: string;
-    budget: string;
+    budget: number;
     deadline: string;
 }
 
