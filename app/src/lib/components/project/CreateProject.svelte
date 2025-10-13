@@ -20,7 +20,7 @@
 		let projectState = $state({
 			title: projectIn?.title ?? '',
 			content: projectIn?.content ?? '',
-			budget: projectIn?.budget.toString() ?? '',
+			budget: projectIn?.budget ?? 0,
 			deadline: projectIn?.deadline.toLocaleDateString('en-CA') ?? ''
 		});
 		return projectState;
@@ -46,7 +46,7 @@
 		const projectPost: ProjectPOST = {
 			title: projectFormInput.title,
 			content: projectFormInput.content,
-			budget: parseFloat(projectFormInput.budget),
+			budget: projectFormInput.budget,
 			deadline: new Date(projectFormInput.deadline).toISOString()
 		};
 
@@ -138,7 +138,7 @@
 				.withMinSize(10)
 				.withMaxSize(500),
 			budget: Validator.number('project budget').required().isPositive(),
-			deadline: Validator.string('project deadline').required()
+			deadline: Validator.string('project deadline').required().nonEmpty()
 		};
 		const taskSchema = {
 			title: Validator.string('task title').required().nonEmpty().withMinSize(5).withMaxSize(20),
@@ -148,7 +148,7 @@
 				.withMinSize(10)
 				.withMaxSize(500),
 			budget: Validator.number('task budget').required().isPositive(),
-			deadline: Validator.string('task deadline').required(),
+			deadline: Validator.string('task deadline').required().nonEmpty(),
 			skills: Validator.stringArray('skills').nonEmpty().maxSize(50)
 		};
 		const projectErrors = validateObject(project, projectSchema);
@@ -209,7 +209,7 @@
 					--width="fit-content"
 					idleView={deleteButton}
 					{endView}
-					onclick={(event) => deleteProject()}
+					onclick={() => deleteProject()}
 				/>
 			{/if}
 			<AsyncButton idleView={submitButton} {endView} onclick={(event) => handleSubmit(event)} />
@@ -231,10 +231,10 @@
 					<div class="input input-label">
 						<input type="text" id="title" placeholder=" " bind:value={projectFormInput.title} />
 						<label for="title">Project Title</label>
-						{#if formValidation}
-							{@render errors(formValidation.projectErrors.title ?? [])}
-						{/if}
 					</div>
+					{#if formValidation}
+						{@render errors(formValidation.projectErrors.title ?? [])}
+					{/if}
 					<div style="margin-top: 1.5rem;"></div>
 					<div>
 						<RichTextEditor bind:x={projectFormInput.content} label={'Project Description'}
@@ -249,17 +249,26 @@
 		<div class="right">
 			<div class="card card-padding">
 				<h2>Project Constraints</h2>
-				<div class="input input-label">
-					<input type="text" id="budget" placeholder=" " bind:value={projectFormInput.budget} />
-					<label for="">Budget</label>
+				<div>
+					<div class="input input-label">
+						<input type="text" id="budget" placeholder=" " bind:value={projectFormInput.budget} />
+						<label for="">Budget</label>
+					</div>
 					{#if formValidation}
 						{@render errors(formValidation.projectErrors.budget ?? [])}
 					{/if}
 				</div>
 
-				<div class="input input-label">
-					<input type="date" id="deadline" placeholder=" " bind:value={projectFormInput.deadline} />
-					<label for="">Deadline</label>
+				<div>
+					<div class="input input-label">
+						<input
+							type="date"
+							id="deadline"
+							placeholder=" "
+							bind:value={projectFormInput.deadline}
+						/>
+						<label for="">Deadline</label>
+					</div>
 					{#if formValidation}
 						{@render errors(formValidation.projectErrors.deadline ?? [])}
 					{/if}
@@ -287,15 +296,17 @@
 			<div class="task-container">
 				<div class="flex-column">
 					<h2>Task Details</h2>
-					<div class="input-label input-style">
-						<input
-							class="input-style"
-							type="text"
-							placeholder=" "
-							id="title"
-							bind:value={taskInstance.title}
-						/>
-						<label for="title">Title</label>
+					<div>
+						<div class="input-label input-style">
+							<input
+								class="input-style"
+								type="text"
+								placeholder=" "
+								id="title"
+								bind:value={taskInstance.title}
+							/>
+							<label for="title">Title</label>
+						</div>
 						{#if formValidation}
 							{@render errors(formValidation.tasksError.get(taskInstance)?.title ?? [])}
 						{/if}
@@ -310,26 +321,30 @@
 				</div>
 				<div class="flex-column">
 					<h2>Task Constraints</h2>
-					<div class="input-label">
-						<input
-							class="input-style"
-							type="date"
-							placeholder="Deadline"
-							bind:value={taskInstance.deadline}
-						/>
-						<label for="deadline">Deadline</label>
+					<div>
+						<div class="input-label">
+							<input
+								class="input-style"
+								type="date"
+								placeholder="Deadline"
+								bind:value={taskInstance.deadline}
+							/>
+							<label for="deadline">Deadline</label>
+						</div>
 						{#if formValidation}
 							{@render errors(formValidation.tasksError.get(taskInstance)?.deadline ?? [])}
 						{/if}
 					</div>
-					<div class="input-label">
-						<input
-							class="input-style"
-							type="text"
-							placeholder=" "
-							bind:value={taskInstance.budget}
-						/>
-						<label for="budget">Budget</label>
+					<div>
+						<div class="input input-label">
+							<input
+								class="input-style"
+								type="text"
+								placeholder=" "
+								bind:value={taskInstance.budget}
+							/>
+							<label for="budget">Budget</label>
+						</div>
 						{#if formValidation}
 							{@render errors(formValidation.tasksError.get(taskInstance)?.budget ?? [])}
 						{/if}
@@ -398,12 +413,6 @@
 		margin-left: auto;
 		width: max-content;
 	}
-	hr {
-		width: 100%;
-		margin: 1rem 0 0.3rem 0;
-		border: none;
-		border-top: 2px solid var(--border);
-	}
 
 	.input > input {
 		width: 100%;
@@ -413,14 +422,6 @@
 		max-width: var(--page-width);
 		margin: 1rem auto;
 		width: 100%;
-	}
-	form {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		gap: 0.5rem;
-		margin-top: 1rem;
 	}
 
 	@media (width < 600px) {

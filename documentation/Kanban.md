@@ -36,6 +36,7 @@ kanban-plugin: board
 - [ ] deleting a project makes the screen refresh because of the asynchronous behavior. Fix that.
 - [ ] data loading
 - [ ] support french and english
+- [ ] if user exists return user already exists
 
 
 ## p1

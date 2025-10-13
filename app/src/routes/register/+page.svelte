@@ -13,14 +13,18 @@
 
 	const validators = (data: Map<string, string>) => {
 		return {
-			role: Validator.string().required().in(['freelancer', 'recruiter']),
-			first_name: Validator.string().required().nonEmpty().withMinSize(2).withMaxSize(20),
-			last_name: Validator.string().required().nonEmpty().withMinSize(2).withMaxSize(20),
-			email: Validator.string().required().nonEmpty().email().withMaxSize(50),
-			password: Validator.string().required().nonEmpty().withMinSize(8),
-			confirm_password: Validator.string()
+			role: Validator.string('Role').required().in(['freelancer', 'recruiter']),
+			first_name: Validator.string('first name')
 				.required()
-				.equal(data.get('password')?.toString() ?? '')
+				.nonEmpty()
+				.withMinSize(2)
+				.withMaxSize(20),
+			last_name: Validator.string('last name').required().nonEmpty().withMinSize(2).withMaxSize(20),
+			email: Validator.string('email').required().nonEmpty().email().withMaxSize(50),
+			password: Validator.string('password').required().nonEmpty().withMinSize(8),
+			confirm_password: Validator.string('confirm password')
+				.required()
+				.equal(data.get('password')?.toString() ?? '', 'password')
 		};
 	};
 	interface FormValidation {
