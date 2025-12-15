@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { User } from 'lucide-svelte';
 	import type { ProfileGET } from '../../../routes/settings/+layout';
+	import { capitalize } from '$lib/utils';
 
 	type Props = {
 		profile: ProfileGET;
@@ -10,14 +11,23 @@
 </script>
 
 <div class="container">
-	<div>
-		<p>{profile.role}</p>
-		<h1>{profile.first_name} {profile.last_name}</h1>
+	<h1>Profile</h1>
+	<p style="color:var(--sub-title)">This information is displayed publicly.</p>
+	<div class="avatar-container" style="padding: 0;">
+		<div class="avatar" data-content={profile.first_name.charAt(0).toUpperCase()}></div>
+		<div>
+			<h2>{capitalize(profile.first_name + ' ' + profile.last_name)}</h2>
+			<p>{profile.role.charAt(0).toUpperCase() + profile.role.slice(1)}</p>
+		</div>
 	</div>
 	<div>
-		<h4>Bio</h4>
+		<h2 style="margin-bottom: 0.2rem;">Email Address</h2>
+		<p>{profile.user_id}</p>
+	</div>
+	<div>
+		<h2 style="margin-bottom: 1rem;">Bio</h2>
 		{#if !profile.bio || profile.bio?.length == 0}
-			<p>Edit to add a bio.</p>
+			<p style="color: var(--sub-title)">Edit to add a bio</p>
 		{:else}
 			<p>
 				{profile.bio}

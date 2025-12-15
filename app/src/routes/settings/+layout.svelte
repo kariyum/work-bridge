@@ -5,29 +5,28 @@
 	let { children, data } = $props();
 	let onPage = $derived(page.url.pathname.slice(1).split('/')[1]);
 	const pageToHeader = new Map([
-		['profile', 'Public profile'],
-		['account', 'Account settings']
+		['profile', 'Public Profile'],
+		['account', 'Account Settings']
 	]);
 </script>
 
 <div class="outer-container">
-	<div>
-		{#if data.user}
-			<h2>{data.user.email}</h2>
-		{/if}
-	</div>
+	<h1>Settings</h1>
+	<p style="color:var(--sub-title)">Manage your account settings and preferences.</p>
 	<div class="container">
 		<div class="menu" data-selected={pageToHeader.get(onPage) != undefined}>
-			<a href="/settings/profile" data-selected={onPage === 'profile'}> <User /> Public profile </a>
+			<a href="/settings/profile" data-selected={onPage === 'profile'}>
+				<User />
+				<div>Public Profile</div>
+			</a>
 			<a href="/settings/account" data-selected={onPage === 'account'}>
-				<Settings /> Account Settings
+				<Settings /> Security & Login
 			</a>
 		</div>
-		<div class="main" data-selected={pageToHeader.get(onPage) != undefined}>
-			{#if pageToHeader.get(onPage)}
+		<div class="main card card-padding" data-selected={pageToHeader.get(onPage) != undefined}>
+			<!-- {#if pageToHeader.get(onPage)}
 				<h2>{pageToHeader.get(onPage)}</h2>
-				<hr />
-			{/if}
+			{/if} -->
 			{@render children()}
 		</div>
 	</div>
@@ -85,6 +84,8 @@
 		color: var(--font-color);
 		padding: 0.5rem;
 		border-radius: 3px;
+		align-items: center;
+		font-size: large;
 	}
 
 	a[data-selected='true'] {
