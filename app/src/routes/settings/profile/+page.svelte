@@ -25,7 +25,7 @@
 {#if data.profileData.error?.parsingError}
 	<p>It's not you, it's us. Parsing error. {data.profileData.error.parsingError.message}</p>
 {:else}
-	<div class="page">
+	<div>
 		{#if data.profileData.isOk() && page.state.profileEditMode}
 			<CreateProfile user={data.profileData.unwrap()} />
 		{:else}

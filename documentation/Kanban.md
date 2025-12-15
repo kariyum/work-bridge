@@ -56,6 +56,7 @@ kanban-plugin: board
 
 ## doing
 
+- [ ] settings page refresh
 
 
 ## tested
