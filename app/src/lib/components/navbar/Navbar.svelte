@@ -179,7 +179,7 @@
 			</li>
 		</div>
 		<li>
-			<a href="/settings"
+			<a href="/settings/profile"
 				><Settings />
 				<div>Settings</div></a
 			>
@@ -228,7 +228,7 @@
 		<div class="mobile">
 			<li><a href="/notifications">Notifications</a></li>
 		</div>
-		<li><a href="/settings">Settings</a></li>
+		<li><a href="/settings/profile">Settings</a></li>
 		<!-- <li><a href="/feature-request">Feature Requests</a></li> -->
 		<li>
 			<button onclick={logout}> Logout </button>
