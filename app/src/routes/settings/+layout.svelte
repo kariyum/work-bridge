@@ -59,6 +59,9 @@
 	}
 
 	@media (width >= 600px) {
+		.main[data-selected='false'] {
+			display: none;
+		}
 		.container {
 			display: grid;
 			grid-template-columns: 30ch 1fr;
