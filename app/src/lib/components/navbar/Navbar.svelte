@@ -179,7 +179,7 @@
 			</li>
 		</div>
 		<li>
-			<a href="/settings/profile"
+			<a href="/settings"
 				><Settings />
 				<div>Settings</div></a
 			>
@@ -201,15 +201,6 @@
 
 {#snippet menuDesktop()}
 	<ul>
-		<div class="mobile">
-			<div class="title">
-				<li>Work Bridge</li>
-				<hr />
-			</div>
-		</div>
-		<div class="mobile">
-			<li><a href="/"><Home /> Home</a></li>
-		</div>
 		{#if user.role === 'recruiter'}
 			<li><a href="/project">Create a project</a></li>
 		{/if}
@@ -225,9 +216,6 @@
 				<NotificationMenu notifications={finalNotifications} />
 			</dialog>
 		</li>
-		<div class="mobile">
-			<li><a href="/notifications">Notifications</a></li>
-		</div>
 		<li><a href="/settings/profile">Settings</a></li>
 		<!-- <li><a href="/feature-request">Feature Requests</a></li> -->
 		<li>
