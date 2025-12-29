@@ -11,7 +11,7 @@
 </script>
 
 <div class="outer-container">
-	<h1>Settings</h1>
+	<a href="/settings" style="padding: 0"><h1>Settings</h1></a>
 	<p style="color:var(--sub-title)">Manage your account settings and preferences.</p>
 	<div class="container">
 		<div class="menu" data-selected={pageToHeader.get(onPage) != undefined}>
