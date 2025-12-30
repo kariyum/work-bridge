@@ -31,7 +31,7 @@
 		{:else}
 			<div class="edit-profile">
 				<ProfileDetails profile={data.profileData.unwrap()} />
-				<button onclick={switchToProfileEditMode}>Edit Profile</button>
+				<button onclick={switchToProfileEditMode}> Edit Profile </button>
 			</div>
 		{/if}
 	</div>
@@ -42,13 +42,16 @@
 		display: flex;
 		align-items: start;
 		justify-content: space-between;
-
-		> button {
-			margin-bottom: auto;
-		}
 	}
 
 	.page {
 		margin-top: 1rem;
+	}
+
+	button {
+		box-sizing: border-box;
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 </style>

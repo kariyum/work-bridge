@@ -15,11 +15,11 @@
 	<p style="color:var(--sub-title)">Manage your account settings and preferences.</p>
 	<div class="container">
 		<div class="menu" data-selected={pageToHeader.get(onPage) != undefined}>
-			<a href="/settings/profile" data-selected={onPage === 'profile'}>
+			<a class="link" href="/settings/profile" data-selected={onPage === 'profile'}>
 				<User />
 				<div>Public Profile</div>
 			</a>
-			<a href="/settings/account" data-selected={onPage === 'account'}>
+			<a class="link" href="/settings/account" data-selected={onPage === 'account'}>
 				<Settings /> Security & Login
 			</a>
 		</div>
@@ -33,6 +33,55 @@
 </div>
 
 <style>
+	.outer-container {
+		max-width: var(--page-width);
+		margin: 0.5rem auto;
+		padding: 1rem;
+		padding-top: 0;
+	}
+
+	a {
+		text-decoration: none;
+		background-color: transparent;
+		color: var(--font-color);
+	}
+
+	.link {
+		position: relative;
+		gap: 1rem;
+		display: flex;
+		border: 2px solid transparent;
+		padding: 0.5rem;
+		border-radius: 3px;
+		align-items: center;
+		font-size: large;
+	}
+
+	.link[data-selected='true'] {
+		background-color: var(--selected-color);
+	}
+
+	.link[data-selected='true']::before {
+		content: '';
+		position: absolute;
+		width: 5px;
+		height: 2.2rem;
+		border-radius: 10px;
+		background-color: var(--blue);
+		left: -0.6rem;
+		top: 0.15rem;
+	}
+
+	.link:hover {
+		background-color: var(--hover-color);
+	}
+
+	.menu {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
 	@media (width < 600px) {
 		.menu[data-selected='true'] {
 			display: none;
@@ -68,51 +117,5 @@
 			gap: 3rem;
 			margin-top: 1rem;
 		}
-	}
-	hr {
-		border-color: var(--border);
-	}
-	.outer-container {
-		max-width: var(--page-width);
-		margin: 0.5rem auto;
-	}
-
-	a {
-		position: relative;
-		gap: 1rem;
-		display: flex;
-		text-decoration: none;
-		background-color: transparent;
-		border: 2px solid transparent;
-		color: var(--font-color);
-		padding: 0.5rem;
-		border-radius: 3px;
-		align-items: center;
-		font-size: large;
-	}
-
-	a[data-selected='true'] {
-		background-color: var(--selected-color);
-	}
-
-	a[data-selected='true']::before {
-		content: '';
-		position: absolute;
-		width: 5px;
-		height: 2.2rem;
-		border-radius: 10px;
-		background-color: var(--blue);
-		left: -0.6rem;
-		top: 0.15rem;
-	}
-
-	a:hover {
-		background-color: var(--hover-color);
-	}
-
-	.menu {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
 	}
 </style>
