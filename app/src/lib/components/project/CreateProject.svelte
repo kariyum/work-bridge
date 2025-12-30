@@ -38,15 +38,12 @@
 		event.preventDefault();
 		formValidation = reportFormValidation(projectFormInput, tasks);
 		if (formValidation.hasErrors) {
-			console.log('Form has errors');
-			console.log(formValidation.projectErrors);
-			console.log(formValidation.tasksError);
 			return;
 		}
 		const projectPost: ProjectPOST = {
 			title: projectFormInput.title,
 			content: projectFormInput.content,
-			budget: projectFormInput.budget,
+			budget: parseFloat(projectFormInput.budget.toString()),
 			deadline: new Date(projectFormInput.deadline).toISOString()
 		};
 

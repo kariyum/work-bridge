@@ -41,7 +41,7 @@
 	function updatePassword(currentPassword: string, newPassword: string, confirmPassword: string) {}
 </script>
 
-<h1>Change Your Password</h1>
+<h2>Change Your Password</h2>
 <form bind:this={formElement}>
 	<div class="input-label">
 		<input type="text" placeholder=" " name="current_password" />
@@ -77,11 +77,14 @@
 {/snippet}
 
 <style>
-    form {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
+	h2 {
+		color: var(--font-color);
+	}
+	form {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
 	input {
 		max-width: 60%;
 		width: 100%;
