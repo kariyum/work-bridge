@@ -186,7 +186,7 @@
 {/snippet}
 
 {#snippet actions()}
-	<div style="width: 100%;">
+	<div style="width: 100%; margin-top: 1rem;">
 		<div class="action-buttons">
 			<button
 				class="cancel-btn"
@@ -204,6 +204,7 @@
 				<AsyncButton
 					--color="var(--vibrant-red)"
 					--width="fit-content"
+					--hover-color="hsl(0, 50%, 35%)"
 					idleView={deleteButton}
 					{endView}
 					onclick={() => deleteProject()}
@@ -248,7 +249,7 @@
 				<h2>Project Constraints</h2>
 				<div>
 					<div class="input input-label">
-						<input type="text" id="budget" placeholder=" " bind:value={projectFormInput.budget} />
+						<input type="number" id="budget" placeholder=" " bind:value={projectFormInput.budget} />
 						<label for="">Budget</label>
 					</div>
 					{#if formValidation}
@@ -339,7 +340,7 @@
 						<div class="input input-label">
 							<input
 								class="input-style"
-								type="text"
+								type="number"
 								placeholder=" "
 								bind:value={taskInstance.budget}
 							/>
@@ -387,7 +388,7 @@
 	.flex-column {
 		display: flex;
 		flex-direction: column;
-		gap: 1.2rem;
+		gap: 1.5rem;
 		justify-content: stretch;
 	}
 

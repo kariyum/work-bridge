@@ -37,7 +37,7 @@
 
 <style>
 	button {
-		width: var(--width, 8rem);
+		width: var(--width, max-content);
 		background-color: var(--color, var(--btn-bg));
 	}
 

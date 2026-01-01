@@ -9,7 +9,7 @@
 	let myEditor: Editor | undefined = $state();
 	let focused: boolean = $state(false);
 
-	let { x = $bindable(), label }: { x: string, label: string } = $props();
+	let { x = $bindable(), label }: { x: string; label: string } = $props();
 	onMount(() => {
 		myEditor = new Editor({
 			editorProps: {
@@ -121,7 +121,7 @@
 		onfocusin={() => (focused = true)}
 		onfocusout={() => (focused = false)}
 	></div>
-	<label for="">{label}</label>
+	<label for="" style:--color={focused ? 'var(--blue)' : 'var(--border)'}>{label}</label>
 </div>
 
 <style>
@@ -130,16 +130,31 @@
 
 		label {
 			position: absolute;
-			transform: translateY(-50%);
-			color: #5f6368;
+			transform: translateY(-62%);
+			color: var(--label-color);
 			pointer-events: none;
 			background-color: var(--input-bg);
 			border-radius: 5px;
 			font-size: 16px;
-			padding: 0 6px;
+			padding: 5px 10px;
 			top: 0;
 			left: 6px;
 			font-size: 14px;
+		}
+
+		label::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 55%;
+			border-top: 2px solid var(--color);
+			border-left: 2px solid var(--color);
+			border-right: 2px solid var(--color);
+
+			border-radius: 5px 5px 0px 0px;
+			pointer-events: none;
 		}
 	}
 	div {
