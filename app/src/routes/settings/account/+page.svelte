@@ -44,22 +44,22 @@
 <h2>Change Your Password</h2>
 <form bind:this={formElement}>
 	<div class="input-label">
-		<input type="text" placeholder=" " name="current_password" />
-		<label for="email">Current Password</label>
+		<input type="password" placeholder=" " name="current_password" />
+		<label for="current_password">Current Password</label>
 	</div>
 	{#if formErrors}
 		{@render errors(formErrors.currentPassword ?? [])}
 	{/if}
 	<div class="input-label">
-		<input type="text" placeholder=" " name="new_password" />
-		<label for="email">New Password</label>
+		<input type="password" placeholder=" " name="new_password" />
+		<label for="new_password">New Password</label>
 	</div>
 	{#if formErrors}
 		{@render errors(formErrors.newPassword ?? [])}
 	{/if}
 	<div class="input-label">
-		<input type="text" placeholder=" " name="confirm_password" />
-		<label for="email">Confirm New Password</label>
+		<input type="password" placeholder=" " name="confirm_password" />
+		<label for="confirm_password">Confirm New Password</label>
 	</div>
 	{#if formErrors}
 		{@render errors(formErrors.confirmPassword ?? [])}

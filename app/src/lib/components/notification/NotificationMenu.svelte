@@ -36,7 +36,7 @@
 {/snippet}
 
 <div>
-	<h1>Notifications</h1>
+	<h3>Notifications</h3>
 	<div>
 		{#if notifications.length}
 			{#each notifications as notification}
@@ -53,6 +53,10 @@
 </div>
 
 <style>
+	h3 {
+		margin-bottom: 1rem;
+		color: var(--font-color);
+	}
 	.proposal {
 		margin: 0.5rem 0 0.5rem 0;
 	}

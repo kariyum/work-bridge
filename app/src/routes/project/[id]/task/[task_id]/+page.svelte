@@ -321,12 +321,17 @@
 								{/if}
 							</div>
 							<div class="card">
-								<div class="flex-row justify-between align-center">
-									<h2 style="padding: 1rem; padding-bottom:0;">About the Recruiter</h2>
+								<div
+									class="flex-row justify-between align-center"
+									style="margin: 1rem 1rem 0 1rem;"
+								>
+									<h2>About the Recruiter</h2>
 									<a
 										href={`/project/${task.project_id}/task/${task.id}/proposals/${task.proposal_id}/discussion`}
-										>Chat</a
+										class="reset-a"
 									>
+										<MessageCircle size="14" />
+									</a>
 								</div>
 								<div class="avatar-container">
 									<div
