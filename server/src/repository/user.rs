@@ -57,6 +57,27 @@ pub async fn update_user(
     .map(|_| ())
 }
 
+pub struct UpdatePassword {
+    pub email: String,
+    pub current_password: String,
+    pub new_password: String,
+}
+
+pub async fn update_password(
+    update_password: UpdatePassword,
+    conn: impl Executor<'_, Database = Postgres>,
+) -> Result<u64, Error> {
+    sqlx::query!(
+        r#"UPDATE users SET hashed_password = $1 WHERE email = $2 AND hashed_password = $3"#,
+        update_password.new_password,
+        update_password.email,
+        update_password.current_password
+    )
+    .execute(conn)
+    .await
+    .map(|query_result| query_result.rows_affected())
+}
+
 #[derive(Deserialize, Debug)]
 pub struct RegisterRequest {
     pub email: String,

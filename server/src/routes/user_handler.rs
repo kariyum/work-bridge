@@ -79,6 +79,7 @@ async fn logout() -> impl Responder {
 async fn whoami(claims: Claims) -> impl Responder {
     HttpResponse::Ok().json(claims)
 }
+
 pub fn routes() -> impl HttpServiceFactory {
     web::scope("auth")
         .route("login", web::post().to(login))
