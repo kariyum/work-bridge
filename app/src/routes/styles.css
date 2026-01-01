@@ -74,6 +74,8 @@ textarea {
     box-sizing: border-box;
     background-color: var(--input-bg);
     resize: none;
+    color: var(--font-color);
+    font-size: 14px;
 }
 
 .light {
@@ -313,9 +315,40 @@ textarea:focus {
             font-size 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         border-radius: 5px;
         font-size: 16px;
-        padding: 0 6px;
+        padding: 4px 8px;
+    }
+    label::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%; 
+  
+        border-radius: 5px 5px 0px 0px;
+        pointer-events: none;
+
+        opacity: 0;
+        transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    input:focus+label::before,
+    input:not(:placeholder-shown)+label::before {
+        border-top: 2px solid var(--border);
+        border-left: 2px solid var(--border);
+        border-right: 2px solid var(--border);
+
+        opacity: 1;
+    }
+
+    input:focus+label::before {
+        border-top: 2px solid var(--blue);
+        border-left: 2px solid var(--blue);
+        border-right: 2px solid var(--blue);
+
+        opacity: 1;
+    }
+ 
     input:focus+label,
     input:not(:placeholder-shown)+label {
         top: 0;
@@ -323,6 +356,67 @@ textarea:focus {
         font-size: 14px;
         transform: translateY(-50%);
     }
+
+}
+
+.textarea-label {
+    position: relative;
+
+    label {
+        position: absolute;
+        top: 15%;
+        left: 6px;
+        transform: translateY(-50%);
+        color: #5f6368;
+        pointer-events: none;
+        background-color: var(--input-bg);
+        transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            left 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+            font-size 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 5px;
+        font-size: 16px;
+        padding: 3px 6px;
+    }
+
+
+    label::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 50%; 
+  
+        border-radius: 5px 5px 0px 0px;
+        pointer-events: none;
+
+        opacity: 0;
+        transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    textarea:focus+label::before,
+    textarea:not(:placeholder-shown)+label::before {
+        border-top: 2px solid var(--border);
+        border-left: 2px solid var(--border);
+        border-right: 2px solid var(--border);
+
+        opacity: 1;
+    }
+
+    textarea:focus+label::before {
+        border-top: 2px solid var(--blue);
+        border-left: 2px solid var(--blue);
+        border-right: 2px solid var(--blue);
+    }
+    
+    textarea:focus+label,
+    textarea:not(:placeholder-shown)+label {
+        top: 0;
+        left: 6px;
+        font-size: 14px;
+        transform: translateY(-50%);
+    }
+
 }
 
 .input-error {
