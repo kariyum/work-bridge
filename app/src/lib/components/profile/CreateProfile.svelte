@@ -52,19 +52,40 @@
 	<div class="container">
 		<form bind:this={form} onsubmit={saveProfile}>
 			<div class="name">
-				<div class="input-group">
+				<div class="input input-label input-group">
+					<input
+						type="text"
+						id="first_name"
+						name="first_name"
+						autocapitalize="words"
+						placeholder=" "
+						value={user.first_name}
+					/>
+
 					<label for="first_name">First Name</label>
-					<input type="text" id="first_name" name="first_name" value={user.first_name} />
 				</div>
-				<div class="input-group">
+				<div class="input input-label input-group">
+					<input
+						type="text"
+						id="last_name"
+						name="last_name"
+						autocapitalize="words"
+						placeholder=" "
+						value={user.last_name}
+					/>
 					<label for="last_name">Last Name</label>
-					<input type="text" id="last_name" name="last_name" value={user.last_name} />
 				</div>
 			</div>
 
-			<div class="input-group">
+			<div class="input textarea-label input-group">
+				<textarea
+					id="description"
+					name="bio"
+					autocapitalize="sentences"
+					placeholder=" "
+					value={user.bio}
+				></textarea>
 				<label for="description">Tell us about yourself</label>
-				<textarea id="description" name="bio" value={user.bio}></textarea>
 			</div>
 			{#if user.role == 'freelancer'}
 				<div class="input-group">
@@ -103,14 +124,10 @@
 <style>
 	.name {
 		display: flex;
-		justify-content: space-between;
-		align-items: stretch;
-		gap: 1rem;
-
-		& > div {
-			width: 100%;
-		}
+		flex-wrap: wrap;
+		gap: 1.5rem;
 	}
+
 	.top-container {
 		width: 100%;
 	}
@@ -124,17 +141,17 @@
 		margin-top: 1rem;
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 1.5rem;
 	}
+
 	.input-group {
-		display: flex;
-		gap: 0.3rem;
-		flex-direction: column;
+		flex-grow: 2;
 	}
 
 	input,
 	textarea {
 		border: 2px solid var(--border);
+		width: 100%;
 	}
 
 	input[type='submit'] {
