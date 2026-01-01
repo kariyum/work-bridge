@@ -34,7 +34,9 @@
 	onMount(() => {
 		if (browser) {
 			webSocketService = WebSocketService.getInstance();
-			const handler = (notif: ProposalNotification | NewProposalNotification | MessagesJsonResponse) => {
+			const handler = (
+				notif: ProposalNotification | NewProposalNotification | MessagesJsonResponse
+			) => {
 				realtimeNotifications = [notif, ...realtimeNotifications];
 				const id = Date.now();
 				toastsQueue.push({
@@ -237,9 +239,11 @@
 					<Menu size="28" />
 				</button>
 			</div>
-			<a class="home" href="/">
-				{user.role.toUpperCase()}
-			</a>
+			<div>
+				<a class="home" href="/">
+					{user.role.toUpperCase()}
+				</a>
+			</div>
 		</h1>
 		<div class="desktop">
 			<nav>
@@ -405,11 +409,12 @@
 		}
 
 		.menu-icon {
-			line-height: 0;
 			padding: 0;
 			background-color: transparent;
 			border: none;
+			line-height: 1;
 		}
+
 		.desktop {
 			display: none;
 		}

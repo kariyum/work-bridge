@@ -98,6 +98,7 @@ textarea {
     --dark-text: #111827;
     --border: #ddd;
     --btn-bg: hsl(214, 100%, 82%);
+    --label-color: #5f6368;
 
     --tag-bg: #e7e7e7;
 
@@ -148,6 +149,8 @@ textarea {
     --active-button: #424242;
     --toast-bg: #333333;
     --error-color: rgb(187, 101, 101);
+    --label-color: #5f6368;
+    --delete-hover-color: hsl(0, 100%, 100%);
 
     --primary: #212227;
     --dark-text: #f9fafb;
@@ -307,7 +310,7 @@ textarea:focus {
         top: 50%;
         left: 6px;
         transform: translateY(-50%);
-        color: #5f6368;
+        color: var(--label-color);
         pointer-events: none;
         background-color: var(--input-bg);
         transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1),
@@ -367,7 +370,7 @@ textarea:focus {
         top: 15%;
         left: 6px;
         transform: translateY(-50%);
-        color: #5f6368;
+        color: var(--label-color);
         pointer-events: none;
         background-color: var(--input-bg);
         transition: top 0.2s cubic-bezier(0.4, 0, 0.2, 1),
@@ -453,7 +456,7 @@ textarea:focus {
     border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
     overflow: hidden;
 }
 
@@ -545,4 +548,16 @@ textarea:focus {
     ::view-transition-new(*) {
         animation: none !important;
     }
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }

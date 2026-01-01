@@ -50,7 +50,12 @@
 		onkeydown={onKeydown}
 		oninput={onInput}
 	/>
-	<label for="" class:focused-label={isFocused || skillsIn.length > 0}>Skills</label>
+	<label
+		for=""
+		class:focused-label={isFocused || skillsIn.length > 0}
+		class:skills-border={isFocused}
+		style:--color={isFocused ? 'var(--blue)' : 'var(--border)'}>Skills</label
+	>
 </div>
 
 <style>
@@ -74,13 +79,39 @@
 			font-size 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 		border-radius: 5px;
 		font-size: 16px;
-		padding: 0 6px;
+		padding: 4px 8px 4px 8px;
 	}
+
+	label::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		height: 60%;
+
+		border-radius: 5px 5px 0px 0px;
+		pointer-events: none;
+
+		transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+		opacity: 0;
+	}
+
 	.focused-label {
 		top: 0;
 		left: 6px;
 		font-size: 14px;
-		transform: translateY(-50%);
+		transform: translateY(-69%);
+		padding: 4px 8px 0px 8px;
+
+		&::before {
+			border-top: 2px solid var(--color);
+			border-left: 2px solid var(--color);
+			border-right: 2px solid var(--color);
+
+			opacity: 1;
+		}
 	}
 	.container {
 		display: flex;
