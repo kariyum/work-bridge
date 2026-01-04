@@ -249,7 +249,7 @@
 				<h2>Project Constraints</h2>
 				<div>
 					<div class="input input-label">
-						<input type="number" id="budget" placeholder=" " bind:value={projectFormInput.budget} />
+						<input id="budget" placeholder=" " bind:value={projectFormInput.budget} />
 						<label for="">Budget</label>
 					</div>
 					{#if formValidation}
@@ -340,7 +340,6 @@
 						<div class="input input-label">
 							<input
 								class="input-style"
-								type="number"
 								placeholder=" "
 								bind:value={taskInstance.budget}
 							/>
