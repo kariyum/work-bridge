@@ -170,13 +170,16 @@ export class NumberValidator extends Validator<number, string> {
         const positive: NumberValidatorType = (
             n: number | undefined | null
         ): Result<void, string> => {
+            if (n == null || n == undefined) {
+                return new Result<void, string>();
+            }
             if (n != null && n != undefined && n >= 0) {
                 return new Result<void, string>();
-            } else
-                return new Result<void, string>(
-                    undefined,
-                    `${this.field} should be positive`
-                );
+            }
+            return new Result<void, string>(
+                undefined,
+                `${this.field} should be positive`
+            );
         };
         this.validators.push(positive);
         return this;
@@ -184,10 +187,13 @@ export class NumberValidator extends Validator<number, string> {
 
     validate(s: any): string[] {
         const regex = new RegExp('^[0-9]+$')
+        // console.log(regex.test(s.toString()));
         if (s != undefined && s != null && !regex.test(s.toString())) {
             return [`${this.field} must be a number`]
         }
-        const results = this.validators.map((validator) => validator(parseFloat(s)));
+        const value = (s != undefined && s != null) ? parseFloat(s) : s;
+        console.log(value);
+        const results = this.validators.map((validator) => validator(value));
         const errors = results.map((error) => error.error).filter((error) => error != undefined);
         return errors;
     }
